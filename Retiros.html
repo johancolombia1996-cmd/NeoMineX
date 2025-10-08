@@ -1,204 +1,452 @@
 <!doctype html>
 <html lang="es">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>NeoMineX - Retiro USDT</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-
 <style>
 :root{
   --bg:#030617;
-  --card:rgba(8,14,23,0.78);
+  --card:rgba(8,14,23,0.82);
   --accent1:#06b6d4;
   --accent2:#0ea5e9;
   --neon:#0ef;
   --muted:rgba(230,247,251,0.72);
   --radius:14px;
 }
-*{box-sizing:border-box;margin:0;padding:0;}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
 body{
   font-family:'Poppins',sans-serif;
-  background:var(--bg);
+  background:
+    radial-gradient(800px 300px at 10% 10%, rgba(14,165,233,0.04), transparent 10%),
+    radial-gradient(600px 250px at 90% 90%, rgba(6,182,212,0.03), transparent 10%),
+    var(--bg);
   color:#e6f7fb;
-  height:100vh;
-  display:flex;align-items:center;justify-content:center;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  overflow-x:hidden;
+  padding:22px;
 }
 
-/* Iconos superiores */
-.back-arrow{
-  position:fixed;top:20px;left:20px;
-  font-size:28px;
-  color:var(--neon);
-  cursor:pointer;
-  animation:pulse 2s infinite;
+/* Top icons */
+.top-left{
+  position:fixed;top:18px;left:18px;
+  font-size:26px;color:var(--neon);cursor:pointer;z-index:60;
+  transition:transform .18s ease;
+}
+.top-left:hover{transform:translateX(-6px) scale(1.04);}
+
+.top-right{
+  position:fixed;top:16px;right:18px;display:flex;gap:12px;align-items:center;z-index:60;
 }
 .notebook{
-  position:fixed;top:20px;right:20px;
-  font-size:26px;
-  color:var(--accent2);
-  cursor:pointer;
-  animation:pulse 2s infinite;
+  font-size:22px;color:var(--accent2);cursor:pointer;transition:transform .18s ease;
 }
-@keyframes pulse{
-  0%,100%{text-shadow:0 0 8px var(--accent2);}
-  50%{text-shadow:0 0 20px var(--neon);}
+.notebook:hover{transform:scale(1.06)}
+.profile-m{
+  width:44px;height:44px;border-radius:50%;
+  background:linear-gradient(145deg,#06b6d4,#0ea5e9);
+  display:flex;align-items:center;justify-content:center;font-weight:800;color:#000;
+  box-shadow:0 0 12px rgba(14,165,233,0.45),0 0 28px rgba(6,182,212,0.12);
+  animation:spin 7s linear infinite, glow 2s ease-in-out infinite alternate;
+  cursor:default;
 }
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes glow{from{box-shadow:0 0 12px rgba(14,165,233,0.45)}to{box-shadow:0 0 22px rgba(6,182,212,0.7)}}
 
-/* Tarjeta principal */
+/* Layout center card */
+.wrapper{max-width:980px;margin:96px auto 40px;padding:0 16px;}
 .card{
-  background:var(--card);
-  border:1px solid rgba(255,255,255,0.05);
-  border-radius:var(--radius);
-  padding:30px 22px;
-  text-align:center;
-  width:90%;max-width:420px;
-  box-shadow:0 0 40px rgba(14,165,233,0.1);
-  backdrop-filter:blur(8px);
+  background:var(--card);border-radius:16px;padding:20px;border:1px solid rgba(255,255,255,0.03);
+  box-shadow:0 30px 60px rgba(2,6,23,0.6);backdrop-filter:blur(6px);
 }
-h2{
-  color:var(--accent1);
-  font-size:22px;
-  margin-bottom:20px;
-  text-shadow:0 0 12px rgba(14,165,233,0.3);
+.head{
+  display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;
 }
-input{
-  width:100%;
-  background:rgba(255,255,255,0.05);
-  border:none;
-  border-radius:10px;
-  padding:12px;
-  color:#e6f7fb;
-  margin-bottom:15px;
-  text-align:center;
-  font-size:15px;
+.title{font-size:20px;color:var(--accent1);font-weight:700}
+.row{display:flex;gap:18px;flex-wrap:wrap}
+.col{flex:1;min-width:260px}
+
+/* Info boxes */
+.infoBox{
+  background:linear-gradient(90deg, rgba(6,182,212,0.04), rgba(14,165,233,0.02));
+  border-radius:10px;padding:10px;border:1px solid rgba(255,255,255,0.02);
+  color:#dff9ff;font-weight:700;margin-bottom:10px;
 }
-input:focus{outline:1px solid var(--accent1);}
-.balance{
-  font-size:14px;
-  margin-bottom:15px;
-  color:var(--muted);
+.idField{display:flex;align-items:center;gap:10px}
+.idText{background:rgba(0,0,0,0.2);padding:8px 10px;border-radius:8px;color:var(--muted);font-weight:700}
+
+/* Form */
+.form{
+  display:flex;flex-direction:column;gap:10px;
+  margin-top:6px;
 }
+label{font-size:13px;color:var(--muted);font-weight:600;margin-bottom:4px}
+.input, .readonly{
+  width:100%;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);
+  background:rgba(255,255,255,0.02);color:#e6f7fb;font-weight:600;font-size:14px;
+}
+.readonly{background:rgba(255,255,255,0.01);opacity:0.95}
+.small{font-size:13px;color:var(--muted)}
+
+/* Actions */
+.actions{display:flex;gap:10px;align-items:center;margin-top:8px}
 .btn{
-  background:linear-gradient(90deg,var(--accent1),var(--accent2));
-  border:none;
-  border-radius:999px;
-  color:#000;
-  font-weight:700;
-  padding:10px 20px;
-  cursor:pointer;
-  transition:transform .25s ease, box-shadow .25s ease;
+  background:linear-gradient(90deg,var(--accent1),var(--accent2));border:none;padding:10px 16px;border-radius:10px;
+  cursor:pointer;color:#000;font-weight:800;box-shadow:0 8px 30px rgba(6,182,212,0.08);
 }
-.btn:hover{
-  transform:translateY(-3px);
-  box-shadow:0 0 20px rgba(14,165,233,0.3);
+.btn.secondary{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted);font-weight:700}
+
+/* Modal history */
+.modal{
+  position:fixed;inset:0;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;
+  opacity:0;visibility:hidden;transition:opacity .2s ease,visibility .2s ease;z-index:80;
+}
+.modal.show{opacity:1;visibility:visible}
+.modal-card{width:92%;max-width:520px;background:var(--card);border-radius:12px;padding:18px;border:1px solid rgba(255,255,255,0.04);position:relative}
+.modal-close{position:absolute;top:10px;right:12px;font-size:18px;cursor:pointer;color:var(--muted)}
+.history-item{padding:10px;border-bottom:1px dashed rgba(255,255,255,0.03);color:var(--neon);font-weight:700}
+.history-empty{color:var(--muted);padding:18px;text-align:center}
+
+/* Footer warning */
+.footer-note{
+  margin-top:14px;padding:12px;border-radius:10px;background:rgba(255,255,255,0.02);
+  color:#ffd0d0;font-size:13px;border:1px solid rgba(255,100,100,0.03)
 }
 
-/* Ventana emergente */
-.modal{
-  position:fixed;
-  top:0;left:0;width:100%;height:100%;
-  background:rgba(0,0,0,0.7);
-  display:flex;align-items:center;justify-content:center;
-  opacity:0;visibility:hidden;
-  transition:opacity .3s ease,visibility .3s ease;
-}
-.modal.active{opacity:1;visibility:visible;}
-.modal-content{
-  background:var(--card);
-  padding:20px;
-  border-radius:var(--radius);
-  width:90%;max-width:380px;
-  box-shadow:0 0 30px rgba(14,165,233,0.2);
-  position:relative;
-  text-align:center;
-}
-.close-btn{
-  position:absolute;top:10px;right:12px;
-  color:var(--muted);
-  font-size:18px;
-  cursor:pointer;
-}
-.withdraw-item{
-  border-bottom:1px solid rgba(255,255,255,0.05);
-  padding:10px 0;
-  color:var(--neon);
-  font-size:14px;
-}
-.empty{
-  color:var(--muted);
-  font-size:14px;
-  padding:20px 0;
+/* responsive */
+@media(max-width:760px){
+  .row{flex-direction:column}
 }
 </style>
 </head>
-
 <body>
 
-<div class="back-arrow" onclick="goBack()">⬅</div>
-<div class="notebook" onclick="openHistory()">📒</div>
+<!-- Top-left back arrow -->
+<div class="top-left" onclick="goHome()" title="Volver">⬅</div>
 
-<div class="card">
-  <h2>Retiro USDT TRC20</h2>
-  <div class="balance">💰 Balance disponible: <span id="balance">5.00</span> USDT</div>
-  <input type="number" id="monto" placeholder="Ingrese monto a retirar (mínimo 1)">
-  <button class="btn" onclick="retirar()">Retirar</button>
+<!-- Top-right icons: notebook + spinning M (perfil) -->
+<div class="top-right">
+  <div class="notebook" title="Historial" onclick="openHistory()">📒</div>
+  <div class="profile-m" title="Perfil">M</div>
 </div>
 
-<!-- Ventana emergente -->
-<div class="modal" id="modal">
-  <div class="modal-content">
-    <span class="close-btn" onclick="closeHistory()">✖</span>
-    <h3 style="color:var(--accent1);margin-bottom:10px;">Historial de Retiros</h3>
-    <div id="history-list" class="empty">No hay retiros registrados.</div>
+<div class="wrapper">
+  <div class="card">
+    <div class="head">
+      <div class="title">Retiro USDT TRC20</div>
+      <div class="small">Retiro mínimo: <strong style="color:var(--neon)">1 USDT</strong></div>
+    </div>
+
+    <div class="row">
+      <!-- Left column: summary + form -->
+      <div class="col">
+        <div class="infoBox">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <div class="small">ID de Usuario</div>
+              <div class="idField" style="margin-top:6px">
+                <div class="idText" id="userId">--</div>
+              </div>
+            </div>
+            <div style="text-align:right">
+              <div class="small">Saldo Disponible</div>
+              <div style="font-weight:800;color:var(--neon);margin-top:6px" id="balanceText">0.00 USDT</div>
+              <div class="small" style="margin-top:6px">Total recargas: <span id="recargasTotal">0.00</span> USDT</div>
+            </div>
+          </div>
+        </div>
+
+        <form class="form" id="withdrawForm" onsubmit="return false;">
+          <div>
+            <label for="address">Dirección de retiro</label>
+            <input id="address" class="input" placeholder="Ingrese dirección TRC20 (empieza con T)" autocomplete="off" />
+            <div class="small" style="margin-top:6px;color:var(--muted)">Ejemplo: TJ6QaxbDeK2sHbeTLWjKFdqiG4eiCaivNu</div>
+          </div>
+
+          <div>
+            <label for="password">Contraseña</label>
+            <input id="password" type="password" class="input" placeholder="Tu contraseña de cuenta" autocomplete="off" />
+            <div class="small" style="margin-top:6px;color:var(--muted)">Si aún no tienes contraseña crea una desde Historial → "Crear contraseña".</div>
+          </div>
+
+          <div>
+            <label for="amount">Cantidad (USDT)</label>
+            <input id="amount" type="number" step="0.01" min="0" class="input" placeholder="Ej: 10.00" />
+          </div>
+
+          <div class="actions">
+            <button class="btn" onclick="handleWithdraw()">Retirar</button>
+            <button class="btn secondary" onclick="goRecharge()">Ir a Recarga</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Right column: history quick + note -->
+      <div class="col">
+        <div style="border-radius:10px;padding:12px;background:linear-gradient(90deg,rgba(255,255,255,0.01),transparent);border:1px solid rgba(255,255,255,0.02)">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <div style="font-weight:700;color:var(--accent1)">Últimos retiros</div>
+            <div class="small" style="color:var(--muted)">Actualizado</div>
+          </div>
+          <div id="recentList">
+            <div class="history-empty">No hay retiros registrados.</div>
+          </div>
+
+          <div style="margin-top:12px">
+            <button class="btn secondary" onclick="openHistory()">Ver historial completo</button>
+          </div>
+        </div>
+
+        <div class="footer-note" style="margin-top:12px">
+          <strong>Importante:</strong> Si retiras y no colocaste correctamente tu dirección de depósito, los activos se <strong>perderán</strong> y tu saldo se <strong>descontará</strong> en cuanto se procese el retiro. Revisa la dirección cuidadosamente antes de confirmar.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Modal: historial y crear contraseña -->
+<div id="modal" class="modal" aria-hidden="true">
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <span class="modal-close" onclick="closeHistory()">✖</span>
+    <h3 id="modalTitle" style="color:var(--accent1);margin-bottom:10px">Historial de retiros</h3>
+
+    <div id="historyContainer"></div>
+
+    <div style="margin-top:14px;display:flex;gap:10px;justify-content:center">
+      <button class="btn secondary" onclick="closeHistory()">Cerrar</button>
+      <button class="btn" onclick="openSetPassword()">Crear / Cambiar contraseña</button>
+    </div>
+
+    <!-- Create Password Area (inline in modal) -->
+    <div id="setPassArea" style="margin-top:12px;display:none">
+      <div style="margin-bottom:8px"><label class="small">Nueva contraseña:</label>
+        <input id="newPass" class="input" type="password" placeholder="Nueva contraseña"></div>
+      <div style="margin-bottom:8px"><label class="small">Repetir contraseña:</label>
+        <input id="confirmPass" class="input" type="password" placeholder="Repetir contraseña"></div>
+      <div style="display:flex;gap:8px;justify-content:center">
+        <button class="btn" onclick="savePassword()">Guardar</button>
+        <button class="btn secondary" onclick="cancelSetPassword()">Cancelar</button>
+      </div>
+    </div>
+
   </div>
 </div>
 
 <script>
-let balance = 5.00; // saldo simulado
-let retiros = [];
+/* ----------------------
+  Persistencia (localStorage)
+   - userId: neominex_user_id (string)
+   - balance: neominex_balance (float)
+   - recargasTotal: neominex_recargas_total (float)
+   - withdrawals: neominex_withdrawals (JSON array)
+   - password: neominex_pass (string)  <-- almacenado en claro (cliente)
+---------------------- */
 
-function goBack(){
-  window.location.href = "https://johancolombia1996-cmd.github.io/NeoMineX/NeoMineX%20-%20Home.html";
+const LS_USER = 'neominex_user_id';
+const LS_BAL  = 'neominex_balance';
+const LS_REC  = 'neominex_recargas_total';
+const LS_W    = 'neominex_withdrawals';
+const LS_PASS = 'neominex_pass';
+
+// Utilidades
+function genId(len=12){
+  const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let s='';
+  for(let i=0;i<len;i++) s += chars[Math.floor(Math.random()*chars.length)];
+  return s;
+}
+function getLS(key, fallback){
+  const v = localStorage.getItem(key);
+  if(v===null) return fallback;
+  try { return JSON.parse(v); } catch(e){ return v; }
+}
+function setLS(key, value){
+  localStorage.setItem(key, JSON.stringify(value));
 }
 
-function retirar(){
-  const monto = parseFloat(document.getElementById("monto").value);
-  if(isNaN(monto) || monto < 1){
-    alert("⚠️ El monto mínimo de retiro es 1 USDT.");
-    return;
-  }
-  if(monto > balance){
-    alert("❌ No tienes balance suficiente.");
-    return;
-  }
-  balance -= monto;
-  document.getElementById("balance").innerText = balance.toFixed(2);
-  retiros.push({monto,fecha:new Date().toLocaleString()});
-  alert("✅ Tu retiro está en proceso.");
-  updateHistory();
+/* Inicialización */
+let userId = localStorage.getItem(LS_USER);
+if(!userId){
+  userId = genId(12);
+  localStorage.setItem(LS_USER, userId);
 }
+let balance = parseFloat(localStorage.getItem(LS_BAL) ?? 5.00); // default 5 USDT
+let recargasTotal = parseFloat(localStorage.getItem(LS_REC) ?? 0.00);
+let withdrawals = JSON.parse(localStorage.getItem(LS_W) || '[]');
+let storedPass = localStorage.getItem(LS_PASS) || null;
 
-function openHistory(){
-  document.getElementById("modal").classList.add("active");
-  updateHistory();
+/* DOM referencias */
+const userIdEl = document.getElementById('userId');
+const balanceText = document.getElementById('balanceText');
+const recargasText = document.getElementById('recargasTotal');
+const recentList = document.getElementById('recentList');
+const modal = document.getElementById('modal');
+const historyContainer = document.getElementById('historyContainer');
+
+/* Mostrar valores */
+function refreshUI(){
+  userIdEl.textContent = userId;
+  balanceText.textContent = balance.toFixed(2) + ' USDT';
+  recargasText.textContent = recargasTotal.toFixed(2);
+  renderRecent();
 }
-
-function closeHistory(){
-  document.getElementById("modal").classList.remove("active");
-}
-
-function updateHistory(){
-  const list=document.getElementById("history-list");
-  if(retiros.length===0){
-    list.innerHTML="<div class='empty'>No hay retiros registrados.</div>";
+function renderRecent(){
+  if(!withdrawals || withdrawals.length === 0){
+    recentList.innerHTML = '<div class="history-empty">No hay retiros registrados.</div>';
   } else {
-    list.innerHTML=retiros.map(r=>`
-      <div class="withdraw-item">💸 ${r.monto} USDT - ${r.fecha}</div>
-    `).join("");
+    const last = withdrawals.slice(-4).reverse();
+    recentList.innerHTML = last.map(r=>`
+      <div style="padding:8px;border-bottom:1px dashed rgba(255,255,255,0.03);">
+        <div style="font-weight:700;color:var(--neon)">${r.monto.toFixed(2)} USDT</div>
+        <div class="small" style="color:var(--muted)">${r.fecha}</div>
+      </div>
+    `).join('');
   }
 }
-</script>
 
+/* Navegación */
+function goHome(){ window.location.href = "https://johancolombia1996-cmd.github.io/NeoMineX/NeoMineX%20-%20Home.html"; }
+function goRecharge(){ window.location.href = "https://johancolombia1996-cmd.github.io/NeoMineX/recarga.html"; } // ajusta si tu URL difiere
+
+/* Abrir/Cerrar historial modal */
+function openHistory(){
+  populateHistory();
+  modal.classList.add('show');
+}
+function closeHistory(){
+  modal.classList.remove('show');
+  hideSetPassArea();
+}
+
+/* Populate historial */
+function populateHistory(){
+  const list = JSON.parse(localStorage.getItem(LS_W) || '[]');
+  if(!list || list.length === 0){
+    historyContainer.innerHTML = '<div class="history-empty">No hay retiros registrados.</div>';
+  } else {
+    historyContainer.innerHTML = list.slice().reverse().map(r=>`
+      <div class="history-item">
+        ${r.monto.toFixed(2)} USDT — ${r.fecha} — 
+        <div style="font-weight:600;color:#cfeef6">${r.to}</div>
+      </div>
+    `).join('');
+  }
+}
+
+/* Crear/guardar contraseña */
+function openSetPassword(){
+  document.getElementById('setPassArea').style.display = 'block';
+}
+function cancelSetPassword(){
+  document.getElementById('setPassArea').style.display = 'none';
+}
+function hideSetPassArea(){
+  document.getElementById('setPassArea').style.display = 'none';
+}
+function savePassword(){
+  const np = document.getElementById('newPass').value;
+  const cp = document.getElementById('confirmPass').value;
+  if(!np || np.length < 4){ alert('La contraseña debe tener al menos 4 caracteres.'); return; }
+  if(np !== cp){ alert('Las contraseñas no coinciden.'); return; }
+  localStorage.setItem(LS_PASS, np);
+  storedPass = np;
+  alert('✅ Contraseña guardada.');
+  hideSetPassArea();
+}
+
+/* Validaciones y retiro */
+function handleWithdraw(){
+  const address = document.getElementById('address').value.trim();
+  const pass = document.getElementById('password').value;
+  const amountVal = parseFloat(document.getElementById('amount').value);
+
+  if(isNaN(amountVal) || amountVal <= 0){
+    alert('Introduce una cantidad válida.');
+    return;
+  }
+  if(amountVal < 1){
+    alert('⚠️ El monto mínimo de retiro es 1 USDT.');
+    return;
+  }
+  if(amountVal > balance){
+    alert('❌ No tienes balance suficiente.');
+    return;
+  }
+  // Password check
+  const stored = localStorage.getItem(LS_PASS);
+  if(stored){
+    if(!pass){ alert('Ingresa tu contraseña.'); return; }
+    if(pass !== stored){ alert('❌ Contraseña incorrecta.'); return; }
+  } else {
+    // no password stored -> ask to create first
+    if(!pass){ 
+      const c = confirm('No tienes contraseña establecida. ¿Deseas crearla ahora usando la contraseña ingresada? (Se almacenará en este navegador).');
+      if(!c) return;
+      if(pass.length < 4){ alert('La contraseña debe tener al menos 4 caracteres.'); return; }
+      localStorage.setItem(LS_PASS, pass);
+      storedPass = pass;
+      alert('✅ Contraseña creada y guardada localmente.');
+    } else {
+      // user entered a pass but none stored: create automatically after confirm
+      const c = confirm('No existe contraseña guardada. ¿Deseas utilizar la que ingresaste como contraseña de la cuenta?');
+      if(!c) return;
+      if(pass.length < 4){ alert('La contraseña debe tener al menos 4 caracteres.'); return; }
+      localStorage.setItem(LS_PASS, pass);
+      storedPass = pass;
+      alert('✅ Contraseña creada y guardada localmente.');
+    }
+  }
+
+  // address validation: TRC addresses start with 'T' and length ~34, but we'll be lenient
+  let addressLooksOk = (address && address[0] === 'T' && address.length >= 20);
+  if(!addressLooksOk){
+    const cont = confirm('La dirección ingresada parece inválida o incompleta. Si continúas, tus activos podrían perderse. ¿Deseas continuar de todos modos?');
+    if(!cont) return;
+  }
+
+  // Proceed withdrawal: deduct balance, create record
+  balance = +(balance - amountVal);
+  recargasTotal = parseFloat(localStorage.getItem(LS_REC) ?? 0.00); // keep recargas total unchanged here
+  // Create record
+  const now = new Date();
+  const record = {
+    id: 'W-' + Math.floor(Math.random()*900000 + 100000),
+    monto: +amountVal,
+    fecha: now.toLocaleString(),
+    to: address || '(no especificada)',
+    status: 'En proceso'
+  };
+  withdrawals.push(record);
+  // persist
+  localStorage.setItem(LS_BAL, balance.toFixed(2));
+  localStorage.setItem(LS_W, JSON.stringify(withdrawals));
+  // Update UI
+  refreshUI();
+  populateHistory();
+  alert('✅ Tu retiro está en proceso. Revisa el historial para más detalles.');
+  // Clear form fields
+  document.getElementById('address').value = '';
+  document.getElementById('amount').value = '';
+  document.getElementById('password').value = '';
+}
+
+/* Inicial UI */
+refreshUI();
+
+/* Exponer funciones al modal global scope */
+window.openHistory = openHistory;
+window.closeHistory = closeHistory;
+window.goHome = goHome;
+window.openSetPassword = openSetPassword;
+window.cancelSetPassword = cancelSetPassword;
+window.savePassword = savePassword;
+window.handleWithdraw = handleWithdraw;
+window.goRecharge = goRecharge;
+</script>
 </body>
-    </html>
+</html>
