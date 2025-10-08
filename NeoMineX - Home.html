@@ -15,14 +15,16 @@
   --neon:#0ef;
   --radius:14px;
 }
-*{box-sizing:border-box}
-body{margin:0;font-family:'Poppins',sans-serif;background:var(--bg);color:#e6f7fb}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Poppins',sans-serif;background:var(--bg);color:#e6f7fb;overflow-x:hidden}
 .container{position:relative;z-index:2;max-width:1000px;margin:40px auto 120px;padding:18px}
+
+/* Banner */
 .banner{display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,0.02);padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.03)}
 .banner .title{font-weight:700;color:var(--accent2)}
 .banner .subtitle{color:var(--muted);font-size:13px}
 
-/* Panel */
+/* Panel general */
 .panel{margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:18px}
 .card{background:var(--card);border:1px solid rgba(255,255,255,0.03);padding:16px;border-radius:var(--radius);backdrop-filter:blur(6px);box-shadow:0 20px 40px rgba(2,6,23,0.5)}
 h3{margin:0 0 10px;color:var(--accent1)}
@@ -33,11 +35,11 @@ h3{margin:0 0 10px;color:var(--accent1)}
 .btn{display:block;width:100%;padding:12px;border-radius:10px;border:none;background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#000;font-weight:700;cursor:pointer;box-shadow:0 8px 30px rgba(6,182,212,0.12)}
 .note{color:var(--muted);font-size:13px;margin-top:6px}
 
-/* Barra superior con iconos */
+/* Botones superiores futuristas */
 .topButtons{
   display:grid;
   grid-template-columns:repeat(4,1fr);
-  gap:12px;
+  gap:10px;
   margin-top:25px;
   margin-bottom:25px;
 }
@@ -46,10 +48,10 @@ h3{margin:0 0 10px;color:var(--accent1)}
   border:1px solid rgba(255,255,255,0.05);
   border-radius:14px;
   text-align:center;
-  padding:14px 8px;
+  padding:10px 6px;
   color:var(--muted);
   font-weight:600;
-  font-size:13px;
+  font-size:12px;
   cursor:pointer;
   transition:all .3s ease;
   box-shadow:0 0 10px rgba(0,255,255,0.05);
@@ -61,14 +63,15 @@ h3{margin:0 0 10px;color:var(--accent1)}
   box-shadow:0 0 20px rgba(14,165,233,0.3);
 }
 .topBtn .icon{
-  font-size:20px;
+  font-size:18px;
   display:block;
   margin-bottom:4px;
 }
 
-/* Navbar inferior */
+/* Barra inferior fija */
 .navbar{
-  position:fixed;bottom:12px;left:50%;
+  position:fixed;
+  bottom:12px;left:50%;
   transform:translateX(-50%);
   width:94%;max-width:980px;
   background:rgba(255,255,255,0.02);
@@ -76,14 +79,25 @@ h3{margin:0 0 10px;color:var(--accent1)}
   display:flex;justify-content:space-between;gap:6px;
   z-index:30;backdrop-filter:blur(6px)
 }
-.navItem{flex:1;text-align:center;color:var(--muted);font-size:12px;padding:6px 8px;border-radius:10px;cursor:pointer}
-.navItem.active{background:linear-gradient(90deg,var(--neon),#06b6d4);color:#000;font-weight:700;box-shadow:0 6px 20px rgba(14,165,233,0.18)}
+.navItem{
+  flex:1;text-align:center;color:var(--muted);
+  font-size:12px;padding:6px 8px;border-radius:10px;
+  cursor:pointer;transition:all .3s ease;
+}
+.navItem.active, .navItem:hover{
+  background:linear-gradient(90deg,var(--neon),#06b6d4);
+  color:#000;font-weight:700;box-shadow:0 6px 20px rgba(14,165,233,0.18);
+}
 
 /* Animación de retiros */
 .withdrawBox{height:240px;overflow:hidden;position:relative}
 .withdrawItem{opacity:0;transform:translateY(20px);transition:all .6s ease;font-size:14px;color:var(--muted);margin:6px 0;padding:8px 10px;background:rgba(255,255,255,0.02);border-radius:10px;border:1px solid rgba(255,255,255,0.03)}
 .withdrawItem.show{opacity:1;transform:translateY(0)}
 .withdrawItem span{color:var(--neon);font-weight:600}
+
+@media(max-width:700px){
+  .panel{grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>
@@ -97,20 +111,20 @@ h3{margin:0 0 10px;color:var(--accent1)}
     <div style="color:var(--muted);font-size:13px">Panel • Bienvenido</div>
   </div>
 
-  <!-- Botones superiores futuristas -->
+  <!-- Botones superiores -->
   <div class="topButtons">
-    <div class="topBtn" onclick="location.href='home.html'"><div class="icon">🏠</div>Home</div>
-    <div class="topBtn" onclick="location.href='mineria.html'"><div class="icon">⚡</div>Minería</div>
-    <div class="topBtn" onclick="location.href='recarga.html'"><div class="icon">💳</div>Recarga</div>
-    <div class="topBtn" onclick="location.href='retiro.html'"><div class="icon">💰</div>Retirar</div>
-    <div class="topBtn" onclick="location.href='perfil.html'"><div class="icon">👤</div>Perfil</div>
-    <div class="topBtn" onclick="location.href='telegram.html'"><div class="icon">📱</div>Telegram</div>
-    <div class="topBtn" onclick="location.href='info.html'"><div class="icon">ℹ️</div>Info</div>
-    <div class="topBtn" onclick="location.href='help.html'"><div class="icon">🆘</div>Help</div>
+    <div class="topBtn" onclick="go('home.html')"><div class="icon">🏠</div>Home</div>
+    <div class="topBtn" onclick="go('mineria.html')"><div class="icon">⚡</div>Minería</div>
+    <div class="topBtn" onclick="go('recarga.html')"><div class="icon">💳</div>Recarga</div>
+    <div class="topBtn" onclick="go('retiro.html')"><div class="icon">💰</div>Retirar</div>
+    <div class="topBtn" onclick="go('perfil.html')"><div class="icon">👤</div>Perfil</div>
+    <div class="topBtn" onclick="go('telegram.html')"><div class="icon">📱</div>Telegram</div>
+    <div class="topBtn" onclick="go('info.html')"><div class="icon">ℹ️</div>Info</div>
+    <div class="topBtn" onclick="go('help.html')"><div class="icon">🆘</div>Help</div>
   </div>
 
   <div class="panel">
-    <!-- Minería -->
+    <!-- Minería en tiempo real -->
     <div class="card" id="miningCard">
       <h3>Minería en Tiempo Real</h3>
       <div id="cryptoList"></div>
@@ -118,7 +132,7 @@ h3{margin:0 0 10px;color:var(--accent1)}
       <p class="note">Energía y rendimiento optimizado por IA. Estado: <span id="mineState" class="kv">Inactiva</span></p>
     </div>
 
-    <!-- Animación de Retiros -->
+    <!-- Retiros en vivo -->
     <div class="card">
       <h3>Retiros en Vivo</h3>
       <div class="withdrawBox" id="withdrawFeed"></div>
@@ -126,17 +140,20 @@ h3{margin:0 0 10px;color:var(--accent1)}
   </div>
 </div>
 
-<!-- Barra inferior profesional -->
+<!-- Barra inferior -->
 <div class="navbar">
-  <div class="navItem active">🏠<div>Inicio</div></div>
-  <div class="navItem">💰<div>Retiro</div></div>
-  <div class="navItem">⚡<div>Minería</div></div>
-  <div class="navItem">📊<div>Panel</div></div>
-  <div class="navItem">👤<div>Perfil</div></div>
+  <div class="navItem active" onclick="go('home.html')">🏠<div>Inicio</div></div>
+  <div class="navItem" onclick="go('retiro.html')">💰<div>Retiro</div></div>
+  <div class="navItem" onclick="go('mineria.html')">⚡<div>Minería</div></div>
+  <div class="navItem" onclick="go('panel.html')">📊<div>Panel</div></div>
+  <div class="navItem" onclick="go('perfil.html')">👤<div>Perfil</div></div>
 </div>
 
 <script>
-/* ----- Minería simulada ----- */
+/* Función general de navegación */
+function go(url){ window.location.href = url; }
+
+/* ----- Minería real simulada ----- */
 const coins=[
   {sym:'BTC',name:'Bitcoin',icon:'https://cryptoicons.org/api/icon/btc/32'},
   {sym:'ETH',name:'Ethereum',icon:'https://cryptoicons.org/api/icon/eth/32'},
@@ -151,12 +168,8 @@ function renderCoins(){
     const div=document.createElement('div');
     div.className='cryptoRow';
     div.innerHTML=`
-      <div class="coinName">
-        <img src="${c.icon}">${c.name} (${c.sym})
-      </div>
-      <div class="coinPrice" id="p-${c.sym}">
-        $${(Math.random()*45000+2000).toFixed(2)}
-      </div>`;
+      <div class="coinName"><img src="${c.icon}">${c.name} (${c.sym})</div>
+      <div class="coinPrice" id="p-${c.sym}">$${(Math.random()*45000+2000).toFixed(2)}</div>`;
     list.appendChild(div);
   });
 }
@@ -178,12 +191,17 @@ document.getElementById('toggleMine').onclick=()=>{
   document.getElementById('mineState').textContent=active?'Activa':'Inactiva';
 };
 
-/* ----- Animación de Retiros ----- */
+/* ----- Animación de Retiros infinitos ----- */
 const feed=document.getElementById('withdrawFeed');
-const addresses=["T*****AUV","T****X9V","T****BGT","T****PLZ","T****LQ8","T****QXX","T****WQ1","T****U2A"];
+function randomAddress(){
+  const chars='ABCDEFGHJKLMNPQRSTUVWXYZ123456789';
+  let s='T';
+  for(let i=0;i<10;i++) s+=chars[Math.floor(Math.random()*chars.length)];
+  return s;
+}
 function addWithdraw(){
-  const addr=addresses[Math.floor(Math.random()*addresses.length)];
-  const amt=(Math.random()*5+1).toFixed(2);
+  const addr=randomAddress();
+  const amt=(Math.random()*10+1).toFixed(2);
   const div=document.createElement('div');
   div.className='withdrawItem';
   div.innerHTML=`💸 Retiro desde <span>${addr}</span> por <span>${amt} USDT</span> completado ✔️`;
@@ -195,4 +213,4 @@ setInterval(addWithdraw,4000);
 addWithdraw();
 </script>
 </body>
-</html>
+  </html>
