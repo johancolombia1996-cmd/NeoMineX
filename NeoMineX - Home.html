@@ -4,73 +4,89 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>NeoMineX - Minería en Tiempo Real</title>
-<meta name="description" content="NeoMineX • Panel de minería automatizada con tecnología futurista y partículas 3D" />
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
-
 :root{
   --bg:#030617;
   --card:rgba(8,14,23,0.78);
   --accent1:#06b6d4;
   --accent2:#0ea5e9;
   --muted:rgba(230,247,251,0.72);
-  --neon: #0ef;
+  --neon:#0ef;
   --radius:14px;
 }
-
-/* Reset / base */
 *{box-sizing:border-box}
-html,body{height:100%;margin:0;font-family:'Poppins',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;color:#e6f7fb;background:var(--bg);-webkit-font-smoothing:antialiased}
-canvas#fx{position:fixed;inset:0;z-index:0;display:block}
-
-/* Container */
+body{margin:0;font-family:'Poppins',sans-serif;background:var(--bg);color:#e6f7fb}
 .container{position:relative;z-index:2;max-width:1000px;margin:40px auto 120px;padding:18px}
-
-/* Banner */
-.banner{display:flex;justify-content:space-between;align-items:center;background:linear-gradient(90deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);box-shadow:0 12px 30px rgba(6,182,212,0.06)}
-.banner .title{font-weight:700;color:var(--accent2);letter-spacing:1px}
+.banner{display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,0.02);padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.03)}
+.banner .title{font-weight:700;color:var(--accent2)}
 .banner .subtitle{color:var(--muted);font-size:13px}
 
-/* Grid */
+/* Panel */
 .panel{margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:18px}
-
-/* Card */
-.card{background:var(--card);border:1px solid rgba(255,255,255,0.03);padding:16px;border-radius:var(--radius);backdrop-filter:blur(4px);box-shadow:0 20px 40px rgba(2,6,23,0.5);transform-style:preserve-3d;transition:transform .18s ease}
-
-/* Titles */
-.card h3{margin:0 0 10px;color:var(--accent1);font-weight:600}
-
-/* Crypto row */
-.cryptoRow{display:flex;justify-content:space-between;align-items:center;padding:10px;border-radius:10px;margin-bottom:8px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02));border:1px solid rgba(255,255,255,0.02)}
-.cryptoRow img{width:26px;height:26px;margin-right:10px}
+.card{background:var(--card);border:1px solid rgba(255,255,255,0.03);padding:16px;border-radius:var(--radius);backdrop-filter:blur(6px);box-shadow:0 20px 40px rgba(2,6,23,0.5)}
+h3{margin:0 0 10px;color:var(--accent1)}
+.cryptoRow{display:flex;justify-content:space-between;align-items:center;padding:10px;border-radius:10px;margin-bottom:8px;background:rgba(255,255,255,0.02)}
+.cryptoRow img{width:26px;height:26px}
 .coinName{display:flex;align-items:center;gap:8px;font-weight:600}
 .coinPrice{color:var(--neon);font-weight:700}
+.btn{display:block;width:100%;padding:12px;border-radius:10px;border:none;background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#000;font-weight:700;cursor:pointer;box-shadow:0 8px 30px rgba(6,182,212,0.12)}
+.note{color:var(--muted);font-size:13px;margin-top:6px}
 
-/* Buttons */
-.btn{display:block;width:100%;padding:12px;border-radius:10px;border:none;background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#000;font-weight:700;cursor:pointer;letter-spacing:.4px;box-shadow:0 8px 30px rgba(6,182,212,0.12)}
-.btn.ghost{background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,0.04)}
+/* Barra superior con iconos */
+.topButtons{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+  margin-top:25px;
+  margin-bottom:25px;
+}
+.topBtn{
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.05);
+  border-radius:14px;
+  text-align:center;
+  padding:14px 8px;
+  color:var(--muted);
+  font-weight:600;
+  font-size:13px;
+  cursor:pointer;
+  transition:all .3s ease;
+  box-shadow:0 0 10px rgba(0,255,255,0.05);
+}
+.topBtn:hover{
+  background:linear-gradient(90deg,var(--accent1),var(--accent2));
+  color:#000;
+  transform:translateY(-3px);
+  box-shadow:0 0 20px rgba(14,165,233,0.3);
+}
+.topBtn .icon{
+  font-size:20px;
+  display:block;
+  margin-bottom:4px;
+}
 
-/* Form inputs */
-label{display:block;color:var(--muted);font-size:13px;margin:8px 0 6px}
-input,select,textarea{width:100%;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#fff;outline:none}
-textarea{min-height:72px;resize:none}
-
-/* Bottom nav full-width look */
-.navbar{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);width:94%;max-width:980px;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));padding:8px;border-radius:999px;border:1px solid rgba(255,255,255,0.04);display:flex;justify-content:space-between;align-items:center;gap:6px;z-index:30;backdrop-filter:blur(6px)}
+/* Navbar inferior */
+.navbar{
+  position:fixed;bottom:12px;left:50%;
+  transform:translateX(-50%);
+  width:94%;max-width:980px;
+  background:rgba(255,255,255,0.02);
+  padding:8px;border-radius:999px;
+  display:flex;justify-content:space-between;gap:6px;
+  z-index:30;backdrop-filter:blur(6px)
+}
 .navItem{flex:1;text-align:center;color:var(--muted);font-size:12px;padding:6px 8px;border-radius:10px;cursor:pointer}
 .navItem.active{background:linear-gradient(90deg,var(--neon),#06b6d4);color:#000;font-weight:700;box-shadow:0 6px 20px rgba(14,165,233,0.18)}
 
-/* small helpers */
-.kv{font-weight:700;color:var(--neon)}
-.note{color:var(--muted);font-size:13px;margin-top:6px}
-
-/* Responsive */
-@media(max-width:880px){.panel{grid-template-columns:1fr}.container{margin:20px auto 140px;padding:12px}}
+/* Animación de retiros */
+.withdrawBox{height:240px;overflow:hidden;position:relative}
+.withdrawItem{opacity:0;transform:translateY(20px);transition:all .6s ease;font-size:14px;color:var(--muted);margin:6px 0;padding:8px 10px;background:rgba(255,255,255,0.02);border-radius:10px;border:1px solid rgba(255,255,255,0.03)}
+.withdrawItem.show{opacity:1;transform:translateY(0)}
+.withdrawItem span{color:var(--neon);font-weight:600}
 </style>
 </head>
 <body>
-
-<canvas id="fx"></canvas>
 
 <div class="container">
   <div class="banner">
@@ -81,296 +97,102 @@ textarea{min-height:72px;resize:none}
     <div style="color:var(--muted);font-size:13px">Panel • Bienvenido</div>
   </div>
 
+  <!-- Botones superiores futuristas -->
+  <div class="topButtons">
+    <div class="topBtn" onclick="location.href='home.html'"><div class="icon">🏠</div>Home</div>
+    <div class="topBtn" onclick="location.href='mineria.html'"><div class="icon">⚡</div>Minería</div>
+    <div class="topBtn" onclick="location.href='recarga.html'"><div class="icon">💳</div>Recarga</div>
+    <div class="topBtn" onclick="location.href='retiro.html'"><div class="icon">💰</div>Retirar</div>
+    <div class="topBtn" onclick="location.href='perfil.html'"><div class="icon">👤</div>Perfil</div>
+    <div class="topBtn" onclick="location.href='telegram.html'"><div class="icon">📱</div>Telegram</div>
+    <div class="topBtn" onclick="location.href='info.html'"><div class="icon">ℹ️</div>Info</div>
+    <div class="topBtn" onclick="location.href='help.html'"><div class="icon">🆘</div>Help</div>
+  </div>
+
   <div class="panel">
     <!-- Minería -->
     <div class="card" id="miningCard">
       <h3>Minería en Tiempo Real</h3>
-      <div id="cryptoList" aria-live="polite"></div>
-      <div style="height:12px"></div>
+      <div id="cryptoList"></div>
       <button class="btn" id="toggleMine">Activar Minería</button>
       <p class="note">Energía y rendimiento optimizado por IA. Estado: <span id="mineState" class="kv">Inactiva</span></p>
     </div>
 
-    <!-- Form / Report -->
-    <div class="card" id="reportCard">
-      <h3>Centro de Reportes</h3>
-      <label>Tipo de reporte</label>
-      <select id="reportType">
-        <option>Spam</option>
-        <option>Comentarios ofensivos</option>
-        <option>Contenido fraudulento</option>
-      </select>
-
-      <label>Cantidad de envío</label>
-      <input id="amount" type="number" value="120000" />
-
-      <p class="note">💰 Total: <span class="kv">48.00 USD</span> (red TRC20)</p>
-
-      <label>Link de red social</label>
-      <input id="link" type="url" placeholder="https://..." />
-
-      <label>Comentarios (opcional)</label>
-      <textarea id="comments" placeholder="Motivo o detalle..."></textarea>
-
-      <div style="display:flex;gap:10px;margin-top:12px">
-        <button class="btn" id="sendReport">Enviar Reporte</button>
-        <button class="btn ghost" id="resetForm">Limpiar</button>
-      </div>
+    <!-- Animación de Retiros -->
+    <div class="card">
+      <h3>Retiros en Vivo</h3>
+      <div class="withdrawBox" id="withdrawFeed"></div>
     </div>
   </div>
 </div>
 
-<!-- Bottom navigation -->
-<div class="navbar" role="navigation" aria-label="Navegación inferior">
-  <div class="navItem active" data-nav="home">🏠<div style="font-size:11px">Inicio</div></div>
-  <div class="navItem" data-nav="retiro">💰<div style="font-size:11px">Retiro</div></div>
-  <div class="navItem" data-nav="mineria">⚡<div style="font-size:11px">Minería</div></div>
-  <div class="navItem" data-nav="recarga">❤️<div style="font-size:11px">Recarga</div></div>
-  <div class="navItem" data-nav="perfil">👤<div style="font-size:11px">Perfil</div></div>
+<!-- Barra inferior profesional -->
+<div class="navbar">
+  <div class="navItem active">🏠<div>Inicio</div></div>
+  <div class="navItem">💰<div>Retiro</div></div>
+  <div class="navItem">⚡<div>Minería</div></div>
+  <div class="navItem">📊<div>Panel</div></div>
+  <div class="navItem">👤<div>Perfil</div></div>
 </div>
 
 <script>
-/* ---------- Particle / energy lines FX (Canvas) ---------- */
-(() => {
-  const canvas = document.getElementById('fx');
-  const ctx = canvas.getContext('2d', { alpha: true });
-  let DPR = Math.max(1, window.devicePixelRatio || 1);
-  let w = innerWidth, h = innerHeight;
-  function resize(){
-    DPR = Math.max(1, window.devicePixelRatio || 1);
-    w = innerWidth; h = innerHeight;
-    canvas.width = Math.round(w * DPR);
-    canvas.height = Math.round(h * DPR);
-    canvas.style.width = w + 'px';
-    canvas.style.height = h + 'px';
-    ctx.setTransform(DPR,0,0,DPR,0,0);
-  }
-  resize();
-  window.addEventListener('resize', resize);
-
-  // particle setup (scale count with area)
-  const area = () => w*h;
-  const BASE = Math.max(18, Math.round(area() / 90000)); // ~n particles
-  let particles = [];
-  function initParticles(){
-    particles = [];
-    const N = Math.min(120, BASE);
-    for(let i=0;i<N;i++){
-      particles.push({
-        x: Math.random()*w,
-        y: Math.random()*h,
-        r: Math.random()*1.6 + 0.6,
-        vx: (Math.random()-0.5) * 0.6,
-        vy: (Math.random()-0.5) * 0.6,
-        alpha: Math.random()*0.8 + 0.15
-      });
-    }
-  }
-  initParticles();
-
-  // energy lines: moving control points
-  const lines = [];
-  const LINES = 5;
-  for(let i=0;i<LINES;i++){
-    const pts = [];
-    const P = 6;
-    for(let j=0;j<P;j++){
-      pts.push({ x: Math.random()*w, y: Math.random()*h, vx:(Math.random()-0.5)*0.8, vy:(Math.random()-0.5)*0.8 });
-    }
-    lines.push(pts);
-  }
-
-  // subtle parallax target from mouse/touch
-  let tx = 0, ty = 0;
-  function updateTarget(x,y){
-    tx = (x - w/2) * 0.02;
-    ty = (y - h/2) * 0.02;
-  }
-  window.addEventListener('mousemove', (e)=> updateTarget(e.clientX,e.clientY));
-  window.addEventListener('touchmove', (e)=> { if(e.touches && e.touches[0]) updateTarget(e.touches[0].clientX, e.touches[0].clientY) }, {passive:true});
-
-  // main loop
-  let last = performance.now();
-  function frame(now){
-    const dt = Math.min(40, now - last) / 16.66; last = now;
-    ctx.clearRect(0,0,w,h);
-
-    // dark radial vignette
-    const g = ctx.createLinearGradient(0,0,w,h);
-    g.addColorStop(0, 'rgba(2,6,23,0.96)');
-    g.addColorStop(1, 'rgba(6,12,20,0.94)');
-    ctx.fillStyle = g;
-    ctx.fillRect(0,0,w,h);
-
-    // draw lines (soft)
-    lines.forEach((pts, li) => {
-      // move points
-      pts.forEach(p => {
-        p.x += p.vx * dt + tx * 0.2;
-        p.y += p.vy * dt + ty * 0.2;
-        if(p.x < -100) p.x = w + 100;
-        if(p.x > w + 100) p.x = -100;
-        if(p.y < -100) p.y = h + 100;
-        if(p.y > h + 100) p.y = -100;
-      });
-      // path
-      ctx.beginPath();
-      pts.forEach((p,i)=> i? ctx.lineTo(p.x,p.y) : ctx.moveTo(p.x,p.y));
-      ctx.strokeStyle = 'rgba(14,165,233,0.055)';
-      ctx.lineWidth = 1;
-      ctx.stroke();
-
-      // bright moving segment
-      const t = (Date.now()/1000 + li*0.2) % 1;
-      const idx = Math.floor(t * (pts.length-1));
-      const pA = pts[idx];
-      const pB = pts[(idx+1) % pts.length];
-      ctx.beginPath();
-      ctx.moveTo(pA.x, pA.y);
-      ctx.lineTo(pB.x, pB.y);
-      ctx.strokeStyle = 'rgba(14,235,255,0.24)';
-      ctx.lineWidth = 2.2;
-      ctx.stroke();
-
-      // glow dot traveling
-      const gx = pA.x + (pB.x - pA.x) * (t % 1);
-      const gy = pA.y + (pB.y - pA.y) * (t % 1);
-      ctx.beginPath();
-      ctx.fillStyle = 'rgba(14,235,255,0.12)';
-      ctx.arc(gx, gy, 6, 0, Math.PI*2);
-      ctx.fill();
-    });
-
-    // particles
-    particles.forEach(p => {
-      p.x += p.vx * dt + tx * 0.05;
-      p.y += p.vy * dt + ty * 0.05;
-      if(p.x < -10) p.x = w + 10;
-      if(p.x > w + 10) p.x = -10;
-      if(p.y < -10) p.y = h + 10;
-      if(p.y > h + 10) p.y = -10;
-      ctx.beginPath();
-      ctx.fillStyle = 'rgba(14,165,233,' + (p.alpha*0.14) + ')';
-      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-      ctx.fill();
-    });
-
-    // occasional orbs
-    if(Math.random() < 0.016){
-      const ox = Math.random()*w, oy = Math.random()*h, rad = 24 + Math.random()*36;
-      const grad = ctx.createRadialGradient(ox,oy,0,ox,oy,rad);
-      grad.addColorStop(0, 'rgba(14,235,255,0.06)');
-      grad.addColorStop(1, 'rgba(14,235,255,0)');
-      ctx.fillStyle = grad;
-      ctx.fillRect(ox-rad, oy-rad, rad*2, rad*2);
-    }
-
-    requestAnimationFrame(frame);
-  }
-  requestAnimationFrame(frame);
-
-  // re-init on large resizes to avoid too many particles
-  let rrTO;
-  window.addEventListener('resize', ()=>{ clearTimeout(rrTO); rrTO = setTimeout(()=> { initParticles(); lines.forEach(pts=> pts.forEach(p=>{ p.x = Math.random()*w; p.y=Math.random()*h; })); }, 220); });
-})();
-
-/* ---------- Crypto list simulation & mining toggle ---------- */
-(() => {
-  const coins = [
-    {sym:'BTC', name:'Bitcoin', icon:'https://cryptoicons.org/api/icon/btc/32'},
-    {sym:'ETH', name:'Ethereum', icon:'https://cryptoicons.org/api/icon/eth/32'},
-    {sym:'USDT', name:'Tether', icon:'https://cryptoicons.org/api/icon/usdt/32'},
-    {sym:'BNB', name:'BNB', icon:'https://cryptoicons.org/api/icon/bnb/32'},
-    {sym:'DOGE', name:'Dogecoin', icon:'https://cryptoicons.org/api/icon/doge/32'}
-  ];
-  const list = document.getElementById('cryptoList');
-
-  function render(){
-    list.innerHTML='';
-    coins.forEach(c=>{
-      const div = document.createElement('div');
-      div.className = 'cryptoRow';
-      const left = document.createElement('div');
-      left.className = 'coinName';
-      left.innerHTML = `<img src="${c.icon}" alt="${c.sym}">${c.name} (${c.sym})`;
-      const price = (Math.random()*45000 + 2000).toFixed(2);
-      const right = document.createElement('div');
-      right.className = 'coinPrice';
-      right.id = 'p-'+c.sym;
-      right.textContent = '$' + price;
-      div.appendChild(left); div.appendChild(right);
-      list.appendChild(div);
-    });
-  }
-  render();
-
-  // small fluctuations
-  setInterval(()=>{
-    coins.forEach(c=>{
-      const el = document.getElementById('p-'+c.sym);
-      if(!el) return;
-      const price = parseFloat(el.textContent.replace('$',''));
-      const next = Math.max(0.01, price + (Math.random()-0.5)*(price*0.006));
-      el.textContent = '$' + next.toFixed(2);
-    });
-  }, 2800);
-
-  // mining toggle with animated card tilt
-  const btn = document.getElementById('toggleMine');
-  const mineState = document.getElementById('mineState');
-  const miningCard = document.getElementById('miningCard');
-  let active = false;
-  btn.addEventListener('click', ()=>{
-    active = !active;
-    btn.textContent = active ? 'Detener Minería' : 'Activar Minería';
-    mineState.textContent = active ? 'Activa' : 'Inactiva';
-    btn.style.boxShadow = active ? '0 12px 40px rgba(14,165,233,0.22)' : '0 8px 30px rgba(6,182,212,0.12)';
-    // small glow pulse
-    miningCard.animate([{transform:'scale(1)'},{transform:'scale(1.02)'},{transform:'scale(1)'}], {duration:420, easing:'ease-out'});
+/* ----- Minería simulada ----- */
+const coins=[
+  {sym:'BTC',name:'Bitcoin',icon:'https://cryptoicons.org/api/icon/btc/32'},
+  {sym:'ETH',name:'Ethereum',icon:'https://cryptoicons.org/api/icon/eth/32'},
+  {sym:'USDT',name:'Tether',icon:'https://cryptoicons.org/api/icon/usdt/32'},
+  {sym:'BNB',name:'BNB',icon:'https://cryptoicons.org/api/icon/bnb/32'},
+  {sym:'DOGE',name:'Dogecoin',icon:'https://cryptoicons.org/api/icon/doge/32'}
+];
+const list=document.getElementById('cryptoList');
+function renderCoins(){
+  list.innerHTML='';
+  coins.forEach(c=>{
+    const div=document.createElement('div');
+    div.className='cryptoRow';
+    div.innerHTML=`
+      <div class="coinName">
+        <img src="${c.icon}">${c.name} (${c.sym})
+      </div>
+      <div class="coinPrice" id="p-${c.sym}">
+        $${(Math.random()*45000+2000).toFixed(2)}
+      </div>`;
+    list.appendChild(div);
   });
-
-  // subtle 3D tilt on pointer move (desktop) and touch for mobile
-  let rect = miningCard.getBoundingClientRect();
-  function tilt(e){
-    rect = miningCard.getBoundingClientRect();
-    const x = (e.clientX || (e.touches && e.touches[0].clientX)) - (rect.left + rect.width/2);
-    const y = (e.clientY || (e.touches && e.touches[0].clientY)) - (rect.top + rect.height/2);
-    const rx = (y / rect.height) * -6;
-    const ry = (x / rect.width) * 6;
-    miningCard.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) translateZ(0)`;
-  }
-  function tiltReset(){ miningCard.style.transform = 'perspective(900px) rotateX(0) rotateY(0)'; }
-  miningCard.addEventListener('mousemove', tilt);
-  miningCard.addEventListener('mouseleave', tiltReset);
-  miningCard.addEventListener('touchmove', tilt, {passive:true});
-  miningCard.addEventListener('touchend', tiltReset);
-
-})();
-
-/* ---------- Form interactions (simple UX) ---------- */
-(() => {
-  const send = document.getElementById('sendReport');
-  const reset = document.getElementById('resetForm');
-  send.addEventListener('click', ()=>{
-    send.textContent = 'Enviando...';
-    setTimeout(()=> { send.textContent = 'Enviar Reporte'; alert('Reporte enviado — Gracias'); }, 900);
+}
+renderCoins();
+setInterval(()=>{
+  coins.forEach(c=>{
+    const el=document.getElementById('p-'+c.sym);
+    if(!el)return;
+    const price=parseFloat(el.textContent.replace('$',''));
+    const next=Math.max(0.01,price+(Math.random()-0.5)*(price*0.006));
+    el.textContent='$'+next.toFixed(2);
   });
-  reset.addEventListener('click', ()=>{
-    document.getElementById('reportType').selectedIndex = 0;
-    document.getElementById('amount').value = '';
-    document.getElementById('link').value = '';
-    document.getElementById('comments').value = '';
-  });
+},2500);
 
-  // nav buttons simple highlight
-  document.querySelectorAll('.navItem').forEach(n=>{
-    n.addEventListener('click', ()=>{
-      document.querySelectorAll('.navItem').forEach(x=> x.classList.remove('active'));
-      n.classList.add('active');
-    });
-  });
-})();
+let active=false;
+document.getElementById('toggleMine').onclick=()=>{
+  active=!active;
+  document.getElementById('toggleMine').textContent=active?'Detener Minería':'Activar Minería';
+  document.getElementById('mineState').textContent=active?'Activa':'Inactiva';
+};
+
+/* ----- Animación de Retiros ----- */
+const feed=document.getElementById('withdrawFeed');
+const addresses=["T*****AUV","T****X9V","T****BGT","T****PLZ","T****LQ8","T****QXX","T****WQ1","T****U2A"];
+function addWithdraw(){
+  const addr=addresses[Math.floor(Math.random()*addresses.length)];
+  const amt=(Math.random()*5+1).toFixed(2);
+  const div=document.createElement('div');
+  div.className='withdrawItem';
+  div.innerHTML=`💸 Retiro desde <span>${addr}</span> por <span>${amt} USDT</span> completado ✔️`;
+  feed.prepend(div);
+  setTimeout(()=>div.classList.add('show'),100);
+  if(feed.children.length>8) feed.removeChild(feed.lastChild);
+}
+setInterval(addWithdraw,4000);
+addWithdraw();
 </script>
-
 </body>
-  </html>
+</html>
