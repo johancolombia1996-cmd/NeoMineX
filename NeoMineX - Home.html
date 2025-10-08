@@ -19,12 +19,40 @@
 body{font-family:'Poppins',sans-serif;background:var(--bg);color:#e6f7fb;overflow-x:hidden}
 .container{position:relative;z-index:2;max-width:1000px;margin:40px auto 120px;padding:18px}
 
-/* Banner */
+/* ===== CARRUSEL SUPERIOR ===== */
+.slider-container{
+  width:100%;
+  overflow:hidden;
+  border-radius:14px;
+  position:relative;
+  margin-bottom:20px;
+  box-shadow:0 0 30px rgba(14,165,233,0.2);
+}
+.slider-track{
+  display:flex;
+  transition:transform 1s ease-in-out;
+  width:300%;
+}
+.slide{
+  min-width:100%;
+  height:180px;
+  background-size:cover;
+  background-position:center;
+  filter:brightness(0.85);
+}
+.slide::after{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:linear-gradient(90deg,rgba(3,6,23,0.6),rgba(3,6,23,0.2));
+}
+
+/* ===== Banner ===== */
 .banner{display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,0.02);padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.03)}
 .banner .title{font-weight:700;color:var(--accent2)}
 .banner .subtitle{color:var(--muted);font-size:13px}
 
-/* Panel general */
+/* ===== Panel general ===== */
 .panel{margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:18px}
 .card{background:var(--card);border:1px solid rgba(255,255,255,0.03);padding:16px;border-radius:var(--radius);backdrop-filter:blur(6px);box-shadow:0 20px 40px rgba(2,6,23,0.5)}
 h3{margin:0 0 10px;color:var(--accent1)}
@@ -35,7 +63,7 @@ h3{margin:0 0 10px;color:var(--accent1)}
 .btn{display:block;width:100%;padding:12px;border-radius:10px;border:none;background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#000;font-weight:700;cursor:pointer;box-shadow:0 8px 30px rgba(6,182,212,0.12)}
 .note{color:var(--muted);font-size:13px;margin-top:6px}
 
-/* Botones superiores futuristas */
+/* ===== Botones superiores ===== */
 .topButtons{
   display:grid;
   grid-template-columns:repeat(4,1fr);
@@ -68,7 +96,7 @@ h3{margin:0 0 10px;color:var(--accent1)}
   margin-bottom:4px;
 }
 
-/* Barra inferior fija */
+/* ===== Barra inferior ===== */
 .navbar{
   position:fixed;
   bottom:12px;left:50%;
@@ -89,7 +117,7 @@ h3{margin:0 0 10px;color:var(--accent1)}
   color:#000;font-weight:700;box-shadow:0 6px 20px rgba(14,165,233,0.18);
 }
 
-/* Animación de retiros */
+/* ===== Animación de retiros ===== */
 .withdrawBox{height:240px;overflow:hidden;position:relative}
 .withdrawItem{opacity:0;transform:translateY(20px);transition:all .6s ease;font-size:14px;color:var(--muted);margin:6px 0;padding:8px 10px;background:rgba(255,255,255,0.02);border-radius:10px;border:1px solid rgba(255,255,255,0.03)}
 .withdrawItem.show{opacity:1;transform:translateY(0)}
@@ -97,10 +125,20 @@ h3{margin:0 0 10px;color:var(--accent1)}
 
 @media(max-width:700px){
   .panel{grid-template-columns:1fr}
+  .slide{height:150px}
 }
 </style>
 </head>
 <body>
+
+<!-- ===== Carrusel superior ===== -->
+<div class="slider-container">
+  <div class="slider-track" id="sliderTrack">
+    <div class="slide" style="background-image:url('https://images.unsplash.com/photo-1629904853716-f0bc54eea481?auto=format&fit=crop&w=1400&q=80')"></div>
+    <div class="slide" style="background-image:url('https://images.unsplash.com/photo-1642104704079-4b6d8e1b7c9f?auto=format&fit=crop&w=1400&q=80')"></div>
+    <div class="slide" style="background-image:url('https://images.unsplash.com/photo-1628191018505-8cb7f35cc23e?auto=format&fit=crop&w=1400&q=80')"></div>
+  </div>
+</div>
 
 <div class="container">
   <div class="banner">
@@ -124,7 +162,7 @@ h3{margin:0 0 10px;color:var(--accent1)}
   </div>
 
   <div class="panel">
-    <!-- Minería en tiempo real -->
+    <!-- Minería -->
     <div class="card" id="miningCard">
       <h3>Minería en Tiempo Real</h3>
       <div id="cryptoList"></div>
@@ -150,10 +188,20 @@ h3{margin:0 0 10px;color:var(--accent1)}
 </div>
 
 <script>
-/* Función general de navegación */
+/* ===== Navegación ===== */
 function go(url){ window.location.href = url; }
 
-/* ----- Minería real simulada ----- */
+/* ===== Carrusel automático ===== */
+const track=document.getElementById('sliderTrack');
+let index=0;
+const slides=document.querySelectorAll('.slide');
+function moveSlide(){
+  index=(index+1)%slides.length;
+  track.style.transform=`translateX(-${index*100}%)`;
+}
+setInterval(moveSlide,5000);
+
+/* ===== Minería simulada ===== */
 const coins=[
   {sym:'BTC',name:'Bitcoin',icon:'https://cryptoicons.org/api/icon/btc/32'},
   {sym:'ETH',name:'Ethereum',icon:'https://cryptoicons.org/api/icon/eth/32'},
@@ -191,7 +239,7 @@ document.getElementById('toggleMine').onclick=()=>{
   document.getElementById('mineState').textContent=active?'Activa':'Inactiva';
 };
 
-/* ----- Animación de Retiros infinitos ----- */
+/* ===== Animación de retiros infinitos ===== */
 const feed=document.getElementById('withdrawFeed');
 function randomAddress(){
   const chars='ABCDEFGHJKLMNPQRSTUVWXYZ123456789';
