@@ -19,40 +19,12 @@
 body{font-family:'Poppins',sans-serif;background:var(--bg);color:#e6f7fb;overflow-x:hidden}
 .container{position:relative;z-index:2;max-width:1000px;margin:40px auto 120px;padding:18px}
 
-/* ===== CARRUSEL SUPERIOR ===== */
-.slider-container{
-  width:100%;
-  overflow:hidden;
-  border-radius:14px;
-  position:relative;
-  margin-bottom:20px;
-  box-shadow:0 0 30px rgba(14,165,233,0.2);
-}
-.slider-track{
-  display:flex;
-  transition:transform 1s ease-in-out;
-  width:300%;
-}
-.slide{
-  min-width:100%;
-  height:180px;
-  background-size:cover;
-  background-position:center;
-  filter:brightness(0.85);
-}
-.slide::after{
-  content:'';
-  position:absolute;
-  inset:0;
-  background:linear-gradient(90deg,rgba(3,6,23,0.6),rgba(3,6,23,0.2));
-}
-
-/* ===== Banner ===== */
+/* Banner */
 .banner{display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,0.02);padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.03)}
 .banner .title{font-weight:700;color:var(--accent2)}
 .banner .subtitle{color:var(--muted);font-size:13px}
 
-/* ===== Panel general ===== */
+/* Panel general */
 .panel{margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:18px}
 .card{background:var(--card);border:1px solid rgba(255,255,255,0.03);padding:16px;border-radius:var(--radius);backdrop-filter:blur(6px);box-shadow:0 20px 40px rgba(2,6,23,0.5)}
 h3{margin:0 0 10px;color:var(--accent1)}
@@ -60,10 +32,9 @@ h3{margin:0 0 10px;color:var(--accent1)}
 .cryptoRow img{width:26px;height:26px}
 .coinName{display:flex;align-items:center;gap:8px;font-weight:600}
 .coinPrice{color:var(--neon);font-weight:700}
-.btn{display:block;width:100%;padding:12px;border-radius:10px;border:none;background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#000;font-weight:700;cursor:pointer;box-shadow:0 8px 30px rgba(6,182,212,0.12)}
 .note{color:var(--muted);font-size:13px;margin-top:6px}
 
-/* ===== Botones superiores ===== */
+/* Botones superiores futuristas */
 .topButtons{
   display:grid;
   grid-template-columns:repeat(4,1fr);
@@ -96,7 +67,7 @@ h3{margin:0 0 10px;color:var(--accent1)}
   margin-bottom:4px;
 }
 
-/* ===== Barra inferior ===== */
+/* Barra inferior fija */
 .navbar{
   position:fixed;
   bottom:12px;left:50%;
@@ -117,28 +88,67 @@ h3{margin:0 0 10px;color:var(--accent1)}
   color:#000;font-weight:700;box-shadow:0 6px 20px rgba(14,165,233,0.18);
 }
 
-/* ===== Animación de retiros ===== */
+/* Animación de retiros */
 .withdrawBox{height:240px;overflow:hidden;position:relative}
 .withdrawItem{opacity:0;transform:translateY(20px);transition:all .6s ease;font-size:14px;color:var(--muted);margin:6px 0;padding:8px 10px;background:rgba(255,255,255,0.02);border-radius:10px;border:1px solid rgba(255,255,255,0.03)}
 .withdrawItem.show{opacity:1;transform:translateY(0)}
 .withdrawItem span{color:var(--neon);font-weight:600}
 
-@media(max-width:700px){
-  .panel{grid-template-columns:1fr}
-  .slide{height:150px}
+/* Texto horizontal profesional */
+.mining-info{
+  margin-top:18px;
+  text-align:center;
+  font-size:14px;
+  color:var(--muted);
+  background:rgba(255,255,255,0.02);
+  border:1px solid rgba(255,255,255,0.03);
+  padding:12px;
+  border-radius:10px;
 }
+
+/* Planes de minería */
+.bot-plans{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin-top:14px;
+}
+.bot-card{
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.05);
+  border-radius:12px;
+  padding:14px;
+  text-align:center;
+  color:var(--muted);
+  transition:all .3s ease;
+}
+.bot-card:hover{
+  background:linear-gradient(90deg,var(--accent1),var(--accent2));
+  color:#000;
+  transform:translateY(-4px);
+}
+.bot-card .icon{font-size:22px;margin-bottom:6px;}
+.bot-card .price{color:var(--neon);font-weight:700;}
+.bot-card .profit{font-size:13px;color:var(--muted);margin-bottom:8px;}
+.invest-btn{
+  background:linear-gradient(90deg,var(--accent1),var(--accent2));
+  border:none;
+  border-radius:10px;
+  padding:8px 14px;
+  font-weight:700;
+  color:#000;
+  cursor:pointer;
+  transition:all .3s ease;
+  box-shadow:0 0 10px rgba(14,165,233,0.2);
+}
+.invest-btn:hover{
+  transform:scale(1.05);
+  box-shadow:0 0 20px rgba(14,165,233,0.4);
+}
+@media(max-width:700px){.panel{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-
-<!-- ===== Carrusel superior ===== -->
-<div class="slider-container">
-  <div class="slider-track" id="sliderTrack">
-    <div class="slide" style="background-image:url('https://images.unsplash.com/photo-1629904853716-f0bc54eea481?auto=format&fit=crop&w=1400&q=80')"></div>
-    <div class="slide" style="background-image:url('https://images.unsplash.com/photo-1642104704079-4b6d8e1b7c9f?auto=format&fit=crop&w=1400&q=80')"></div>
-    <div class="slide" style="background-image:url('https://images.unsplash.com/photo-1628191018505-8cb7f35cc23e?auto=format&fit=crop&w=1400&q=80')"></div>
-  </div>
-</div>
 
 <div class="container">
   <div class="banner">
@@ -162,11 +172,10 @@ h3{margin:0 0 10px;color:var(--accent1)}
   </div>
 
   <div class="panel">
-    <!-- Minería -->
+    <!-- Minería en tiempo real -->
     <div class="card" id="miningCard">
       <h3>Minería en Tiempo Real</h3>
       <div id="cryptoList"></div>
-      <button class="btn" id="toggleMine">Activar Minería</button>
       <p class="note">Energía y rendimiento optimizado por IA. Estado: <span id="mineState" class="kv">Inactiva</span></p>
     </div>
 
@@ -174,6 +183,21 @@ h3{margin:0 0 10px;color:var(--accent1)}
     <div class="card">
       <h3>Retiros en Vivo</h3>
       <div class="withdrawBox" id="withdrawFeed"></div>
+      <div class="mining-info">
+        Las ganancias diarias de la minería son del <b>1.5%</b>. <br>
+        Monto mínimo de inversión: <b>10 USDT</b> • Retiro mínimo: <b>1 USDT</b>
+      </div>
+
+      <div class="bot-plans">
+        <div class="bot-card"><div class="icon">🤖</div><div>Bot 1</div><div class="price">$10</div><div class="profit">Gana +1.5% diario</div><button class="invest-btn" onclick="go('bot1.html')">Invertir</button></div>
+        <div class="bot-card"><div class="icon">🤖</div><div>Bot 2</div><div class="price">$20</div><div class="profit">Gana +1.5% diario</div><button class="invest-btn" onclick="go('bot2.html')">Invertir</button></div>
+        <div class="bot-card"><div class="icon">🤖</div><div>Bot 3</div><div class="price">$30</div><div class="profit">Gana +1.5% diario</div><button class="invest-btn" onclick="go('bot3.html')">Invertir</button></div>
+        <div class="bot-card"><div class="icon">🤖</div><div>Bot 4</div><div class="price">$40</div><div class="profit">Gana +1.5% diario</div><button class="invest-btn" onclick="go('bot4.html')">Invertir</button></div>
+        <div class="bot-card"><div class="icon">🤖</div><div>Bot 5</div><div class="price">$50</div><div class="profit">Gana +1.5% diario</div><button class="invest-btn" onclick="go('bot5.html')">Invertir</button></div>
+        <div class="bot-card"><div class="icon">🤖</div><div>Bot 6</div><div class="price">$100</div><div class="profit">Gana +1.5% diario</div><button class="invest-btn" onclick="go('bot6.html')">Invertir</button></div>
+        <div class="bot-card"><div class="icon">🤖</div><div>Bot 7</div><div class="price">$200</div><div class="profit">Gana +1.5% diario</div><button class="invest-btn" onclick="go('bot7.html')">Invertir</button></div>
+        <div class="bot-card"><div class="icon">🤖</div><div>Bot 8</div><div class="price">$500</div><div class="profit">Gana +1.5% diario</div><button class="invest-btn" onclick="go('bot8.html')">Invertir</button></div>
+      </div>
     </div>
   </div>
 </div>
@@ -188,20 +212,8 @@ h3{margin:0 0 10px;color:var(--accent1)}
 </div>
 
 <script>
-/* ===== Navegación ===== */
 function go(url){ window.location.href = url; }
 
-/* ===== Carrusel automático ===== */
-const track=document.getElementById('sliderTrack');
-let index=0;
-const slides=document.querySelectorAll('.slide');
-function moveSlide(){
-  index=(index+1)%slides.length;
-  track.style.transform=`translateX(-${index*100}%)`;
-}
-setInterval(moveSlide,5000);
-
-/* ===== Minería simulada ===== */
 const coins=[
   {sym:'BTC',name:'Bitcoin',icon:'https://cryptoicons.org/api/icon/btc/32'},
   {sym:'ETH',name:'Ethereum',icon:'https://cryptoicons.org/api/icon/eth/32'},
@@ -232,14 +244,7 @@ setInterval(()=>{
   });
 },2500);
 
-let active=false;
-document.getElementById('toggleMine').onclick=()=>{
-  active=!active;
-  document.getElementById('toggleMine').textContent=active?'Detener Minería':'Activar Minería';
-  document.getElementById('mineState').textContent=active?'Activa':'Inactiva';
-};
-
-/* ===== Animación de retiros infinitos ===== */
+/* Retiros animados */
 const feed=document.getElementById('withdrawFeed');
 function randomAddress(){
   const chars='ABCDEFGHJKLMNPQRSTUVWXYZ123456789';
