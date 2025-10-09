@@ -26,14 +26,12 @@ body{
     var(--bg);
   color:#eaf8ff;
   font-family:'Poppins',sans-serif;
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
   padding:20px;
   display:flex;
   justify-content:center;
   min-height:100vh;
   overflow-y:auto;
-  padding-bottom:160px;
+  padding-bottom:140px;
 }
 .wrap{width:100%;max-width:520px;margin:20px auto}
 .card{
@@ -41,7 +39,7 @@ body{
   border-radius:14px;
   padding:18px;
   border:1px solid rgba(255,255,255,0.03);
-  box-shadow: 0 18px 50px rgba(2,6,23,0.6);
+  box-shadow:0 18px 50px rgba(2,6,23,0.6);
   backdrop-filter:blur(6px);
   position:relative;
   overflow:visible;
@@ -108,7 +106,6 @@ body{
 .canvasParticles{
   position:absolute;inset:0;pointer-events:none;z-index:2;
 }
-
 .robotWrap{
   position:absolute;left:0;right:0;top:-64px;height:64px;pointer-events:none;z-index:60;
   display:block;
@@ -138,9 +135,7 @@ body{
 }
 .robot.pulsing::after{opacity:1;animation:pulseGlow 1.2s ease-in-out infinite;}
 @keyframes pulseGlow{0%{transform:scale(0.98)}50%{transform:scale(1.04)}100%{transform:scale(0.98)}}
-
 .robot .antenna{position:absolute;top:-8px;left:calc(var(--robot-size)/2 - 4px);width:8px;height:8px;border-radius:50%;background:#00eaff;box-shadow:0 0 10px #00eaff}
-
 .trail{
   position:absolute; height:4px; border-radius:4px;
   background:linear-gradient(90deg, rgba(0,215,255,0.95), rgba(6,182,212,0.6));
@@ -148,7 +143,6 @@ body{
   opacity:0.9; pointer-events:none; z-index:55;
   transition:opacity 1s linear, transform 1s linear;
 }
-
 .statRow{display:flex;justify-content:space-between;align-items:center;margin-top:6px}
 .stat{font-size:13px;color:var(--muted)}
 
@@ -173,7 +167,6 @@ body{
   gap:6px;
   z-index:100;
 }
-
 .navItem{
   flex:1;
   text-align:center;
@@ -185,7 +178,6 @@ body{
   background:transparent;
   transition:all .2s;
 }
-
 .navItem.active,
 .navItem:hover{
   color:#000;
@@ -194,48 +186,39 @@ body{
   box-shadow:0 8px 26px rgba(0,215,255,0.10);
   transform:translateY(-2px);
 }
+.navItem img, .navItem svg{width:22px;height:22px;display:block;margin:0 auto 2px;}
+.navItem div{font-size:10px;margin-top:2px}
 
-.navItem img, .navItem svg{
-  width:22px;
-  height:22px;
-  display:block;
-  margin:0 auto 2px;
+#modal,#modalRetiro{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);align-items:center;justify-content:center;z-index:2000}
+#modal .modal-inner,#modalRetiro .modal-inner{
+  background:var(--card);
+  padding:16px;
+  border-radius:12px;
+  width:90%;
+  max-width:520px;
+  position:relative;
+  box-shadow:0 20px 60px rgba(0,0,0,0.6);
 }
-.navItem div{
-  font-size:10px;
-  margin-top:2px;
-}
-
-#modal,#withdrawModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);align-items:center;justify-content:center;z-index:2000}
-#modal .modal-inner,#withdrawModal .modal-inner{
-  background:var(--card);padding:16px;border-radius:12px;width:90%;max-width:520px;position:relative;box-shadow:0 20px 60px rgba(0,0,0,0.6)
-}
-
-input,select{width:100%;padding:8px;border-radius:8px;border:none;margin-bottom:10px;background:rgba(255,255,255,0.05);color:#eaf8ff;font-weight:500;font-size:14px}
-
 @media(max-width:480px){
   :root{--robot-size:42px}
   .card{padding:14px}
   .progressBar{height:14px}
 }
-
-h1, h2, h3, h4, h5, h6, .title, .btn {font-weight:700; font-family:'Poppins',sans-serif;}
-p, div, span, label, input {font-family:'Poppins',sans-serif; font-weight:400;}
+h1,h2,h3,h4,h5,h6,.title,.btn { font-weight:700; font-family:'Poppins',sans-serif; }
+p, div, span, label, input { font-family:'Poppins',sans-serif; font-weight:400; }
 </style>
 </head>
 <body>
 
 <div class="top-left" title="Volver" onclick="goHome()">⬅</div>
 <div class="top-right">
-  <div style="cursor:pointer;font-size:20px;color:var(--muted)" title="Historial de Retiros" onclick="openWithdrawHistory()">📒</div>
+  <div style="cursor:pointer;font-size:20px;color:var(--muted)" title="Historial de Retiros" onclick="openHistory()">📒</div>
   <div class="profileM" title="Perfil">M</div>
 </div>
 
 <div class="wrap">
   <div class="card">
-
-    <div class="motivational">💎 Neomax: Minerando el futuro, construyendo oportunidades. Cada esfuerzo cuenta. <span class="brand">¡Avanza y gana!</span></div>
-
+    <div class="motivational">💎 Neomax: Minerando el futuro, construyendo oportunidades.</div>
     <div class="header">
       <div>
         <div class="title">⚡ Minería USDT TRC20</div>
@@ -246,7 +229,6 @@ p, div, span, label, input {font-family:'Poppins',sans-serif; font-weight:400;}
         <div style="margin-top:6px;font-weight:800;color:var(--neon)" id="userId">---</div>
       </div>
     </div>
-
     <div class="infoGrid">
       <div class="info">
         <div class="label">Saldo de Recarga</div>
@@ -255,7 +237,7 @@ p, div, span, label, input {font-family:'Poppins',sans-serif; font-weight:400;}
       <div class="info">
         <div class="label">Saldo de Minería</div>
         <div class="value" id="mined">0.00 USDT</div>
-        <button class="btn ghost" id="withdrawBtn" style="margin-top:8px;">Retirar</button>
+        <button id="retiroBtn" class="btn primary" style="margin-top:8px">Retirar</button>
       </div>
     </div>
 
@@ -267,7 +249,6 @@ p, div, span, label, input {font-family:'Poppins',sans-serif; font-weight:400;}
           <div class="stateText" id="stateText">Inactiva</div>
         </div>
       </div>
-
       <div class="progressWrap">
         <div class="progressBar" id="progressBar">
           <div id="progressFill" class="progressFill"></div>
@@ -280,139 +261,160 @@ p, div, span, label, input {font-family:'Poppins',sans-serif; font-weight:400;}
           </div>
         </div>
         <div class="statRow">
-  <div class="stat">Tiempo restante: <span id="timeLeft">00:00</span></div>
-  <div class="stat">Progreso: <span id="percentComplete">0%</span></div>
+          <div class="stat">Tiempo restante: <strong id="timeLeft">—</strong></div>
+          <div class="stat">Inversión: <strong id="invested">—</strong></div>
+        </div>
+      </div>
+      <div class="actions">
+        <button id="startBtn" class="btn primary">Iniciar Minería</button>
+        <button id="claimBtn" class="btn ghost" disabled>Reclamar</button>
+      </div>
+      <div style="margin-top:8px;color:var(--muted);font-size:13px">
+        Si cierras o recargas, la minería continúa gracias al almacenamiento local.
+      </div>
+    </div>
+
+    <div class="note" id="noteText"></div>
+  </div>
 </div>
 
-<div class="actions">
-  <button class="btn primary" id="startMineBtn">Iniciar Minería</button>
-  <button class="btn ghost" id="stopMineBtn" disabled>Detener Minería</button>
-</div>
-
-<div class="note">
-  Nota: Asegúrate de tener saldo suficiente en Minería para poder retirar tus ganancias.
-</div>
-
-</div> <!-- Fin minerBox -->
-</div> <!-- Fin card wrap -->
-
-<!-- Navbar -->
 <div class="navbar">
-  <div class="navItem active">
-    <img src="https://img.icons8.com/ios-filled/50/ffffff/home.png"/>
-    <div>Inicio</div>
-  </div>
-  <div class="navItem">
-    <img src="https://img.icons8.com/ios-filled/50/ffffff/money.png"/>
-    <div>Retiro</div>
-  </div>
-  <div class="navItem">
-    <img src="https://img.icons8.com/ios-filled/50/ffffff/mining.png"/>
-    <div>Minería</div>
-  </div>
-  <div class="navItem">
-    <img src="https://img.icons8.com/ios-filled/50/ffffff/referral.png"/>
-    <div>Referido</div>
-  </div>
-  <div class="navItem">
-    <img src="https://img.icons8.com/ios-filled/50/ffffff/user.png"/>
-    <div>Perfil</div>
+  <div class="navItem active" onclick="go('NeoMineX - Home.html')">🏠<div>Inicio</div></div>
+  <div class="navItem" onclick="go('Retiros.html')">💰<div>Retiro</div></div>
+  <div class="navItem" onclick="go('Mineria.html')">⚡<div>Minería</div></div>
+  <div class="navItem" onclick="go('Referidos.html')">👤👤<div>Referido</div></div>
+  <div class="navItem" onclick="go('Perfil.html')">👤<div>Perfil</div></div>
+</div>
+
+<!-- MODAL HISTORIAL -->
+<div id="modal">
+  <div class="modal-inner">
+    <div style="position:absolute;right:10px;top:8px;cursor:pointer;color:var(--neon)" onclick="closeHistory()">✖</div>
+    <h3 style="color:var(--neon);margin-bottom:8px">Historial de Retiros</h3>
+    <div id="historyList" style="max-height:320px;overflow:auto;color:#cfeef6">
+      <div style="color:var(--muted)">No hay registros aún.</div>
+    </div>
+    <div style="display:flex;justify-content:center;margin-top:12px;gap:8px">
+      <button style="padding:8px 12px;border-radius:8px;border:none;background:var(--accent1);color:#000;font-weight:700" onclick="closeHistory()">Cerrar</button>
+    </div>
   </div>
 </div>
 
-<!-- Modal Retiro -->
-<div id="withdrawModal">
+<!-- MODAL RETIRO -->
+<div id="modalRetiro">
   <div class="modal-inner">
-    <h2>💰 Retirar Ganancias</h2>
-    <label for="walletAddr">Dirección TRC20</label>
-    <input type="text" id="walletAddr" placeholder="Ingrese su wallet">
-    <label for="withdrawAmount">Cantidad a retirar (min 5 USDT)</label>
-    <input type="number" id="withdrawAmount" placeholder="0.00" min="5">
-    <label for="withdrawPassword">Contraseña</label>
-    <input type="password" id="withdrawPassword" placeholder="********">
-    <button class="btn primary" id="confirmWithdrawBtn">Confirmar Retiro</button>
-    <button class="btn ghost" onclick="closeWithdrawModal()">Cancelar</button>
-  </div>
+    style="position:absolute;right:10px;top:8px;cursor:pointer;color:var(--neon)" onclick="closeRetiro()">✖</div>
+<h3 style="color:var(--neon);margin-bottom:8px">Retirar Saldo</h3>
+<div style="display:flex;flex-direction:column;gap:10px;color:#cfeef6">
+  <label>Saldo disponible: <strong id="modalSaldo">0.00 USDT</strong></label>
+  <input type="text" id="retiroDireccion" placeholder="Dirección TRC20" style="padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.05);background:rgba(255,255,255,0.02);color:#eaf8ff">
+  <input type="number" id="retiroCantidad" placeholder="Cantidad a retirar (min 1 USDT)" style="padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.05);background:rgba(255,255,255,0.02);color:#eaf8ff">
+  <input type="password" id="retiroPass" placeholder="Contraseña" style="padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.05);background:rgba(255,255,255,0.02);color:#eaf8ff">
+  <button id="confirmRetiro" class="btn primary">Confirmar Retiro</button>
+</div>
+</div>
 </div>
 
 <script>
-let mining = false;
-let minedAmount = 0;
-let progress = 0;
-let timerInterval;
+// VARIABLES
+let saldoMineria = 0.00;
+let tiempoMineria = 86400; // 24 horas en segundos
+let intervaloMineria = null;
 
-const startBtn = document.getElementById('startMineBtn');
-const stopBtn = document.getElementById('stopMineBtn');
-const progressFill = document.getElementById('progressFill');
-const percentComplete = document.getElementById('percentComplete');
-const timeLeft = document.getElementById('timeLeft');
+// ELEMENTOS
+const startBtn = document.getElementById('startBtn');
+const claimBtn = document.getElementById('claimBtn');
 const stateText = document.getElementById('stateText');
-const withdrawBtn = document.getElementById('withdrawBtn');
-const withdrawModal = document.getElementById('withdrawModal');
-const confirmWithdrawBtn = document.getElementById('confirmWithdrawBtn');
-const minedDisplay = document.getElementById('mined');
+const progressFill = document.getElementById('progressFill');
+const timeLeftElem = document.getElementById('timeLeft');
+const retiroBtn = document.getElementById('retiroBtn');
+const modalRetiro = document.getElementById('modalRetiro');
+const modalSaldo = document.getElementById('modalSaldo');
+const confirmRetiro = document.getElementById('confirmRetiro');
 
-startBtn.addEventListener('click', ()=>{
-  if(minedAmount < 0){alert('No tienes saldo suficiente'); return;}
-  mining = true;
-  startBtn.disabled = true;
-  stopBtn.disabled = false;
-  stateText.textContent = "Minando...";
-  let seconds = 120; // duración de minado 2min
-  progress = 0;
-  timerInterval = setInterval(()=>{
-    seconds--;
-    progress += 0.833; // 100 / 120
-    progressFill.style.width = progress+'%';
-    percentComplete.textContent = Math.floor(progress)+'%';
-    let min = String(Math.floor(seconds/60)).padStart(2,'0');
-    let sec = String(seconds%60).padStart(2,'0');
-    timeLeft.textContent = `${min}:${sec}`;
-    if(seconds<=0){
-      clearInterval(timerInterval);
-      mining=false;
-      stateText.textContent="Inactiva";
-      startBtn.disabled=false;
-      stopBtn.disabled=true;
-      minedAmount += Math.random()*1.5 + 0.5; // ejemplo ganancia
-      minedDisplay.textContent = minedAmount.toFixed(2) + " USDT";
-      progressFill.style.width='0%';
-      percentComplete.textContent='0%';
-      timeLeft.textContent='00:00';
-      alert('Minado completado! Puedes retirar tus ganancias.');
+// FUNCIONES MODAL
+function openRetiro(){
+  if(saldoMineria <= 0){
+    alert('No tienes saldo para retirar.');
+    return;
+  }
+  modalRetiro.style.display = 'flex';
+  modalSaldo.textContent = saldoMineria.toFixed(2) + ' USDT';
+}
+function closeRetiro(){ modalRetiro.style.display = 'none'; }
+
+// INICIAR MINERÍA
+startBtn.addEventListener('click',()=>{
+  if(saldoMineria <= 0){
+    alert('Debes tener saldo de minería para iniciar.');
+    return;
+  }
+  if(intervaloMineria) return; // evitar reinicio
+  stateText.textContent = 'Minería Activa';
+  let segundosRestantes = tiempoMineria;
+  intervaloMineria = setInterval(()=>{
+    segundosRestantes--;
+    let hrs = Math.floor(segundosRestantes/3600);
+    let min = Math.floor((segundosRestantes%3600)/60);
+    let seg = segundosRestantes%60;
+    timeLeftElem.textContent = `${hrs}h ${min}m ${seg}s`;
+    progressFill.style.width = `${((tiempoMineria-segundosRestantes)/tiempoMineria)*100}%`;
+    if(segundosRestantes<=0){
+      clearInterval(intervaloMineria);
+      intervalMineria = null;
+      stateText.textContent = 'Minería Completa';
+      claimBtn.disabled = false;
     }
   },1000);
 });
 
-stopBtn.addEventListener('click', ()=>{
-  clearInterval(timerInterval);
-  mining=false;
-  startBtn.disabled=false;
-  stopBtn.disabled=true;
-  stateText.textContent="Inactiva";
-  alert('Minería detenida.');
+// RECLAMAR MINERÍA
+claimBtn.addEventListener('click',()=>{
+  alert('Minería completada! Saldo agregado.');
+  saldoMineria += 0; // aquí podrías sumar ganancia real
+  claimBtn.disabled = true;
+  progressFill.style.width = '0%';
+  timeLeftElem.textContent = '0h 0m 0s';
+  stateText.textContent = 'Inactiva';
 });
 
-// Modal Retiro
-withdrawBtn.addEventListener('click', ()=>withdrawModal.style.display='flex');
-function closeWithdrawModal(){withdrawModal.style.display='none'}
+// BOTÓN RETIRO
+retiroBtn.addEventListener('click', openRetiro);
 
-confirmWithdrawBtn.addEventListener('click', ()=>{
-  const addr = document.getElementById('walletAddr').value;
-  const amount = parseFloat(document.getElementById('withdrawAmount').value);
-  const pass = document.getElementById('withdrawPassword').value;
-  if(!addr || !amount || !pass){alert('Complete todos los campos'); return;}
-  if(amount > minedAmount){alert('No tienes saldo suficiente'); return;}
-  if(amount < 5){alert('Cantidad mínima 5 USDT'); return;}
-  minedAmount -= amount;
-  minedDisplay.textContent = minedAmount.toFixed(2) + " USDT";
-  closeWithdrawModal();
-  alert(`Retiro de ${amount.toFixed(2)} USDT enviado a ${addr}`);
+// CONFIRMAR RETIRO
+confirmRetiro.addEventListener('click',()=>{
+  const cantidad = parseFloat(document.getElementById('retiroCantidad').value);
+  const direccion = document.getElementById('retiroDireccion').value;
+  const pass = document.getElementById('retiroPass').value;
+  if(!direccion || !pass || isNaN(cantidad)){
+    alert('Completa todos los campos correctamente.');
+    return;
+  }
+  if(cantidad < 1){
+    alert('La cantidad mínima de retiro es 1 USDT.');
+    return;
+  }
+  if(cantidad > saldoMineria){
+    alert('No tienes suficiente saldo.');
+    return;
+  }
+  saldoMineria -= cantidad;
+  document.getElementById('mined').textContent = saldoMineria.toFixed(2) + ' USDT';
+  addHistorial(direccion, cantidad);
+  closeRetiro();
+  alert('Retiro exitoso!');
 });
 
-// Función ejemplo
-function goHome(){alert('Volviendo al inicio');}
-function openWithdrawHistory(){alert('Historial de retiros');}
+// HISTORIAL SIMPLIFICADO
+function addHistorial(direccion,cantidad){
+  const historyList = document.getElementById('historyList');
+  const div = document.createElement('div');
+  div.textContent = `➡ ${cantidad.toFixed(2)} USDT a ${direccion} ✅`;
+  historyList.prepend(div);
+}
+
+// INICIALIZAR
+document.getElementById('mined').textContent = saldoMineria.toFixed(2) + ' USDT';
 </script>
 </body>
-  </html>
+</html>
