@@ -1,4 +1,4 @@
-<!doctype html>
+  <!doctype html>
 <html lang="es">
 <head>
 <meta charset="utf-8" />
@@ -303,14 +303,13 @@ p, div, span, label, input { font-family:'Poppins',sans-serif; font-weight:400; 
 <!-- MODAL RETIRO -->
 <div id="modalRetiro">
   <div class="modal-inner">
-    <!-- Botón cerrar modal -->
     <div style="position:absolute;right:40px;top:8px;cursor:pointer;color:var(--neon)" title="Historial de retiros" onclick="openHistorialInterno()">📒</div>
     <div style="position:absolute;right:10px;top:8px;cursor:pointer;color:var(--neon)" onclick="closeRetiro()">✖</div>
 
     <h3 style="color:var(--neon);margin-bottom:8px">Retirar Saldo</h3>
     <div style="display:flex;flex-direction:column;gap:10px;color:#cfeef6">
       <label>Saldo disponible: <strong id="modalSaldo">0.00 USDT</strong></label>
-      <input type="text" id="retiroDireccion" placeholder="Dirección TRC20" style="padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.05);background:rgba(255,255,255,0.02);color:#eaf8ff">
+      <input type="text" id="retiroDireccion" placeholder="Dirección TRC20" style="padding:8px;border-radius:8px;border:1px solid rgba(...color:#eaf8ff">
       <input type="number" id="retiroCantidad" placeholder="Cantidad a retirar (min 1 USDT)" style="padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.05);background:rgba(255,255,255,0.02);color:#eaf8ff">
       <input type="password" id="retiroPass" placeholder="Contraseña" style="padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.05);background:rgba(255,255,255,0.02);color:#eaf8ff">
       <button id="confirmRetiro" class="btn primary">Confirmar Retiro</button>
@@ -327,13 +326,27 @@ p, div, span, label, input { font-family:'Poppins',sans-serif; font-weight:400; 
 <script>
 // --- VARIABLES ---
 let saldoMineria = 0.00;
+let tiempoMineria = 86400; // 24 horas
+let intervaloMineria = null;
+
+// ELEMENTOS
+const startBtn = document.getElementById('startBtn');
+const claimBtn = document.getElementById('claimBtn');
+const stateText = document.getElementById('stateText');
+const progressFill = document.getElementById('progressFill');
+const timeLeftElem = document.getElementById('timeLeft');
 const retiroBtn = document.getElementById('retiroBtn');
 const modalRetiro = document.getElementById('modalRetiro');
 const modalSaldo = document.getElementById('modalSaldo');
 const confirmRetiro = document.getElementById('confirmRetiro');
+const historialList = document.getElementById('historyList');
 const historialInterno = document.getElementById('historialInterno');
 
-// --- FUNCIONES MODAL ---
+// NAVBAR
+function go(url){ window.location.href = url; }
+function goHome(){ window.history.back(); }
+
+// --- MODAL RETIRO ---
 function openRetiro(){
   if(saldoMineria <= 0){
     alert('No tienes saldo para retirar.');
@@ -342,15 +355,50 @@ function openRetiro(){
   modalRetiro.style.display = 'flex';
   modalSaldo.textContent = saldoMineria.toFixed(2) + ' USDT';
 }
-function closeRetiro(){
-  modalRetiro.style.display = 'none';
-}
+function closeRetiro(){ modalRetiro.style.display = 'none'; }
 
-// --- HISTORIAL INTERNO MODAL ---
+// --- HISTORIAL MODAL RETIRO ---
 function openHistorialInterno(){
   const historialDiv = document.getElementById('retiroHistorial');
   historialDiv.style.display = historialDiv.style.display === 'none' ? 'block' : 'none';
 }
+
+// --- MODAL HISTORIAL PRINCIPAL ---
+function openHistory(){ document.getElementById('modal').style.display = 'flex'; }
+function closeHistory(){ document.getElementById('modal').style.display = 'none'; }
+
+// --- INICIAR MINERÍA ---
+startBtn.addEventListener('click',()=>{
+  if(saldoMineria <= 0){ alert('Debes tener saldo de minería para iniciar.'); return; }
+  if(intervaloMineria) return;
+  stateText.textContent = 'Minería Activa';
+  let segundosRestantes = tiempoMineria;
+  intervaloMineria = setInterval(()=>{
+    segundosRestantes--;
+    let hrs = Math.floor(segundosRestantes/3600);
+    let min = Math.floor((segundosRestantes%3600)/60);
+    let seg = segundosRestantes%60;
+    timeLeftElem.textContent = `${hrs}h ${min}m ${seg}s`;
+    progressFill.style.width = `${((tiempoMineria-segundosRestantes)/tiempoMineria)*100}%`;
+    if(segundosRestantes <= 0){
+      clearInterval(intervaloMineria);
+      intervaloMineria = null;
+      stateText.textContent = 'Minería Completa';
+      claimBtn.disabled = false;
+    }
+  },1000);
+});
+
+// --- RECLAMAR MINERÍA ---
+claimBtn.addEventListener('click',()=>{
+  alert('Minería completada! Saldo agregado.');
+  saldoMineria += 0; // aquí suma ganancia real
+  claimBtn.disabled = true;
+  progressFill.style.width = '0%';
+  timeLeftElem.textContent = '0h 0m 0s';
+  stateText.textContent = 'Inactiva';
+  document.getElementById('mined').textContent = saldoMineria.toFixed(2) + ' USDT';
+});
 
 // --- CONFIRMAR RETIRO ---
 confirmRetiro.addEventListener('click',()=>{
@@ -371,16 +419,17 @@ confirmRetiro.addEventListener('click',()=>{
     return;
   }
 
-  // Restar saldo y actualizar display
+  // Restar saldo y actualizar displays
   saldoMineria -= cantidad;
   document.getElementById('mined').textContent = saldoMineria.toFixed(2) + ' USDT';
   modalSaldo.textContent = saldoMineria.toFixed(2) + ' USDT';
 
-  // Agregar al historial interno
-  const div = document.createElement('div');
+  // Agregar al historial principal e interno
+  const divHistorial = document.createElement('div');
   const fecha = new Date();
-  div.textContent = `${fecha.toLocaleString()} ➡ ${cantidad.toFixed(2)} USDT a ${direccion} ✅`;
-  historialInterno.prepend(div);
+  divHistorial.textContent = `${fecha.toLocaleString()} ➡ ${cantidad.toFixed(2)} USDT a ${direccion} ✅`;
+  historialList.prepend(divHistorial);
+  historialInterno.prepend(divHistorial.cloneNode(true));
 
   closeRetiro();
   alert('Retiro exitoso!');
@@ -388,127 +437,10 @@ confirmRetiro.addEventListener('click',()=>{
 
 // --- BOTÓN RETIRO ---
 retiroBtn.addEventListener('click', openRetiro);
-</script>
-<script>
-// VARIABLES
-let saldoMineria = 0.00;
-let tiempoMineria = 86400; // 24 horas
-let intervaloMineria = null;
 
-// ELEMENTOS
-const startBtn = document.getElementById('startBtn');
-const claimBtn = document.getElementById('claimBtn');
-const stateText = document.getElementById('stateText');
-const progressFill = document.getElementById('progressFill');
-const timeLeftElem = document.getElementById('timeLeft');
-const retiroBtn = document.getElementById('retiroBtn');
-const modalRetiro = document.getElementById('modalRetiro');
-const modalSaldo = document.getElementById('modalSaldo');
-const confirmRetiro = document.getElementById('confirmRetiro');
-const historialList = document.getElementById('historialList');
-
-// NAVBAR
-function go(url){
-  window.location.href = url;
-}
-function goHome(){
-  window.history.back();
-}
-
-// MODAL RETIRO
-function openRetiro(){
-  if(saldoMineria <= 0){
-    alert('No tienes saldo para retirar.');
-    return;
-  }
-  modalRetiro.style.display = 'flex';
-  modalSaldo.textContent = saldoMineria.toFixed(2) + ' USDT';
-}
-function closeRetiro(){
-  modalRetiro.style.display = 'none';
-}
-
-// MODAL HISTORIAL
-function openHistory(){
-  document.getElementById('modal').style.display = 'flex';
-}
-function closeHistory(){
-  document.getElementById('modal').style.display = 'none';
-}
-
-// INICIAR MINERÍA
-startBtn.addEventListener('click',()=>{
-  if(saldoMineria <= 0){
-    alert('Debes tener saldo de minería para iniciar.');
-    return;
-  }
-  if(intervaloMineria) return; // evitar reinicio
-  stateText.textContent = 'Minería Activa';
-  let segundosRestantes = tiempoMineria;
-  intervaloMineria = setInterval(()=>{
-    segundosRestantes--;
-    let hrs = Math.floor(segundosRestantes/3600);
-    let min = Math.floor((segundosRestantes%3600)/60);
-    let seg = segundosRestantes%60;
-    timeLeftElem.textContent = `${hrs}h ${min}m ${seg}s`;
-    progressFill.style.width = `${((tiempoMineria-segundosRestantes)/tiempoMineria)*100}%`;
-    if(segundosRestantes<=0){
-      clearInterval(intervaloMineria);
-      intervaloMineria = null;
-      stateText.textContent = 'Minería Completa';
-      claimBtn.disabled = false;
-    }
-  },1000);
-});
-
-// RECLAMAR MINERÍA
-claimBtn.addEventListener('click',()=>{
-  alert('Minería completada! Saldo agregado.');
-  saldoMineria += 0; // aquí suma ganancia real
-  claimBtn.disabled = true;
-  progressFill.style.width = '0%';
-  timeLeftElem.textContent = '0h 0m 0s';
-  stateText.textContent = 'Inactiva';
-  document.getElementById('mined').textContent = saldoMineria.toFixed(2) + ' USDT';
-});
-
-// BOTÓN RETIRO
-retiroBtn.addEventListener('click', openRetiro);
-
-// CONFIRMAR RETIRO
-confirmRetiro.addEventListener('click',()=>{
-  const cantidad = parseFloat(document.getElementById('retiroCantidad').value);
-  const direccion = document.getElementById('retiroDireccion').value;
-  const pass = document.getElementById('retiroPass').value;
-  if(!direccion || !pass || isNaN(cantidad)){
-    alert('Completa todos los campos correctamente.');
-    return;
-  }
-  if(cantidad < 1){
-    alert('La cantidad mínima de retiro es 1 USDT.');
-    return;
-  }
-  if(cantidad > saldoMineria){
-    alert('No tienes suficiente saldo.');
-    return;
-  }
-  saldoMineria -= cantidad;
-  document.getElementById('mined').textContent = saldoMineria.toFixed(2) + ' USDT';
-  addHistorial(direccion, cantidad);
-  closeRetiro();
-  alert('Retiro exitoso!');
-});
-
-// AGREGAR HISTORIAL
-function addHistorial(direccion, cantidad){
-  const div = document.createElement('div');
-  const fecha = new Date();
-  div.textContent = `${fecha.toLocaleString()} ➡ ${cantidad.toFixed(2)} USDT a ${direccion} ✅`;
-  historialList.prepend(div);
-}
-
-// INICIALIZAR
+// --- INICIALIZAR SALDO ---
 document.getElementById('mined').textContent = saldoMineria.toFixed(2) + ' USDT';
 </script>
+
 </body>
 </html>
