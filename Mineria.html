@@ -1,222 +1,233 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Minería USDT TRC20</title>
-<style>
-body {
-  margin: 0;
-  font-family: 'Poppins', sans-serif;
-  background: radial-gradient(circle at center, #00111f, #000);
-  color: #fff;
-  overflow-y: auto;
-}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Minería NeoMineX</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Orbitron", sans-serif;
+      background: radial-gradient(circle at top, #0a0f1f, #01030a);
+      color: white;
+      overflow-y: auto;
+      height: 100vh;
+    }
 
-.container {
-  padding: 20px;
-  padding-bottom: 120px; /* espacio extra para la barra inferior */
-}
+    .container {
+      padding: 20px;
+      padding-bottom: 100px; /* espacio para la navbar */
+      text-align: center;
+    }
 
-.card {
-  background: rgba(0, 15, 40, 0.7);
-  border-radius: 15px;
-  padding: 20px;
-  margin-bottom: 20px;
-  box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
-}
+    h2 {
+      color: #00aaff;
+      text-shadow: 0 0 10px #00aaff;
+    }
 
-h2 {
-  color: #00ccff;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
+    .saldo-box {
+      background: rgba(0, 20, 50, 0.6);
+      border: 1px solid #00aaff;
+      border-radius: 15px;
+      padding: 15px;
+      margin: 10px auto;
+      width: 90%;
+      max-width: 380px;
+      box-shadow: 0 0 15px #00aaff55;
+    }
 
-.balance {
-  font-size: 18px;
-  margin-top: 10px;
-  color: #00eaff;
-}
+    .saldo-box div {
+      margin: 8px 0;
+      font-size: 18px;
+    }
 
-.progress-container {
-  background: rgba(255,255,255,0.1);
-  border-radius: 10px;
-  height: 20px;
-  overflow: hidden;
-  margin-top: 15px;
-  position: relative;
-  box-shadow: 0 0 10px #00bfff inset;
-}
+    .progress-container {
+      position: relative;
+      width: 90%;
+      max-width: 360px;
+      height: 30px;
+      margin: 30px auto;
+      background: rgba(0, 30, 60, 0.5);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 0 20px #00aaff44 inset, 0 0 10px #00aaff88;
+    }
 
-.progress-bar {
-  background: linear-gradient(90deg, #00bfff, #00ffff);
-  height: 100%;
-  width: 0%;
-  transition: width 1s linear;
-  position: relative;
-  overflow: visible;
-}
+    .progress-bar {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #00aaff, #00ffff);
+      box-shadow: 0 0 10px #00ffff;
+      border-radius: 20px;
+      transition: width 0.1s linear;
+    }
 
-/* 🔹 Robot con rastro eléctrico */
-.robot {
-  position: absolute;
-  top: -28px;
-  left: 0;
-  width: 45px;
-  height: 45px;
-  background: url('https://cdn-icons-png.flaticon.com/512/4712/4712106.png') no-repeat center/contain;
-  animation: moveRobot 60s linear forwards;
-}
+    .robot {
+      position: absolute;
+      top: -45px;
+      width: 40px;
+      height: 40px;
+      background: radial-gradient(circle, #00ffff 40%, transparent 70%);
+      border-radius: 50%;
+      box-shadow: 0 0 20px #00ffff, 0 0 40px #00aaff;
+      animation: robotWalk 1s infinite alternate;
+      z-index: 5;
+    }
 
-.robot::after {
-  content: "";
-  position: absolute;
-  top: 15px;
-  left: -100px;
-  width: 100px;
-  height: 8px;
-  background: radial-gradient(circle, rgba(0,255,255,0.8) 0%, transparent 70%);
-  animation: energyTrail 0.3s infinite alternate;
-  filter: blur(3px);
-}
+    @keyframes robotWalk {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-5px); }
+      100% { transform: translateY(0px); }
+    }
 
-@keyframes moveRobot {
-  from { left: 0%; filter: drop-shadow(0 0 8px #00ffff); }
-  to { left: 100%; filter: drop-shadow(0 0 25px #00bfff); }
-}
+    .rastro {
+      position: absolute;
+      top: 15px;
+      height: 2px;
+      background: rgba(0, 255, 255, 0.6);
+      border-radius: 2px;
+      box-shadow: 0 0 10px #00ffff;
+      animation: fadeTrail 1s linear forwards;
+    }
 
-@keyframes energyTrail {
-  from { opacity: 0.5; transform: scaleX(1); }
-  to { opacity: 1; transform: scaleX(1.3); }
-}
+    @keyframes fadeTrail {
+      from { opacity: 1; width: 0; }
+      to { opacity: 0; width: 100%; }
+    }
 
-button {
-  width: 48%;
-  padding: 12px;
-  border: none;
-  border-radius: 10px;
-  background: linear-gradient(90deg, #007bff, #00eaff);
-  color: #fff;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  margin-top: 10px;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
+    .btn {
+      display: block;
+      width: 80%;
+      max-width: 300px;
+      margin: 10px auto;
+      padding: 12px;
+      background: linear-gradient(90deg, #00aaff, #0066ff);
+      color: white;
+      font-weight: bold;
+      border: none;
+      border-radius: 25px;
+      font-size: 16px;
+      cursor: pointer;
+      box-shadow: 0 0 20px #00aaff;
+      transition: transform 0.2s, box-shadow 0.3s;
+    }
 
-button:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 15px #00eaff;
-}
+    .btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px #00ffff;
+    }
 
-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
+    .navbar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(0, 10, 30, 0.85);
+      display: flex;
+      justify-content: space-around;
+      padding: 8px 0;
+      backdrop-filter: blur(6px);
+      box-shadow: 0 -2px 15px #00aaff55;
+    }
 
-.navbar {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  background: rgba(0, 15, 40, 0.95);
-  display: flex;
-  justify-content: space-around;
-  padding: 10px 0;
-  border-top: 1px solid #00bfff;
-  backdrop-filter: blur(6px);
-}
+    .navItem {
+      text-align: center;
+      color: white;
+      font-size: 14px;
+      cursor: pointer;
+      transition: color 0.3s;
+    }
 
-.navItem {
-  text-align: center;
-  color: #ccc;
-  font-size: 12px;
-  transition: color 0.3s;
-}
+    .navItem.active, .navItem:hover {
+      color: #00aaff;
+    }
 
-.navItem.active {
-  color: #00eaff;
-}
-
-.navItem div {
-  margin-top: 3px;
-}
-</style>
+  </style>
 </head>
 <body>
+  <div class="container">
+    <h2>Minería Activa ⚡</h2>
 
-<div class="container">
-  <div class="card">
-    <h2>⚡ Minería USDT TRC20</h2>
-    <p>Obtén <strong>1.5%</strong> cada ciclo — Mínimo inversión: <strong>10 USDT</strong></p>
-
-    <div class="balance">Saldo de Recarga: <strong>10 USDT</strong></div>
-    <div class="balance">Saldo de Minería: <strong>0.15 USDT</strong></div>
-
-    <div class="card" style="margin-top:20px;">
-      <h3>Estado de Minería</h3>
-      <p><strong>Minando...</strong></p>
-      <div class="progress-container">
-        <div class="progress-bar" id="progressBar"></div>
-        <div class="robot"></div>
-      </div>
-      <p>Tiempo restante: <span id="timer">00:01:00</span></p>
-      <p>Inversión: <strong>10 USDT</strong></p>
-      <div style="display:flex; justify-content:space-between;">
-        <button id="startBtn" onclick="iniciarMineria()">Iniciar Minería</button>
-        <button id="claimBtn" disabled>Reclamar</button>
-      </div>
-      <p style="font-size:12px; opacity:0.8;">Si cierras o recargas, la minería continuará gracias al almacenamiento local.</p>
+    <div class="saldo-box">
+      <div>Saldo de Recarga: <strong id="saldoRecarga">10 USDT</strong></div>
+      <div>Saldo de Inversión: <strong id="saldoInversion">10 USDT</strong></div>
+      <div>Saldo Minería: <strong id="saldoMineria">0.00 USDT</strong></div>
     </div>
 
-    <p style="color:#ffcc00; font-size:13px;">
-      ⚠️ Revisa siempre la dirección de retiro antes de mover fondos. Si la dirección es incorrecta, tus activos no se podrán recuperar.
-    </p>
+    <div class="progress-container">
+      <div class="progress-bar" id="progress"></div>
+      <div class="robot" id="robot"></div>
+    </div>
+
+    <button class="btn" id="iniciarBtn">Iniciar Minería</button>
+    <button class="btn" id="reclamarBtn" disabled>Reclamar Ganancias</button>
   </div>
-</div>
 
-<div class="navbar">
-  <div class="navItem active" onclick="go('home.html')">🏠<div>Inicio</div></div>
-  <div class="navItem" onclick="go('Retiros.html')">💰<div>Retiro</div></div>
-  <div class="navItem" onclick="go('mineria.html')">⚡<div>Minería</div></div>
-  <div class="navItem" onclick="go('panel.html')">📊<div>Panel</div></div>
-  <div class="navItem" onclick="go('perfil.html')">👤<div>Perfil</div></div>
-</div>
+  <div class="navbar">
+    <div class="navItem" onclick="go('home.html')">🏠<div>Inicio</div></div>
+    <div class="navItem" onclick="go('Retiros.html')">💰<div>Retiro</div></div>
+    <div class="navItem active" onclick="go('mineria.html')">⚡<div>Minería</div></div>
+    <div class="navItem" onclick="go('panel.html')">📊<div>Panel</div></div>
+    <div class="navItem" onclick="go('perfil.html')">👤<div>Perfil</div></div>
+  </div>
 
-<script>
-function go(url){window.location.href=url;}
+  <script>
+    let progreso = 0;
+    let minando = false;
+    let saldoRecarga = 10;
+    let saldoInversion = 10;
+    let saldoMineria = 0;
+    const progress = document.getElementById('progress');
+    const robot = document.getElementById('robot');
+    const reclamarBtn = document.getElementById('reclamarBtn');
 
-let duracion = 60; // 1 minuto para pruebas
-let tiempoRestante = duracion;
-let minando = false;
-let progreso = 0;
+    function go(url) { window.location.href = url; }
 
-function iniciarMineria() {
-  if (minando) return;
-  minando = true;
-  document.getElementById('startBtn').disabled = true;
-  const progressBar = document.getElementById('progressBar');
-  const timer = document.getElementById('timer');
-  const claimBtn = document.getElementById('claimBtn');
+    document.getElementById('iniciarBtn').addEventListener('click', () => {
+      if (saldoRecarga < 10) {
+        alert('Necesitas mínimo 10 USDT para iniciar la minería.');
+        return;
+      }
+      if (minando) return;
+      minando = true;
+      progreso = 0;
+      reclamarBtn.disabled = true;
+      const duracion = 60; // 1 minuto (cambiar a 86400 para 24 h)
+      const intervalo = setInterval(() => {
+        progreso += 100 / duracion;
+        if (progreso > 100) progreso = 100;
+        progress.style.width = progreso + '%';
+        robot.style.left = `calc(${progreso}% - 20px)`;
 
-  let intervalo = setInterval(() => {
-    tiempoRestante--;
-    progreso = ((duracion - tiempoRestante) / duracion) * 100;
-    progressBar.style.width = progreso + "%";
+        // crear rastro
+        const rastro = document.createElement('div');
+        rastro.classList.add('rastro');
+        rastro.style.left = progreso + '%';
+        progress.parentElement.appendChild(rastro);
+        setTimeout(() => rastro.remove(), 1000);
 
-    let min = Math.floor(tiempoRestante / 60);
-    let sec = tiempoRestante % 60;
-    timer.textContent = `00:${String(min).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+        if (progreso >= 100) {
+          clearInterval(intervalo);
+          reclamarBtn.disabled = false;
+          minando = false;
+        }
+      }, 1000);
+    });
 
-    if (tiempoRestante <= 0) {
-      clearInterval(intervalo);
-      timer.textContent = "00:00:00";
-      claimBtn.disabled = false;
-      minando = false;
-    }
-  }, 1000);
-}
-</script>
-
+    reclamarBtn.addEventListener('click', () => {
+      if (progreso < 100) return;
+      const ganancia = saldoInversion * 0.015;
+      saldoMineria += ganancia;
+      document.getElementById('saldoMineria').textContent = saldoMineria.toFixed(2) + ' USDT';
+      alert('✅ Minería completada. Ganancia acreditada: ' + ganancia.toFixed(2) + ' USDT.');
+      progreso = 0;
+      progress.style.width = '0%';
+      robot.style.left = '0';
+      reclamarBtn.disabled = true;
+    });
+  </script>
 </body>
 </html>
