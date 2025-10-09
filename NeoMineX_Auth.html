@@ -135,65 +135,92 @@
   </div>
 
   <script>
-  // función para generar código de referido
-  function generateRefCode(length = 4){
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    let code = '';
-    for(let i=0;i<length;i++) code += chars.charAt(Math.floor(Math.random() * chars.length));
-    return code;
+const btnLogin = document.getElementById('btnLogin');
+const btnRegister = document.getElementById('btnRegister');
+const loginForm = document.getElementById('loginForm');
+const regForm = document.getElementById('regForm');
+const pageTitle = document.getElementById('pageTitle');
+const loginError = document.getElementById('loginError');
+const regError = document.getElementById('regError');
+const loginDemo = document.getElementById('loginDemo');
+
+// Generar código de referido
+function generateRefCode(length = 4){
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let code = '';
+  for(let i=0;i<length;i++) code += chars.charAt(Math.floor(Math.random()*chars.length));
+  return code;
+}
+
+// Toggle login/registro
+btnLogin.addEventListener('click', ()=>{
+  btnLogin.classList.add('active'); btnRegister.classList.remove('active');
+  loginForm.style.display='flex'; regForm.style.display='none';
+  pageTitle.textContent='NeoMineX - Login';
+});
+
+btnRegister.addEventListener('click', ()=>{
+  btnRegister.classList.add('active'); btnLogin.classList.remove('active');
+  loginForm.style.display='none'; regForm.style.display='flex';
+  pageTitle.textContent='NeoMineX - Registro';
+  document.getElementById('refCode').value = generateRefCode();
+});
+
+// Validación de email
+function validEmail(e){ return /\S+@\S+\.\S+/.test(e); }
+
+// Guardar y obtener usuario (localStorage demo)
+function saveUser(email, pass){ localStorage.setItem('neomx_user_'+email, JSON.stringify({email,pass})); }
+function getUser(email){ const s = localStorage.getItem('neomx_user_'+email); return s?JSON.parse(s):null; }
+
+// Registro
+document.getElementById('regForm').addEventListener('submit', e=>{
+  e.preventDefault(); regError.textContent='';
+  const email = document.getElementById('regEmail').value.trim();
+  const p1 = document.getElementById('regPass').value;
+  const p2 = document.getElementById('regPass2').value;
+  if(!validEmail(email)){ regError.textContent='Introduce un correo válido.'; return; }
+  if(p1.length < 6){ regError.textContent='La contraseña debe tener al menos 6 caracteres.'; return; }
+  if(p1!==p2){ regError.textContent='Las contraseñas no coinciden.'; return; }
+  if(getUser(email)){ regError.textContent='Ya existe una cuenta con ese correo.'; return; }
+  saveUser(email,p1);
+  alert('Cuenta creada correctamente. Código de referido: '+document.getElementById('refCode').value);
+  btnLogin.click();
+  document.getElementById('loginEmail').value = email;
+  document.getElementById('loginPass').value = '';
+});
+
+// Cancelar registro
+document.getElementById('cancelReg').addEventListener('click', ()=>{ btnLogin.click(); });
+
+// Demo
+loginDemo.addEventListener('click', ()=>{
+  const demoEmail = 'demo@neomineX.local';
+  if(!getUser(demoEmail)) saveUser(demoEmail,'demopass');
+  document.getElementById('loginEmail').value = demoEmail;
+  document.getElementById('loginPass').value = 'demopass';
+});
+
+// LOGIN actualizado con validación
+loginForm.addEventListener('submit', e=>{
+  e.preventDefault(); loginError.textContent='';
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass = document.getElementById('loginPass').value.trim();
+  
+  if(email === '' || pass === ''){
+    loginError.textContent = 'Coloca un correo y una contraseña correctos';
+    return;
   }
 
-  const btnLogin = document.getElementById('btnLogin');
-  const btnRegister = document.getElementById('btnRegister');
-  const loginForm = document.getElementById('loginForm');
-  const regForm = document.getElementById('regForm');
-  const pageTitle = document.getElementById('pageTitle');
-  const loginError = document.getElementById('loginError');
-  const regError = document.getElementById('regError');
-  const loginDemo = document.getElementById('loginDemo');
+  const u = getUser(email);
+  if(!u || u.pass !== pass){
+    loginError.textContent = 'Coloca un correo y una contraseña correctos';
+    return;
+  }
 
-  btnLogin.addEventListener('click', ()=>{
-    btnLogin.classList.add('active'); btnRegister.classList.remove('active');
-    loginForm.style.display='flex'; regForm.style.display='none';
-    pageTitle.textContent='NeoMineX - Login';
-  });
-
-  btnRegister.addEventListener('click', ()=>{
-    btnRegister.classList.add('active'); btnLogin.classList.remove('active');
-    loginForm.style.display='none'; regForm.style.display='flex';
-    pageTitle.textContent='NeoMineX - Registro';
-    document.getElementById('refCode').value = generateRefCode(); // asignar código
-  });
-
-  // registro simple
-  function validEmail(e){ return /\S+@\S+\.\S+/.test(e); }
-  function saveUser(email, pass){ localStorage.setItem('neomx_user_'+email, JSON.stringify({email,pass})); }
-  function getUser(email){ const s = localStorage.getItem('neomx_user_'+email); return s?JSON.parse(s):null; }
-
-  document.getElementById('regForm').addEventListener('submit', e=>{
-    e.preventDefault(); regError.textContent='';
-    const email = document.getElementById('regEmail').value.trim();
-    const p1 = document.getElementById('regPass').value;
-    const p2 = document.getElementById('regPass2').value;
-    if(!validEmail(email)){ regError.textContent='Introduce un correo válido.'; return; }
-    if(p1.length < 6){ regError.textContent='La contraseña debe tener al menos 6 caracteres.'; return; }
-    if(p1!==p2){ regError.textContent='Las contraseñas no coinciden.'; return; }
-    if(getUser(email)){ regError.textContent='Ya existe una cuenta con ese correo.'; return; }
-    saveUser(email,p1);
-    alert('Cuenta creada correctamente. Código de referido: '+document.getElementById('refCode').value);
-    btnLogin.click();
-    document.getElementById('loginEmail').value = email;
-    document.getElementById('loginPass').value = '';
-  });
-
-  document.getElementById('cancelReg').addEventListener('click', ()=>{ btnLogin.click(); });
-
-  loginDemo.addEventListener('click', ()=>{
-    const demoEmail = 'demo@neomineX.local';
-    if(!getUser(demoEmail)) saveUser(demoEmail,'demopass');
-    document.getElementById('loginEmail').value = demoEmail;
-    document.getElementById('loginPass').value = 'demopass';
-  });
+  // Si todo es correcto, ir directo a Home
+  window.location.href = 'https://johancolombia1996-cmd.github.io/NeoMineX/NeoMineX%20-%20Home.html';
+});
   </script>
 </body>
 </html>
