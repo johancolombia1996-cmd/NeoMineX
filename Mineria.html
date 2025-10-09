@@ -303,7 +303,10 @@ p, div, span, label, input { font-family:'Poppins',sans-serif; font-weight:400; 
 <!-- MODAL RETIRO -->
 <div id="modalRetiro">
   <div class="modal-inner">
+    <!-- Botón cerrar modal -->
+    <div style="position:absolute;right:40px;top:8px;cursor:pointer;color:var(--neon)" title="Historial de retiros" onclick="openHistorialInterno()">📒</div>
     <div style="position:absolute;right:10px;top:8px;cursor:pointer;color:var(--neon)" onclick="closeRetiro()">✖</div>
+
     <h3 style="color:var(--neon);margin-bottom:8px">Retirar Saldo</h3>
     <div style="display:flex;flex-direction:column;gap:10px;color:#cfeef6">
       <label>Saldo disponible: <strong id="modalSaldo">0.00 USDT</strong></label>
@@ -311,14 +314,81 @@ p, div, span, label, input { font-family:'Poppins',sans-serif; font-weight:400; 
       <input type="number" id="retiroCantidad" placeholder="Cantidad a retirar (min 1 USDT)" style="padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.05);background:rgba(255,255,255,0.02);color:#eaf8ff">
       <input type="password" id="retiroPass" placeholder="Contraseña" style="padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.05);background:rgba(255,255,255,0.02);color:#eaf8ff">
       <button id="confirmRetiro" class="btn primary">Confirmar Retiro</button>
-      <div id="retiroHistorial" style="margin-top:12px;max-height:120px;overflow:auto;border-top:1px solid rgba(255,255,255,0.1);padding-top:8px;color:#cfeef6">
+
+      <!-- Historial interno del modal -->
+      <div id="retiroHistorial" style="margin-top:12px;max-height:120px;overflow:auto;border-top:1px solid rgba(255,255,255,0.1);padding-top:8px;color:#cfeef6;display:none;">
         <strong>Historial de retiros:</strong>
-        <div id="historialList">No hay retiros aún.</div>
+        <div id="historialInterno">No hay retiros aún.</div>
       </div>
     </div>
   </div>
 </div>
 
+<script>
+// --- VARIABLES ---
+let saldoMineria = 0.00;
+const retiroBtn = document.getElementById('retiroBtn');
+const modalRetiro = document.getElementById('modalRetiro');
+const modalSaldo = document.getElementById('modalSaldo');
+const confirmRetiro = document.getElementById('confirmRetiro');
+const historialInterno = document.getElementById('historialInterno');
+
+// --- FUNCIONES MODAL ---
+function openRetiro(){
+  if(saldoMineria <= 0){
+    alert('No tienes saldo para retirar.');
+    return;
+  }
+  modalRetiro.style.display = 'flex';
+  modalSaldo.textContent = saldoMineria.toFixed(2) + ' USDT';
+}
+function closeRetiro(){
+  modalRetiro.style.display = 'none';
+}
+
+// --- HISTORIAL INTERNO MODAL ---
+function openHistorialInterno(){
+  const historialDiv = document.getElementById('retiroHistorial');
+  historialDiv.style.display = historialDiv.style.display === 'none' ? 'block' : 'none';
+}
+
+// --- CONFIRMAR RETIRO ---
+confirmRetiro.addEventListener('click',()=>{
+  const cantidad = parseFloat(document.getElementById('retiroCantidad').value);
+  const direccion = document.getElementById('retiroDireccion').value;
+  const pass = document.getElementById('retiroPass').value;
+
+  if(!direccion || !pass || isNaN(cantidad)){
+    alert('Completa todos los campos correctamente.');
+    return;
+  }
+  if(cantidad < 1){
+    alert('La cantidad mínima de retiro es 1 USDT.');
+    return;
+  }
+  if(cantidad > saldoMineria){
+    alert('Saldo insuficiente.');
+    return;
+  }
+
+  // Restar saldo y actualizar display
+  saldoMineria -= cantidad;
+  document.getElementById('mined').textContent = saldoMineria.toFixed(2) + ' USDT';
+  modalSaldo.textContent = saldoMineria.toFixed(2) + ' USDT';
+
+  // Agregar al historial interno
+  const div = document.createElement('div');
+  const fecha = new Date();
+  div.textContent = `${fecha.toLocaleString()} ➡ ${cantidad.toFixed(2)} USDT a ${direccion} ✅`;
+  historialInterno.prepend(div);
+
+  closeRetiro();
+  alert('Retiro exitoso!');
+});
+
+// --- BOTÓN RETIRO ---
+retiroBtn.addEventListener('click', openRetiro);
+</script>
 <script>
 // VARIABLES
 let saldoMineria = 0.00;
