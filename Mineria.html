@@ -197,16 +197,56 @@ body{
 
 /* =========================
    NAV BAR (kept from original)
+/* =========================
+   BOTONES DE LA BARRA INFERIOR
    ========================= */
 .navbar{
-  position:fixed;bottom:12px;left:50%;transform:translateX(-50%);
-  width:94%;max-width:980px;display:flex;justify-content:space-between;gap:6px;z-index:100;
+  position:fixed;
+  bottom:12px;
+  left:50%;
+  transform:translateX(-50%);
+  width:94%;
+  max-width:980px;
+  display:flex;
+  justify-content:space-between;
+  gap:6px;
+  z-index:100;
 }
-.navItem{
-  flex:1;text-align:center;color:var(--muted);font-size:12px;padding:8px;border-radius:999px;cursor:pointer;background:transparent;
-}
-.navItem.active,.navItem:hover{color:#000;background:linear-gradient(90deg,var(--neon),#06b6d4);font-weight:700;box-shadow:0 8px 26px rgba(0,215,255,0.10)}
 
+.navItem{
+  flex:1;
+  text-align:center;
+  color:#94a8b6; /* color base gris azul */
+  font-size:12px;
+  padding:8px;
+  border-radius:999px; /* forma oval */
+  cursor:pointer;
+  background:transparent;
+  transition:all .2s;
+}
+
+.navItem.active,
+.navItem:hover{
+  color:#000; /* texto negro cuando activo o hover */
+  background:linear-gradient(90deg,#00d7ff,#06b6d4); /* degradado azul */
+  font-weight:700;
+  box-shadow:0 8px 26px rgba(0,215,255,0.10);
+  transform:translateY(-2px); /* pequeño efecto de elevación */
+}
+
+/* Iconos dentro de navItem (emoji o imagen) */
+.navItem img, .navItem svg{
+  width:22px;
+  height:22px;
+  display:block;
+  margin:0 auto 2px;
+}
+
+/* Texto debajo del icono */
+.navItem div{
+  font-size:10px;
+  margin-top:2px;
+   }
 /* modal (history) */
 #modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);align-items:center;justify-content:center;z-index:2000}
 #modal .modal-inner{background:var(--card);padding:16px;border-radius:12px;width:90%;max-width:520px;position:relative;box-shadow:0 20px 60px rgba(0,0,0,0.6)}
