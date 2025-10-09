@@ -14,16 +14,13 @@
     }
     *{box-sizing:border-box}
     html,body{height:100%;margin:0;font-family:'Poppins',system-ui,Roboto,Arial;color:var(--text);background:var(--bg);-webkit-font-smoothing:antialiased}
-    /* background canvas sits fixed */ 
     #bgCanvas{position:fixed;inset:0;z-index:0;display:block}
-    /* container */
     .wrap{position:relative;z-index:8;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:18px}
     .card{
       width:100%;max-width:960px;border-radius:16px;padding:0;overflow:hidden;
       display:grid;grid-template-columns:460px 1fr;gap:0;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
       border:1px solid rgba(56,189,248,0.06);box-shadow:0 30px 80px rgba(2,6,23,0.7);
     }
-    /* left side - auth form */
     .auth{
       padding:28px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));display:flex;flex-direction:column;gap:12px;
     }
@@ -43,14 +40,12 @@
     .ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--text);font-weight:700}
     .note{font-size:12px;color:var(--muted)}
     .error{color:#ff7b7b;font-size:13px}
-    /* right side - info panel */
     .panelSide{padding:32px;background:linear-gradient(180deg, rgba(6,12,20,0.6), rgba(8,14,23,0.6));display:flex;flex-direction:column;gap:14px;align-items:center;justify-content:center}
     .panelSide h2{margin:0;color:var(--accent2)}
     .panelSide p{margin:0;color:var(--muted);text-align:center}
     .features{display:flex;flex-direction:column;gap:10px;margin-top:8px}
     .feat{display:flex;gap:10px;align-items:center}
     .dot{width:10px;height:10px;border-radius:50%;background:var(--accent1);box-shadow:0 8px 24px rgba(6,182,212,0.12)}
-    /* small devices */
     @media (max-width:980px){
       .card{grid-template-columns:1fr;max-width:520px}
       .panelSide{order:2;padding:20px}
@@ -68,7 +63,6 @@
 
   <div class="wrap">
     <div class="card" role="region" aria-label="NeoMineX Auth">
-      <!-- AUTH LEFT -->
       <div class="auth" aria-hidden="false">
         <div class="brand">
           <div class="logo">NX</div>
@@ -116,6 +110,11 @@
             <label class="small" for="regPass2">Confirmar contraseña</label>
             <input id="regPass2" type="password" placeholder="Repite la contraseña" required />
           </div>
+          <!-- NUEVO: Código de referido -->
+          <div>
+            <label class="small" for="refCode">Código de referido</label>
+            <input id="refCode" type="text" readonly />
+          </div>
           <div class="row">
             <button type="submit" class="actionBtn">Crear Cuenta</button>
             <button type="button" id="cancelReg" class="ghost">Cancelar</button>
@@ -126,10 +125,8 @@
 
       <!-- RIGHT PANEL -->
       <div class="panelSide" aria-hidden="false">
-        
         <div class="features" role="list">
-          <div class="feat" role="listitem"><div class="dot" aria-hidden></div><div class="muted">⚡ Minería ultrarrápida con tecnología de última generación.
-</div></div>
+          <div class="feat" role="listitem"><div class="dot" aria-hidden></div><div class="muted">⚡ Minería ultrarrápida con tecnología de última generación.</div></div>
           <div class="feat" role="listitem"><div class="dot" aria-hidden></div><div class="muted">🤖 Energía optimizada por IA para maximizar ganancias.</div></div>
           <div class="feat" role="listitem"><div class="dot" aria-hidden></div><div class="muted">🌌 Diseño futurista y escalable, listo para el metaverso financiero.</div></div>
         </div>
@@ -137,163 +134,66 @@
     </div>
   </div>
 
-  <!-- sound (tiny) fallback + programmatic oscillator used primarily -->
-  <audio id="clickSound" preload="auto">
-    <source src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABAAZGF0YSMAAAAA" type="audio/wav">
-  </audio>
-
   <script>
-  /* ================= Canvas Background (same holographic particles + lines) ================= */
-  (function(){
-    const canvas = document.getElementById('bgCanvas');
-    const ctx = canvas.getContext('2d');
-    const DPR = window.devicePixelRatio || 1;
-    let w = canvas.width = innerWidth * DPR, h = canvas.height = innerHeight * DPR;
-    canvas.style.width = innerWidth + 'px'; canvas.style.height = innerHeight + 'px'; ctx.scale(DPR, DPR);
-    let W = innerWidth, H = innerHeight;
+  // función para generar código de referido
+  function generateRefCode(length = 4){
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let code = '';
+    for(let i=0;i<length;i++) code += chars.charAt(Math.floor(Math.random() * chars.length));
+    return code;
+  }
 
-    // particles
-    const NP = Math.round((W*H)/70000);
-    const parts = [];
-    for(let i=0;i<NP;i++) parts.push({x:Math.random()*W, y:Math.random()*H, r:Math.random()*1.6+0.3, vx:(Math.random()-0.5)*0.3, vy:(Math.random()-0.5)*0.3, a:Math.random()*0.7+0.2});
+  const btnLogin = document.getElementById('btnLogin');
+  const btnRegister = document.getElementById('btnRegister');
+  const loginForm = document.getElementById('loginForm');
+  const regForm = document.getElementById('regForm');
+  const pageTitle = document.getElementById('pageTitle');
+  const loginError = document.getElementById('loginError');
+  const regError = document.getElementById('regError');
+  const loginDemo = document.getElementById('loginDemo');
 
-    // lines
-    const LINES = []; const LINE_COUNT = Math.max(3, Math.round(NP/6));
-    for(let i=0;i<LINE_COUNT;i++){
-      const pts=[]; const segs = 6 + Math.round(Math.random()*6);
-      for(let s=0;s<segs;s++) pts.push({x:Math.random()*W, y:Math.random()*H, vx:(Math.random()-0.5)*0.6, vy:(Math.random()-0.5)*0.6});
-      LINES.push({pts,offset:Math.random()*1000});
-    }
+  btnLogin.addEventListener('click', ()=>{
+    btnLogin.classList.add('active'); btnRegister.classList.remove('active');
+    loginForm.style.display='flex'; regForm.style.display='none';
+    pageTitle.textContent='NeoMineX - Login';
+  });
 
-    function draw(){
-      ctx.clearRect(0,0,W,H);
-      const g=ctx.createLinearGradient(0,0,W,H); g.addColorStop(0,'rgba(2,6,23,0.82)'); g.addColorStop(1,'rgba(6,12,20,0.86)');
-      ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
+  btnRegister.addEventListener('click', ()=>{
+    btnRegister.classList.add('active'); btnLogin.classList.remove('active');
+    loginForm.style.display='none'; regForm.style.display='flex';
+    pageTitle.textContent='NeoMineX - Registro';
+    document.getElementById('refCode').value = generateRefCode(); // asignar código
+  });
 
-      LINES.forEach(line=>{
-        const pts=line.pts;
-        ctx.beginPath(); pts.forEach((p,i)=> i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));
-        ctx.strokeStyle='rgba(6,182,212,0.05)'; ctx.lineWidth=1.2; ctx.stroke();
+  // registro simple
+  function validEmail(e){ return /\S+@\S+\.\S+/.test(e); }
+  function saveUser(email, pass){ localStorage.setItem('neomx_user_'+email, JSON.stringify({email,pass})); }
+  function getUser(email){ const s = localStorage.getItem('neomx_user_'+email); return s?JSON.parse(s):null; }
 
-        ctx.beginPath(); pts.forEach((p,i)=> i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));
-        ctx.strokeStyle='rgba(14,165,233,0.12)'; ctx.lineWidth=0.6; ctx.stroke();
+  document.getElementById('regForm').addEventListener('submit', e=>{
+    e.preventDefault(); regError.textContent='';
+    const email = document.getElementById('regEmail').value.trim();
+    const p1 = document.getElementById('regPass').value;
+    const p2 = document.getElementById('regPass2').value;
+    if(!validEmail(email)){ regError.textContent='Introduce un correo válido.'; return; }
+    if(p1.length < 6){ regError.textContent='La contraseña debe tener al menos 6 caracteres.'; return; }
+    if(p1!==p2){ regError.textContent='Las contraseñas no coinciden.'; return; }
+    if(getUser(email)){ regError.textContent='Ya existe una cuenta con ese correo.'; return; }
+    saveUser(email,p1);
+    alert('Cuenta creada correctamente. Código de referido: '+document.getElementById('refCode').value);
+    btnLogin.click();
+    document.getElementById('loginEmail').value = email;
+    document.getElementById('loginPass').value = '';
+  });
 
-        for(let s=0;s<2;s++){
-          const t=(Date.now()*0.001 + line.offset + s*1.7) % 1000 / 1000;
-          const pos = Math.floor(t*(pts.length-1));
-          ctx.beginPath(); ctx.moveTo(pts[pos].x,pts[pos].y); ctx.lineTo(pts[(pos+1)%pts.length].x, pts[(pos+1)%pts.length].y);
-          ctx.strokeStyle='rgba(6,182,212,0.36)'; ctx.lineWidth=2.2; ctx.stroke();
-        }
-        pts.forEach(p=>{ p.x+=p.vx; p.y+=p.vy; if(p.x<-60)p.x=W+60; if(p.x>W+60)p.x=-60; if(p.y<-60)p.y=H+60; if(p.y>H+60)p.y=-60; });
-      });
+  document.getElementById('cancelReg').addEventListener('click', ()=>{ btnLogin.click(); });
 
-      parts.forEach(p=>{
-        p.x += p.vx; p.y += p.vy; p.a += (Math.random()-0.5)*0.02; p.a = Math.max(0.12, Math.min(1, p.a));
-        if(p.x < -10) p.x = W+10; if(p.x > W+10) p.x = -10; if(p.y < -10) p.y = H+10; if(p.y > H+10) p.y = -10;
-        ctx.beginPath(); ctx.fillStyle = `rgba(14,165,233,${0.12 * p.a})`; ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fill();
-      });
-
-      requestAnimationFrame(draw);
-    }
-    draw();
-
-    window.addEventListener('resize', ()=>{
-      W = innerWidth; H = innerHeight;
-      canvas.width = W * DPR; canvas.height = H * DPR; canvas.style.width = W+'px'; canvas.style.height = H+'px';
-      ctx.setTransform(1,0,0,1,0,0); ctx.scale(DPR,DPR);
-    });
-  })();
-
-  /* ================= Auth logic (localStorage demo) ================= */
-  (function(){
-    const btnLogin = document.getElementById('btnLogin');
-    const btnRegister = document.getElementById('btnRegister');
-    const loginForm = document.getElementById('loginForm');
-    const regForm = document.getElementById('regForm');
-    const pageTitle = document.getElementById('pageTitle');
-    const loginError = document.getElementById('loginError');
-    const regError = document.getElementById('regError');
-    const loginDemo = document.getElementById('loginDemo');
-    const clickAudio = document.getElementById('clickSound');
-
-    function playClick(){
-      try{
-        const ctx = new (window.AudioContext||window.webkitAudioContext)();
-        const o = ctx.createOscillator(); const g = ctx.createGain();
-        o.type = 'sine'; o.frequency.value = 880;
-        g.gain.value = 0.0001; g.gain.exponentialRampToValueAtTime(0.08, ctx.currentTime + 0.02);
-        o.connect(g); g.connect(ctx.destination); o.start();
-        g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.18);
-        setTimeout(()=>{ o.stop(); ctx.close(); }, 220);
-      }catch(e){
-        clickAudio.currentTime = 0; clickAudio.play().catch(()=>{});
-      }
-    }
-
-    // toggle views
-    btnLogin.addEventListener('click', ()=>{ btnLogin.classList.add('active'); btnRegister.classList.remove('active'); loginForm.style.display='flex'; regForm.style.display='none'; pageTitle.textContent='NeoMineX - Login'; playClick(); });
-    btnRegister.addEventListener('click', ()=>{ btnRegister.classList.add('active'); btnLogin.classList.remove('active'); loginForm.style.display='none'; regForm.style.display='flex'; pageTitle.textContent='NeoMineX - Registro'; playClick(); });
-
-    // Basic validators
-    function validEmail(e){ return /\S+@\S+\.\S+/.test(e); }
-    function saveUser(email, pass){ localStorage.setItem('neomx_user_'+email, JSON.stringify({email,pass})); }
-    function getUser(email){ const s = localStorage.getItem('neomx_user_'+email); return s?JSON.parse(s):null; }
-
-    // register
-    regForm.addEventListener('submit', e=>{
-      e.preventDefault(); regError.textContent='';
-      const email = document.getElementById('regEmail').value.trim();
-      const p1 = document.getElementById('regPass').value;
-      const p2 = document.getElementById('regPass2').value;
-      if(!validEmail(email)){ regError.textContent='Introduce un correo válido.'; return; }
-      if(p1.length < 6){ regError.textContent='La contraseña debe tener al menos 6 caracteres.'; return; }
-      if(p1 !== p2){ regError.textContent='Las contraseñas no coinciden.'; return; }
-      if(getUser(email)){ regError.textContent='Ya existe una cuenta con ese correo.'; return; }
-      saveUser(email, p1);
-      playClick();
-      alert('Cuenta creada correctamente. Ahora inicia sesión.');
-      // switch to login
-      btnLogin.click();
-      document.getElementById('loginEmail').value = email;
-      document.getElementById('loginPass').value = '';
-    });
-
-    // cancel register
-    document.getElementById('cancelReg').addEventListener('click', ()=>{ btnLogin.click(); });
-
-    // demo account quick create
-    loginDemo.addEventListener('click', ()=>{
-      const demoEmail = 'demo@neomineX.local';
-      if(!getUser(demoEmail)) saveUser(demoEmail, 'demopass');
-      document.getElementById('loginEmail').value = demoEmail;
-      document.getElementById('loginPass').value = 'demopass';
-      playClick();
-    });
-
-    // login
-    loginForm.addEventListener('submit', e=>{
-      e.preventDefault(); loginError.textContent='';
-      const email = document.getElementById('loginEmail').value.trim();
-      const pass = document.getElementById('loginPass').value;
-      if(!validEmail(email)){ loginError.textContent='Introduce un correo válido.'; return; }
-      const u = getUser(email);
-      if(!u || u.pass !== pass){ loginError.textContent='Correo o contraseña incorrectos.'; return; }
-      // success: play sound and redirect to panel
-      playClick();
-      // small success animation / delay
-      setTimeout(()=>{ 
-        // Redirect to your panel (ensure file name matches or change here)
-        window.location.href = 'https://johancolombia1996-cmd.github.io/NeoMineX/NeoMineX%20-%20Home.html';
-      }, 400);
-    });
-
-    // Accessibility: Enter on tab buttons
-    [btnLogin, btnRegister].forEach(b => b.addEventListener('keydown', e=>{ if(e.key==='Enter') b.click(); }));
-
-    // keyboard shortcuts: Ctrl+Shift+D to clear demo users (dev)
-    document.addEventListener('keydown', e=>{ if(e.ctrlKey && e.shiftKey && e.key.toLowerCase()==='d'){ for(let key in localStorage) if(key.startsWith('neomx_user_')) localStorage.removeItem(key); alert('Usuarios demo eliminados'); } });
-
-  })();
+  loginDemo.addEventListener('click', ()=>{
+    const demoEmail = 'demo@neomineX.local';
+    if(!getUser(demoEmail)) saveUser(demoEmail,'demopass');
+    document.getElementById('loginEmail').value = demoEmail;
+    document.getElementById('loginPass').value = 'demopass';
+  });
   </script>
 </body>
 </html>
