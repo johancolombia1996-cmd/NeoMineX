@@ -226,7 +226,7 @@ p, div, span, label, input { font-family:'Poppins',sans-serif; font-weight:400; 
       </div>
       <div style="text-align:right">
         <div style="font-size:12px;color:var(--muted)">ID</div>
-        <div style="margin-top:6px;font-weight:800;color:var(--neon)" id="userId">---</div>
+        <div style="margin-top:6px;font-weight:800;color:var(--neon)" id="userId">AB12</div>
       </div>
     </div>
     <div class="infoGrid">
@@ -303,22 +303,26 @@ p, div, span, label, input { font-family:'Poppins',sans-serif; font-weight:400; 
 <!-- MODAL RETIRO -->
 <div id="modalRetiro">
   <div class="modal-inner">
-    style="position:absolute;right:10px;top:8px;cursor:pointer;color:var(--neon)" onclick="closeRetiro()">✖</div>
-<h3 style="color:var(--neon);margin-bottom:8px">Retirar Saldo</h3>
-<div style="display:flex;flex-direction:column;gap:10px;color:#cfeef6">
-  <label>Saldo disponible: <strong id="modalSaldo">0.00 USDT</strong></label>
-  <input type="text" id="retiroDireccion" placeholder="Dirección TRC20" style="padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.05);background:rgba(255,255,255,0.02);color:#eaf8ff">
-  <input type="number" id="retiroCantidad" placeholder="Cantidad a retirar (min 1 USDT)" style="padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.05);background:rgba(255,255,255,0.02);color:#eaf8ff">
-  <input type="password" id="retiroPass" placeholder="Contraseña" style="padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.05);background:rgba(255,255,255,0.02);color:#eaf8ff">
-  <button id="confirmRetiro" class="btn primary">Confirmar Retiro</button>
-</div>
-</div>
+    <div style="position:absolute;right:10px;top:8px;cursor:pointer;color:var(--neon)" onclick="closeRetiro()">✖</div>
+    <h3 style="color:var(--neon);margin-bottom:8px">Retirar Saldo</h3>
+    <div style="display:flex;flex-direction:column;gap:10px;color:#cfeef6">
+      <label>Saldo disponible: <strong id="modalSaldo">0.00 USDT</strong></label>
+      <input type="text" id="retiroDireccion" placeholder="Dirección TRC20" style="padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.05);background:rgba(255,255,255,0.02);color:#eaf8ff">
+      <input type="number" id="retiroCantidad" placeholder="Cantidad a retirar (min 1 USDT)" style="padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.05);background:rgba(255,255,255,0.02);color:#eaf8ff">
+      <input type="password" id="retiroPass" placeholder="Contraseña" style="padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.05);background:rgba(255,255,255,0.02);color:#eaf8ff">
+      <button id="confirmRetiro" class="btn primary">Confirmar Retiro</button>
+      <div id="retiroHistorial" style="margin-top:12px;max-height:120px;overflow:auto;border-top:1px solid rgba(255,255,255,0.1);padding-top:8px;color:#cfeef6">
+        <strong>Historial de retiros:</strong>
+        <div id="historialList">No hay retiros aún.</div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
 // VARIABLES
 let saldoMineria = 0.00;
-let tiempoMineria = 86400; // 24 horas en segundos
+let tiempoMineria = 86400; // 24 horas
 let intervaloMineria = null;
 
 // ELEMENTOS
@@ -331,8 +335,17 @@ const retiroBtn = document.getElementById('retiroBtn');
 const modalRetiro = document.getElementById('modalRetiro');
 const modalSaldo = document.getElementById('modalSaldo');
 const confirmRetiro = document.getElementById('confirmRetiro');
+const historialList = document.getElementById('historialList');
 
-// FUNCIONES MODAL
+// NAVBAR
+function go(url){
+  window.location.href = url;
+}
+function goHome(){
+  window.history.back();
+}
+
+// MODAL RETIRO
 function openRetiro(){
   if(saldoMineria <= 0){
     alert('No tienes saldo para retirar.');
@@ -341,7 +354,17 @@ function openRetiro(){
   modalRetiro.style.display = 'flex';
   modalSaldo.textContent = saldoMineria.toFixed(2) + ' USDT';
 }
-function closeRetiro(){ modalRetiro.style.display = 'none'; }
+function closeRetiro(){
+  modalRetiro.style.display = 'none';
+}
+
+// MODAL HISTORIAL
+function openHistory(){
+  document.getElementById('modal').style.display = 'flex';
+}
+function closeHistory(){
+  document.getElementById('modal').style.display = 'none';
+}
 
 // INICIAR MINERÍA
 startBtn.addEventListener('click',()=>{
@@ -361,7 +384,7 @@ startBtn.addEventListener('click',()=>{
     progressFill.style.width = `${((tiempoMineria-segundosRestantes)/tiempoMineria)*100}%`;
     if(segundosRestantes<=0){
       clearInterval(intervaloMineria);
-      intervalMineria = null;
+      intervaloMineria = null;
       stateText.textContent = 'Minería Completa';
       claimBtn.disabled = false;
     }
@@ -371,11 +394,12 @@ startBtn.addEventListener('click',()=>{
 // RECLAMAR MINERÍA
 claimBtn.addEventListener('click',()=>{
   alert('Minería completada! Saldo agregado.');
-  saldoMineria += 0; // aquí podrías sumar ganancia real
+  saldoMineria += 0; // aquí suma ganancia real
   claimBtn.disabled = true;
   progressFill.style.width = '0%';
   timeLeftElem.textContent = '0h 0m 0s';
   stateText.textContent = 'Inactiva';
+  document.getElementById('mined').textContent = saldoMineria.toFixed(2) + ' USDT';
 });
 
 // BOTÓN RETIRO
@@ -405,12 +429,12 @@ confirmRetiro.addEventListener('click',()=>{
   alert('Retiro exitoso!');
 });
 
-// HISTORIAL SIMPLIFICADO
-function addHistorial(direccion,cantidad){
-  const historyList = document.getElementById('historyList');
+// AGREGAR HISTORIAL
+function addHistorial(direccion, cantidad){
   const div = document.createElement('div');
-  div.textContent = `➡ ${cantidad.toFixed(2)} USDT a ${direccion} ✅`;
-  historyList.prepend(div);
+  const fecha = new Date();
+  div.textContent = `${fecha.toLocaleString()} ➡ ${cantidad.toFixed(2)} USDT a ${direccion} ✅`;
+  historialList.prepend(div);
 }
 
 // INICIALIZAR
