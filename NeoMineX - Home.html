@@ -132,16 +132,56 @@ h3{color:var(--accent1);margin-bottom:10px;}
 .withdrawItem.show{opacity:1;transform:translateY(0);}
 .withdrawItem span{color:var(--neon);font-weight:700;}
 
-/* ===== Barra inferior ===== */
+/* =========================
+   BOTONES DE LA BARRA INFERIOR
+   ========================= */
 .navbar{
-  position:fixed;bottom:12px;left:50%;transform:translateX(-50%);
-  width:94%;max-width:980px;background:rgba(255,255,255,0.02);padding:8px;border-radius:999px;
-  display:flex;justify-content:space-between;gap:6px;z-index:30;backdrop-filter:blur(6px);
-  box-shadow:0 8px 30px rgba(3,6,23,0.6);
+  position:fixed;
+  bottom:12px;
+  left:50%;
+  transform:translateX(-50%);
+  width:94%;
+  max-width:980px;
+  display:flex;
+  justify-content:space-between;
+  gap:6px;
+  z-index:100;
 }
-.navItem{flex:1;text-align:center;color:var(--muted);font-size:12px;padding:6px 8px;border-radius:10px;cursor:pointer;transition:all .2s ease;}
-.navItem.active,.navItem:hover{background:linear-gradient(90deg,var(--neon),#06b6d4);color:#000;font-weight:800;box-shadow:0 10px 30px rgba(14,165,233,0.14);}
-@media(max-width:820px){.panel{grid-template-columns:1fr;}}
+
+.navItem{
+  flex:1;
+  text-align:center;
+  color:#94a8b6; /* color base gris azul */
+  font-size:12px;
+  padding:8px;
+  border-radius:999px; /* forma oval */
+  cursor:pointer;
+  background:transparent;
+  transition:all .2s;
+}
+
+.navItem.active,
+.navItem:hover{
+  color:#000; /* texto negro cuando activo o hover */
+  background:linear-gradient(90deg,#00d7ff,#06b6d4); /* degradado azul */
+  font-weight:700;
+  box-shadow:0 8px 26px rgba(0,215,255,0.10);
+  transform:translateY(-2px); /* pequeño efecto de elevación */
+}
+
+/* Iconos dentro de navItem (emoji o imagen) */
+.navItem img, .navItem svg{
+  width:22px;
+  height:22px;
+  display:block;
+  margin:0 auto 2px;
+}
+
+/* Texto debajo del icono */
+.navItem div{
+  font-size:10px;
+  margin-top:2px;
+  }
 </style>
 </head>
 
