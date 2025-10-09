@@ -72,7 +72,7 @@ body{
 
 /* ===== Panel principal ===== */
 .container{max-width:1000px;margin:20px auto 120px;padding:18px;}
-.panel{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+.panel{display:grid;grid-template-columns:1fr;gap:18px;}
 .card{
   background:var(--card);
   border:1px solid rgba(255,255,255,0.03);
@@ -87,7 +87,7 @@ h3{color:var(--accent1);margin-bottom:10px;}
 .botGrid{
   margin-top:10px;
   display:grid;
-  grid-template-columns:1fr 1fr; /* 2 columnas x 2 filas automáticamente */
+  grid-template-columns:1fr 1fr;
   gap:10px;
 }
 .botCard{
@@ -131,14 +131,17 @@ h3{color:var(--accent1);margin-bottom:10px;}
   box-shadow:0 8px 25px rgba(14,165,233,0.25);
 }
 
-/* ===== Retiros en vivo horizontales tipo ticker ===== */
+/* ===== Retiros en vivo horizontales tipo ticker profesional ===== */
 .withdrawBox{
   display:flex;
   flex-direction:row;
   gap:10px;
   overflow-x:auto;
-  padding:8px;
+  padding:10px;
+  border-radius:14px;
+  background:linear-gradient(90deg, rgba(0,215,255,0.1), rgba(6,165,212,0.1));
   scrollbar-width:none;
+  box-shadow:0 4px 20px rgba(0,215,255,0.15);
 }
 .withdrawBox::-webkit-scrollbar{display:none;}
 .withdrawItem{
@@ -148,10 +151,16 @@ h3{color:var(--accent1);margin-bottom:10px;}
   transition:all .6s ease;
   font-size:14px;
   color:var(--muted);
-  padding:8px 10px;
-  background:rgba(255,255,255,0.02);
-  border-radius:10px;
-  border:1px solid rgba(255,255,255,0.03);
+  padding:8px 12px;
+  background:rgba(8,14,23,0.5);
+  border-radius:12px;
+  border:1px solid rgba(14,165,233,0.3);
+  box-shadow:0 4px 8px rgba(0,215,255,0.1);
+  white-space:nowrap;
+}
+.withdrawItem:hover{
+  transform:translateY(-2px);
+  box-shadow:0 6px 15px rgba(0,215,255,0.25);
 }
 .withdrawItem.show{
   opacity:1;
@@ -174,37 +183,31 @@ h3{color:var(--accent1);margin-bottom:10px;}
   gap:6px;
   z-index:100;
 }
-
 .navItem{
   flex:1;
   text-align:center;
-  color:#94a8b6; /* color base gris azul */
+  color:#94a8b6;
   font-size:12px;
   padding:8px;
-  border-radius:999px; /* forma oval */
+  border-radius:999px;
   cursor:pointer;
   background:transparent;
   transition:all .2s;
 }
-
 .navItem.active,
 .navItem:hover{
-  color:#000; /* texto negro cuando activo o hover */
-  background:linear-gradient(90deg,#00d7ff,#06b6d4); /* degradado azul */
+  color:#000;
+  background:linear-gradient(90deg,#00d7ff,#06b6d4);
   font-weight:700;
   box-shadow:0 8px 26px rgba(0,215,255,0.10);
-  transform:translateY(-2px); /* pequeño efecto de elevación */
+  transform:translateY(-2px);
 }
-
-/* Iconos dentro de navItem (emoji o imagen) */
 .navItem img, .navItem svg{
   width:22px;
   height:22px;
   display:block;
   margin:0 auto 2px;
 }
-
-/* Texto debajo del icono */
 .navItem div{
   font-size:10px;
   margin-top:2px;
@@ -235,52 +238,50 @@ h3{color:var(--accent1);margin-bottom:10px;}
 
 <!-- Contenido principal -->
 <div class="container">
-  <div class="panel">
-    <!-- MINERÍA AUTOMÁTICA -->
-    <div class="card">
-      <h3>Minería Automática NeoMineX</h3>
-      <p class="note">Energía y rendimiento optimizado por IA. Estado: <strong style="color:var(--neon)">Activa</strong></p>
+  <!-- MINERÍA AUTOMÁTICA -->
+  <div class="card">
+    <h3>Minería Automática NeoMineX</h3>
+    <p class="note">Energía y rendimiento optimizado por IA. Estado: <strong style="color:var(--neon)">Activa</strong></p>
 
-      <div class="botGrid">
-        <div class="botCard">
-          <div class="icon">🤖</div>
-          <div>Bot 1</div>
-          <div class="price">$10</div>
-          <div class="gain">+1.5% diario</div>
-          <button class="buy-btn" onclick="go('Recargas.html')">Comprar</button>
-        </div>
+    <div class="botGrid">
+      <div class="botCard">
+        <div class="icon">🤖</div>
+        <div>Bot 1</div>
+        <div class="price">$10</div>
+        <div class="gain">+1.5% diario</div>
+        <button class="buy-btn" onclick="go('Recargas.html')">Comprar</button>
+      </div>
 
-        <div class="botCard">
-          <div class="icon">🤖</div>
-          <div>Bot 2</div>
-          <div class="price">$20</div>
-          <div class="gain">+1.5% diario</div>
-          <button class="buy-btn" onclick="go('Recargas.html')">Comprar</button>
-        </div>
+      <div class="botCard">
+        <div class="icon">🤖</div>
+        <div>Bot 2</div>
+        <div class="price">$20</div>
+        <div class="gain">+1.5% diario</div>
+        <button class="buy-btn" onclick="go('Recargas.html')">Comprar</button>
+      </div>
 
-        <div class="botCard">
-          <div class="icon">🤖</div>
-          <div>Bot 3</div>
-          <div class="price">$30</div>
-          <div class="gain">+1.5% diario</div>
-          <button class="buy-btn" onclick="go('Recargas.html')">Comprar</button>
-        </div>
+      <div class="botCard">
+        <div class="icon">🤖</div>
+        <div>Bot 3</div>
+        <div class="price">$30</div>
+        <div class="gain">+1.5% diario</div>
+        <button class="buy-btn" onclick="go('Recargas.html')">Comprar</button>
+      </div>
 
-        <div class="botCard">
-          <div class="icon">🤖</div>
-          <div>Bot 4</div>
-          <div class="price">$50</div>
-          <div class="gain">+1.5% diario</div>
-          <button class="buy-btn" onclick="go('Recargas.html')">Comprar</button>
-        </div>
+      <div class="botCard">
+        <div class="icon">🤖</div>
+        <div>Bot 4</div>
+        <div class="price">$50</div>
+        <div class="gain">+1.5% diario</div>
+        <button class="buy-btn" onclick="go('Recargas.html')">Comprar</button>
       </div>
     </div>
+  </div>
 
-    <!-- RETIROS EN VIVO HORIZONTALES -->
-    <div class="card">
-      <h3>Retiros en Vivo</h3>
-      <div class="withdrawBox" id="withdrawFeed"></div>
-    </div>
+  <!-- RETIROS EN VIVO HORIZONTALES MEJORADOS -->
+  <div class="card">
+    <h3>Retiros en Vivo</h3>
+    <div class="withdrawBox" id="withdrawFeed"></div>
   </div>
 </div>
 
@@ -297,34 +298,42 @@ h3{color:var(--accent1);margin-bottom:10px;}
 function go(url){window.location.href=url;}
 
 // Carrusel
-const imgs=document.querySelectorAll('#carousel img');
-let current=0;
-setInterval(()=>{
+const imgs = document.querySelectorAll('#carousel img');
+let current = 0;
+setInterval(() => {
   imgs[current].classList.remove('active');
-  current=(current+1)%imgs.length;
+  current = (current + 1) % imgs.length;
   imgs[current].classList.add('active');
-},5000);
+}, 5000);
 
 // Retiros en vivo
-const feed=document.getElementById('withdrawFeed');
-function randomAddr(){
-  const c='ABCDEFGHJKLMNPQRSTUVWXYZ123456789';
-  let s='T';
-  for(let i=0;i<10;i++) s+=c[Math.floor(Math.random()*c.length)];
+const feed = document.getElementById('withdrawFeed');
+function randomAddr() {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ123456789';
+  let s = 'T';
+  for (let i = 0; i < 10; i++) {
+    s += chars[Math.floor(Math.random() * chars.length)];
+  }
   return s;
 }
-function addWithdraw(){
-  const addr=randomAddr();
-  const amt=(Math.random()*80+1).toFixed(2);
-  const div=document.createElement('div');
-  div.className='withdrawItem';
-  div.innerHTML=`💸 Retiro desde <span>${addr}</span> por <span>${amt} USDT</span> completado ✔️`;
+
+function addWithdraw() {
+  const addr = randomAddr();
+  const amt = (Math.random() * 80 + 1).toFixed(2);
+  const div = document.createElement('div');
+  div.className = 'withdrawItem';
+  div.innerHTML = `💸 Retiro desde <span>${addr}</span> por <span>${amt} USDT</span> completado ✔️`;
   feed.appendChild(div);
-  setTimeout(()=>div.classList.add('show'),100);
-  // Mantener solo últimos 20 items
-  if(feed.children.length>20) feed.removeChild(feed.firstChild);
+  setTimeout(() => div.classList.add('show'), 100);
+
+  // Mantener solo los últimos 20 retiros
+  if (feed.children.length > 20) {
+    feed.removeChild(feed.firstChild);
+  }
 }
-setInterval(addWithdraw,3500);
+
+// Añadir retiros automáticamente cada 3.5 segundos
+setInterval(addWithdraw, 3500);
 addWithdraw();
 </script>
 
