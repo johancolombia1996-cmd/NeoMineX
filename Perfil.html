@@ -50,12 +50,38 @@ body{
 @keyframes fadeInUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
 
 /* PERFIL */
-.profileM{
-  width:50px;height:50px;border-radius:50%;
+.profileSection{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:16px;
+}
+.profileIcon{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.profileCircle{
+  width:50px;
+  height:50px;
+  border-radius:50%;
   background:linear-gradient(145deg,var(--accent1),var(--accent2));
-  display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;
-  box-shadow:0 8px 26px rgba(6,182,212,0.12);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:800;
+  color:#fff;
+  font-size:20px;
+  animation:spin 8s linear infinite;
+  box-shadow:0 6px 20px rgba(0,215,255,0.4);
+}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.userID{
+  font-weight:700;
   font-size:16px;
+  color:var(--neon);
+  letter-spacing:1px;
+  user-select:none;
 }
 .vipRibbon{
   background:linear-gradient(145deg,var(--accent1),var(--accent2));
@@ -77,11 +103,15 @@ body{
 .info .label{font-size:12px;color:var(--muted);margin-bottom:8px}
 .info .value{font-size:16px;color:var(--neon);font-weight:800}
 
-/* BOTONES ACCIÓN */
-.actions{display:flex;gap:10px;margin-top:16px}
+/* BOTONES ACCIÓN MÓVIL 3x2 */
+.actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin-top:16px;
+}
 .actions .btn{
-  flex:1;
-  padding:10px;
+  padding:14px;
   border-radius:12px;
   border:none;
   font-weight:800;
@@ -90,8 +120,9 @@ body{
   display:flex;
   flex-direction:column;
   align-items:center;
-  gap:4px;
+  gap:6px;
   font-size:14px;
+  text-align:center;
 }
 .actions .btn.primary{
   background:linear-gradient(90deg,var(--accent1),var(--accent2));
@@ -112,13 +143,17 @@ body{
   color:#000;background:linear-gradient(90deg,var(--neon),#06b6d4);font-weight:700;box-shadow:0 8px 26px rgba(0,215,255,0.10);
 }
 </style>
+</head>
 <body>
 
 <div class="wrap">
   <div class="card">
     <!-- PERFIL -->
-    <div style="display:flex;justify-content:space-between;align-items:center;">
-      <div class="profileM">ALADO ID</div>
+    <div class="profileSection">
+      <div class="profileIcon">
+        <div class="profileCircle">M</div>
+        <div class="userID">A1B2</div>
+      </div>
       <div class="vipRibbon">VIP-0</div>
     </div>
 
@@ -134,7 +169,7 @@ body{
       </div>
     </div>
 
-    <!-- BOTONES ACCIÓN -->
+    <!-- BOTONES ACCIÓN 3x2 -->
     <div class="actions">
       <button class="btn primary" onclick="go('Home.html')">🏠<br>Home</button>
       <button class="btn primary" onclick="go('Ayuda.html')">❓<br>Ayuda</button>
@@ -160,4 +195,4 @@ function go(url){window.location.href=url;}
 </script>
 
 </body>
-        </html>
+</html>
