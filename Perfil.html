@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>NeoMineX — Minería (PRO)</title>
+<title>NeoMineX — Perfil Profesional</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -15,19 +15,15 @@
   --muted:#94a8b6;
   --glass:rgba(255,255,255,0.02);
   --radius:12px;
-  --robot-size:48px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
 body{
-  background:
-    radial-gradient(600px 200px at 10% 10%, rgba(0,215,255,0.03), transparent 10%),
-    radial-gradient(500px 180px at 90% 90%, rgba(6,182,212,0.02), transparent 10%),
-    var(--bg);
+  background:radial-gradient(600px 200px at 10% 10%, rgba(0,215,255,0.03), transparent 10%),
+             radial-gradient(500px 180px at 90% 90%, rgba(6,182,212,0.02), transparent 10%),
+             var(--bg);
   color:#eaf8ff;
   font-family:'Poppins',sans-serif;
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
   padding:20px;
   display:flex;
   justify-content:center;
@@ -35,35 +31,43 @@ body{
   overflow-y:auto;
   padding-bottom:140px;
 }
+
+/* WRAP */
 .wrap{width:100%;max-width:520px;margin:20px auto}
+
+/* CARD PRINCIPAL */
 .card{
   background:var(--card);
   border-radius:14px;
-  padding:18px;
+  padding:16px;
   border:1px solid rgba(255,255,255,0.03);
-  box-shadow: 0 18px 50px rgba(2,6,23,0.6);
+  box-shadow:0 18px 50px rgba(2,6,23,0.6);
   backdrop-filter:blur(6px);
-  position:relative;
-  overflow:visible;
+  overflow:hidden;
   animation:fadeInUp .36s ease both;
 }
+
+/* ANIMACIÓN */
 @keyframes fadeInUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
 
-/* PERFIL */
-.profileSection{
+/* BANNER PERFIL */
+.profileBanner{
+  width:100%;
+  height:120px;
+  border-radius:14px;
+  background:linear-gradient(90deg,#0ea5e9,#06b6d4);
   display:flex;
+  align-items:center;
   justify-content:space-between;
-  align-items:center;
+  padding:0 16px;
+  position:relative;
+  overflow:hidden;
   margin-bottom:16px;
-}
-.profileIcon{
-  display:flex;
-  align-items:center;
-  gap:12px;
+  box-shadow:0 6px 30px rgba(0,215,255,0.2);
 }
 .profileCircle{
-  width:50px;
-  height:50px;
+  width:60px;
+  height:60px;
   border-radius:50%;
   background:linear-gradient(145deg,var(--accent1),var(--accent2));
   display:flex;
@@ -71,15 +75,15 @@ body{
   justify-content:center;
   font-weight:800;
   color:#fff;
-  font-size:20px;
-  animation:spin 8s linear infinite;
+  font-size:24px;
+  animation:spin 10s linear infinite;
   box-shadow:0 6px 20px rgba(0,215,255,0.4);
 }
 @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 .userID{
   font-weight:700;
   font-size:16px;
-  color:var(--neon);
+  color:#fff;
   letter-spacing:1px;
   user-select:none;
 }
@@ -89,47 +93,53 @@ body{
   font-weight:700;
   border-radius:12px;
   padding:6px 12px;
+  font-size:13px;
   box-shadow:0 6px 20px rgba(0,215,255,0.3);
   text-align:center;
-  font-size:13px;
 }
 
-/* INFO GRID */
-.infoGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+/* INFO GRID MODERNO */
+.infoGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
 .info{
   background:var(--glass);
-  padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.02);text-align:center;
+  padding:14px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.03);
+  text-align:center;
+  box-shadow:0 6px 20px rgba(0,215,255,0.1);
+  transition:transform .2s;
 }
+.info:hover{transform:translateY(-3px);}
 .info .label{font-size:12px;color:var(--muted);margin-bottom:8px}
-.info .value{font-size:16px;color:var(--neon);font-weight:800}
+.info .value{font-size:18px;color:var(--neon);font-weight:800}
 
-/* BOTONES ACCIÓN MÓVIL 3x2 */
+/* BOTONES 2 FILAS x 3 COLUMNAS */
 .actions{
   display:grid;
-  grid-template-columns:1fr 1fr;
+  grid-template-columns:repeat(3,1fr);
   gap:12px;
-  margin-top:16px;
+  margin-top:20px;
 }
 .actions .btn{
   padding:14px;
-  border-radius:12px;
+  border-radius:14px;
   border:none;
   font-weight:800;
   cursor:pointer;
-  transition:transform .15s,box-shadow .15s;
   display:flex;
   flex-direction:column;
   align-items:center;
+  justify-content:center;
   gap:6px;
   font-size:14px;
   text-align:center;
-}
-.actions .btn.primary{
+  transition:transform .15s,box-shadow .15s;
   background:linear-gradient(90deg,var(--accent1),var(--accent2));
   color:#000;
   box-shadow:0 8px 26px rgba(0,215,255,0.10);
 }
 .actions .btn:active{transform:translateY(2px);}
+.actions .btn:hover{box-shadow:0 10px 28px rgba(0,215,255,0.2);}
 
 /* NAVBAR INFERIOR */
 .navbar{
@@ -142,15 +152,41 @@ body{
 .navItem.active,.navItem:hover{
   color:#000;background:linear-gradient(90deg,var(--neon),#06b6d4);font-weight:700;box-shadow:0 8px 26px rgba(0,215,255,0.10);
 }
+
+/* ICONO TELEGRAM FLOTANTE */
+.telegramFloat{
+  position:fixed;
+  right:16px;
+  bottom:120px; /* arriba de la navbar */
+  width:50px;
+  height:50px;
+  background:#0088cc;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 6px 20px rgba(0,0,0,0.4);
+  cursor:pointer;
+  transition:transform .2s, box-shadow .2s;
+  z-index:150;
+}
+.telegramFloat:hover{
+  transform:translateY(-4px);
+  box-shadow:0 10px 30px rgba(0,0,0,0.6);
+}
+.telegramFloat img{
+  width:28px;
+  height:28px;
+}
 </style>
 </head>
 <body>
 
 <div class="wrap">
   <div class="card">
-    <!-- PERFIL -->
-    <div class="profileSection">
-      <div class="profileIcon">
+    <!-- BANNER PERFIL -->
+    <div class="profileBanner">
+      <div style="display:flex;align-items:center;gap:12px;">
         <div class="profileCircle">M</div>
         <div class="userID">A1B2</div>
       </div>
@@ -169,20 +205,20 @@ body{
       </div>
     </div>
 
-    <!-- BOTONES ACCIÓN 3x2 -->
+    <!-- BOTONES 2 FILAS x 3 COLUMNAS -->
     <div class="actions">
-      <button class="btn primary" onclick="go('Home.html')">🏠<br>Home</button>
-      <button class="btn primary" onclick="go('Ayuda.html')">❓<br>Ayuda</button>
-      <button class="btn primary" onclick="go('CerrarSesion.html')">🚪<br>Cerrar</button>
-      <button class="btn primary" onclick="go('Mineria.html')">⚡<br>Minería</button>
-      <button class="btn primary" onclick="go('Recarga.html')">💳<br>Recarga</button>
-      <button class="btn primary" onclick="go('Retiros.html')">💰<br>Retiros</button>
+      <button class="btn" onclick="go('Home.html')">🏠<br>Home</button>
+      <button class="btn" onclick="go('Ayuda.html')">❓<br>Ayuda</button>
+      <button class="btn" onclick="go('CerrarSesion.html')">🚪<br>Cerrar</button>
+      <button class="btn" onclick="go('Mineria.html')">⚡<br>Minería</button>
+      <button class="btn" onclick="go('Recarga.html')">💳<br>Recarga</button>
+      <button class="btn" onclick="go('Retiros.html')">💰<br>Retiros</button>
     </div>
   </div>
 </div>
 
 <!-- NAVBAR INFERIOR -->
-<div class="navbar" role="navigation" aria-label="Navegación">
+<div class="navbar">
   <div class="navItem active" onclick="go('NeoMineX - Home.html')">🏠<div>Inicio</div></div>
   <div class="navItem" onclick="go('Retiros.html')">💰<div>Retiro</div></div>
   <div class="navItem" onclick="go('Mineria.html')">⚡<div>Minería</div></div>
@@ -190,9 +226,14 @@ body{
   <div class="navItem" onclick="go('Perfil.html')">👤<div>Perfil</div></div>
 </div>
 
+<!-- ICONO TELEGRAM FLOTANTE -->
+<div class="telegramFloat" onclick="go('https://t.me/TuCanal')">
+  <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/telegram.svg" alt="Telegram">
+</div>
+
 <script>
 function go(url){window.location.href=url;}
 </script>
 
 </body>
-</html>
+  </html>
