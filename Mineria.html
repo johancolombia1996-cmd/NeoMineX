@@ -391,7 +391,7 @@ p, div, span, label, input {
 */
 const REQUIRED_MIN = 10.00;
 const DAILY_RATE = 0.015; // 1.5%
-const CYCLE_MS = 60 * 1000; // <-- PRUEBA: 1 minuto. Para 24h usar 24*60*60*1000
+const CYCLE_Mrole= 24*60*60 * 1000; // <-- PRUEBA: 1 minuto. Para 24h usar 24*60*60*1000
 
 /* ================ KEYS ================ */
 const K_REC = 'nm_recarga';
@@ -420,7 +420,7 @@ const progressBarEl = document.getElementById('progressBar');
 const robotWrap = document.getElementById('robotWrap');
 
 /* ================ INICIALIZAR SALDOS ================ */
-if(localStorage.getItem(K_REC) === null) localStorage.setItem(K_REC, Number(10.00).toFixed(8)); // prueba 10 USDT
+if(localStorage.getItem(K_REC) === null) localStorage.setItem(K_REC, Number(0.00).toFixed(8)); // prueba 10 USDT
 if(localStorage.getItem(K_MINED) === null) localStorage.setItem(K_MINED, Number(0).toFixed(8));
 if(localStorage.getItem(K_INV) === null) localStorage.setItem(K_INV, Number(0).toFixed(8));
 
