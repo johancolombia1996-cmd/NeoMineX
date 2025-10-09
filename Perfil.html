@@ -25,12 +25,18 @@ html,body{height:100%;background:var(--bg);color:#eaf8ff;font-family:'Poppins',s
 @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 .userID{font-weight:700;font-size:16px;color:#fff;margin-left:6px;user-select:none;}
 .vipRibbon{background:linear-gradient(145deg,var(--accent1),var(--accent2));color:#000;font-weight:700;border-radius:12px;padding:6px 12px;font-size:13px;box-shadow:0 6px 20px rgba(0,215,255,0.3);text-align:center;}
-.infoGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px;}
+.infoGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
 .info{background:var(--glass);padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);text-align:center;box-shadow:0 6px 20px rgba(0,215,255,0.1);transition:transform .2s;}
 .info:hover{transform:translateY(-3px);}
 .info .label{font-size:12px;color:var(--muted);margin-bottom:6px;}
 .info .value{font-size:16px;color:var(--neon);font-weight:800;}
-.actions{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px;}
+.survey{margin-bottom:16px;background:var(--glass);padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);text-align:center;box-shadow:0 6px 20px rgba(0,215,255,0.08);}
+.survey h3{color:var(--neon);font-weight:700;margin-bottom:10px;font-size:14px;}
+.survey .options{display:flex;justify-content:center;gap:16px;margin-bottom:8px;}
+.survey .options div{flex:1;background:linear-gradient(90deg,var(--accent1),var(--accent2));padding:12px;border-radius:10px;cursor:pointer;color:#000;font-weight:700;transition:transform .2s;}
+.survey .options div:hover{transform:translateY(-2px);}
+.survey .note{font-size:12px;color:#fff;margin-top:4px;}
+.actions{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:20px;}
 .actions .btn{padding:10px;border-radius:12px;border:none;font-weight:700;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:12px;text-align:center;transition:transform .15s,box-shadow .15s;background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#000;box-shadow:0 6px 20px rgba(0,215,255,0.1);}
 .actions .btn:active{transform:translateY(2px);}
 .actions .btn:hover{box-shadow:0 8px 28px rgba(0,215,255,0.2);}
@@ -38,25 +44,16 @@ html,body{height:100%;background:var(--bg);color:#eaf8ff;font-family:'Poppins',s
 .navItem{flex:1;text-align:center;color:var(--muted);font-size:12px;padding:8px;border-radius:999px;cursor:pointer;background:transparent;}
 .navItem.active,.navItem:hover{color:#000;background:linear-gradient(90deg,var(--neon),#06b6d4);font-weight:700;box-shadow:0 8px 26px rgba(0,215,255,0.10);}
 
-/* FORMULARIO ENCUESTA */
-.survey{margin-top:16px;background:var(--glass);padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);text-align:center;box-shadow:0 6px 20px rgba(0,215,255,0.08);}
-.survey h3{color:var(--neon);font-weight:700;margin-bottom:10px;font-size:14px;}
-.survey .options{display:flex;justify-content:center;gap:16px;margin-bottom:8px;}
-.survey .options div{flex:1;background:linear-gradient(90deg,var(--accent1),var(--accent2));padding:12px;border-radius:10px;cursor:pointer;color:#000;font-weight:700;transition:transform .2s;}
-.survey .options div:hover{transform:translateY(-2px);}
-.survey .note{font-size:12px;color:#fff;margin-top:4px;}
-
-/* VENTANA EMERGENTE */
-.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);align-items:center;justify-content:center;z-index:2000;}
-.modal .modal-inner{background:var(--card);padding:16px;border-radius:12px;text-align:center;position:relative;box-shadow:0 20px 60px rgba(0,0,0,0.6);}
+/* MODAL MEJORADO */
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);align-items:center;justify-content:center;z-index:2000;}
+.modal .modal-inner{background:var(--card);padding:20px 16px;border-radius:16px;width:300px;max-width:90%;text-align:center;position:relative;box-shadow:0 20px 60px rgba(0,0,0,0.8);}
 .modal .close{position:absolute;top:8px;right:8px;font-size:18px;color:#fff;cursor:pointer;}
 .modal h2{color:var(--neon);margin-bottom:12px;}
 .modal p{font-size:14px;margin-bottom:12px;}
 .firework{position:absolute;width:100%;height:100%;top:0;left:0;pointer-events:none;}
 
-/* TELEGRAM FLOTANTE */
-.telegramFloat{position:fixed;right:16px;bottom:120px;width:50px;height:50px;background:#0088cc;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 20px rgba(0,0,0,0.4);cursor:pointer;transition:transform .2s,box-shadow .2s;z-index:150;}
-.telegramFloat:hover{transform:translateY(-4px);box-shadow:0 10px 30px rgba(0,0,0,0.6);}
+/* TELEGRAM FLOTANTE MOVIBLE */
+.telegramFloat{position:fixed;right:16px;bottom:120px;width:50px;height:50px;background:#0088cc;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 20px rgba(0,0,0,0.4);cursor:pointer;transition:all 1.5s ease-in-out;z-index:150;}
 .telegramFloat img{width:28px;height:28px;}
 </style>
 </head>
@@ -86,27 +83,26 @@ html,body{height:100%;background:var(--bg);color:#eaf8ff;font-family:'Poppins',s
       </div>
     </div>
 
+    <!-- ENCUESTA ARRIBA DE BOTONES -->
+    <div class="survey">
+      <h3>¿Opinas que la mejor minería es NeoMineX?</h3>
+      <div class="options">
+        <div id="optionYes">Sí</div>
+        <div id="optionNo">No</div>
+      </div>
+      <div class="note">Responde y obtén un beneficio</div>
+    </div>
+
     <!-- BOTONES -->
     <div class="actions">
       <button class="btn" onclick="go('Home.html')">🏠<br>Home</button>
       <button class="btn" onclick="go('Ayuda.html')">❓<br>Ayuda</button>
       <button class="btn" onclick="go('CerrarSesion.html')">🚪<br>Cerrar</button>
       <button class="btn" onclick="go('Mineria.html')">⚡<br>Minería</button>
-<button class="btn" onclick="go('Recarga.html')">💳<br>Recarga</button>
-<button class="btn" onclick="go('Retiros.html')">💰<br>Retiros</button>
-</div>
-
-<!-- ENCUESTA -->
-<div class="survey">
-  <h3>¿Opinas que la mejor minería es NeoMineX?</h3>
-  <div class="options">
-    <div id="optionYes">Sí</div>
-    <div id="optionNo">No</div>
+      <button class="btn" onclick="go('Recarga.html')">💳<br>Recarga</button>
+      <button class="btn" onclick="go('Retiros.html')">💰<br>Retiros</button>
+    </div>
   </div>
-  <div class="note">Responde y obtén un beneficio</div>
-</div>
-
-</div>
 </div>
 
 <!-- NAVBAR INFERIOR -->
@@ -118,8 +114,8 @@ html,body{height:100%;background:var(--bg);color:#eaf8ff;font-family:'Poppins',s
   <div class="navItem" onclick="go('Perfil.html')">👤<div>Perfil</div></div>
 </div>
 
-<!-- TELEGRAM FLOTANTE -->
-<div class="telegramFloat" onclick="go('https://t.me/TuCanal')">
+<!-- TELEGRAM FLOTANTE MOVIBLE -->
+<div class="telegramFloat" id="telegramFloat" onclick="go('https://t.me/TuCanal')">
   <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/telegram.svg" alt="Telegram">
 </div>
 
@@ -137,7 +133,17 @@ html,body{height:100%;background:var(--bg);color:#eaf8ff;font-family:'Poppins',s
 // NAVEGACIÓN
 function go(url){window.location.href=url;}
 
-// LOGICA DE ENCUESTA
+// TELEGRAM FLOAT MOVIMIENTO VERTICAL
+const telegram = document.getElementById('telegramFloat');
+let direction = 1;
+setInterval(()=> {
+  let bottom = parseInt(window.getComputedStyle(telegram).bottom);
+  if(bottom >= window.innerHeight-70) direction=-1;
+  if(bottom <= 70) direction=1;
+  telegram.style.bottom = (bottom + direction*2) + 'px';
+},30);
+
+// ENCUESTA Y MODAL
 const optionYes = document.getElementById('optionYes');
 const optionNo = document.getElementById('optionNo');
 const modal = document.getElementById('modal');
@@ -146,18 +152,17 @@ const modalMessage = document.getElementById('modalMessage');
 const modalClose = document.getElementById('modalClose');
 const recargaBalance = document.getElementById('recargaBalance');
 
-// Revisar localStorage cada 4 días
 const surveyKey = 'NeoMineXSurvey';
 const now = Date.now();
 const fourDays = 4*24*60*60*1000;
-
+  // Verificar si ya respondió
 if(localStorage.getItem(surveyKey)){
-  const lastTime = parseInt(localStorage.getItem(surveyKey));
-  if(now - lastTime >= fourDays){
-    localStorage.removeItem(surveyKey);
-  }else{
-    document.querySelector('.survey').style.display='none';
+  const data = JSON.parse(localStorage.getItem(surveyKey));
+  // Mantener balance si respondió sí
+  if(data.answer === 'yes'){
+    recargaBalance.innerText = (parseFloat(recargaBalance.innerText)+1).toFixed(2)+' $';
   }
+  document.querySelector('.survey').style.display='none';
 }
 
 function showModal(title,message,showFireworks){
@@ -166,21 +171,22 @@ function showModal(title,message,showFireworks){
   modalMessage.innerText = message;
   if(showFireworks){
     startFireworks();
+    setTimeout(stopFireworks,4000); // Detener fuegos después de 4s
   }
 }
 
-// EVENTO CERRAR MODAL
+// CERRAR MODAL
 modalClose.onclick = () => { modal.style.display='none'; stopFireworks(); }
 
 // RESPONDER SÍ
 optionYes.onclick = () => {
   if(localStorage.getItem(surveyKey)) return;
   showModal('¡Gracias por elegirnos!','NeoMineX te agradece, tienes 1 USDT de recompensa.',true);
-  // Sumar 1 USDT al balance de recarga
+  // Sumar 1 USDT
   let balance = parseFloat(recargaBalance.innerText);
   balance += 1;
-  recargaBalance.innerText = balance.toFixed(2) + ' $';
-  localStorage.setItem(surveyKey,now);
+  recargaBalance.innerText = balance.toFixed(2)+' $';
+  localStorage.setItem(surveyKey,JSON.stringify({answer:'yes',time:now}));
   document.querySelector('.survey').style.display='none';
 }
 
@@ -188,50 +194,47 @@ optionYes.onclick = () => {
 optionNo.onclick = () => {
   if(localStorage.getItem(surveyKey)) return;
   showModal('¡Me has roto el corazón!','No recibirás nada. Viva NeoMineX 💔',false);
-  localStorage.setItem(surveyKey,now);
+  localStorage.setItem(surveyKey,JSON.stringify({answer:'no',time:now}));
   document.querySelector('.survey').style.display='none';
 }
 
-// FUEGOS ARTIFICIALES SIMPLES
-let canvas, ctx, fireworks=[];
-let fwInterval;
-
+// FUEGOS ARTIFICIALES MEJORADOS
+let canvas, ctx, particles=[], fwInterval;
 function startFireworks(){
   canvas = document.getElementById('fireworkCanvas');
   canvas.width = canvas.offsetWidth;
   canvas.height = canvas.offsetHeight;
   ctx = canvas.getContext('2d');
+  for(let i=0;i<50;i++){
+    particles.push({
+      x: Math.random()*canvas.width,
+      y: canvas.height,
+      vx: (Math.random()-0.5)*6,
+      vy: Math.random()*-8-2,
+      alpha: 1,
+      color: `hsl(${Math.random()*360},100%,60%)`,
+      size: 2+Math.random()*3
+    });
+  }
   fwInterval = setInterval(drawFireworks,30);
 }
-
 function stopFireworks(){
   clearInterval(fwInterval);
+  particles = [];
   ctx.clearRect(0,0,canvas.width,canvas.height);
 }
-
 function drawFireworks(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
-  if(Math.random()<0.05){
-    fireworks.push({x:Math.random()*canvas.width, y:canvas.height, vy:-4-Math.random()*2, particles:[]});
-  }
-  fireworks.forEach((fw,i)=>{
-    fw.y += fw.vy;
-    if(fw.particles.length===0 && fw.y<canvas.height/2){
-      for(let j=0;j<30;j++){
-        fw.particles.push({x:fw.x,y:fw.y, vx:(Math.random()-0.5)*4, vy:(Math.random()-0.5)*4, alpha:1});
-      }
-    }
-    fw.particles.forEach(p=>{
-      p.x += p.vx;
-      p.y += p.vy;
-      p.alpha -=0.03;
-      ctx.fillStyle = `rgba(0,215,255,${p.alpha})`;
-      ctx.beginPath();
-      ctx.arc(p.x,p.y,2,0,Math.PI*2);
-      ctx.fill();
-    });
-    fw.particles = fw.particles.filter(p=>p.alpha>0);
-    if(fw.particles.length===0 && fw.y<0) fireworks.splice(i,1);
+  particles.forEach((p,i)=>{
+    p.x += p.vx;
+    p.y += p.vy;
+    p.vy += 0.05; // gravedad
+    p.alpha -= 0.02;
+    if(p.alpha<=0) particles.splice(i,1);
+    ctx.fillStyle = `hsla(${Math.random()*360},100%,60%,${p.alpha})`;
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.size,0,Math.PI*2);
+    ctx.fill();
   });
 }
 </script>
