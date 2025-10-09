@@ -1,207 +1,181 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>NeoMineX — Minería (PRO)</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Minería USDT TRC20</title>
 <style>
-:root{
-  --bg:#020615;
-  --card:rgba(8,12,20,0.88);
-  --accent1:#06b6d4;
-  --accent2:#0ea5e9;
-  --neon:#00d7ff; /* azul eléctrico */
-  --muted:#94a8b6;
-  --glass:rgba(255,255,255,0.02);
-  --radius:12px;
-}
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%}
-body{
-  background:
-    radial-gradient(600px 200px at 10% 10%, rgba(0,215,255,0.03), transparent 10%),
-    radial-gradient(500px 180px at 90% 90%, rgba(6,182,212,0.02), transparent 10%),
-    var(--bg);
-  color:#eaf8ff;
-  font-family:'Poppins',sans-serif;
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
-  padding:20px;
-  display:flex;
-  justify-content:center;
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: radial-gradient(circle at center, #00111f, #000);
+  color: #fff;
   overflow-y: auto;
-  heigth: 110px;
 }
 
-/* Container */
-.wrap{width:100%;max-width:480px;}
-.card{
-  background:var(--card);
-  border-radius:14px;
-  padding:18px;
-  border:1px solid rgba(255,255,255,0.03);
-  box-shadow: 0 18px 50px rgba(2,6,23,0.6);
-  backdrop-filter:blur(6px);
-  position:relative;
-  overflow:hidden;
-  transform:translateY(12px);
-  animation:fadeInUp .5s ease both;
-}
-@keyframes fadeInUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
-
-/* Top controls */
-.top-left{position:fixed;left:18px;top:18px;font-size:22px;color:var(--neon);cursor:pointer;z-index:40;}
-.top-right{position:fixed;right:18px;top:18px;display:flex;gap:12px;z-index:40}
-.profileM{
-  width:44px;height:44px;border-radius:50%;
-  background:linear-gradient(145deg,var(--accent1),var(--accent2));
-  display:flex;align-items:center;justify-content:center;font-weight:800;color:#000;
-  box-shadow:0 8px 26px rgba(6,182,212,0.12);
-  animation:spin 6s linear infinite, glow 2s ease-in-out infinite alternate;
-}
-@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
-@keyframes glow{from{box-shadow:0 8px 20px rgba(0,215,255,0.12)}to{box-shadow:0 12px 40px rgba(0,215,255,0.18)}}
-
-/* Header */
-.header{display:flex;align-items:center;justify-content:space-between}
-.title{font-size:18px;color:var(--neon);font-weight:700;display:flex;gap:10px;align-items:center}
-.subtitle{font-size:12px;color:var(--muted);margin-top:6px}
-
-/* Info grid */
-.infoGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
-.info{
-  background:var(--glass);
-  padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.02);text-align:center;
-}
-.info .label{font-size:12px;color:var(--muted);margin-bottom:8px}
-.info .value{font-size:16px;color:var(--neon);font-weight:800}
-
-/* Miner box */
-.minerBox{margin-top:14px;padding:14px;border-radius:12px;background:linear-gradient(90deg,rgba(6,182,212,0.02),rgba(14,165,233,0.02));border:1px solid rgba(255,255,255,0.03)}
-.minerHeader{display:flex;align-items:center;gap:12px;margin-bottom:12px}
-.minerIcon{width:54px;height:54px;border-radius:12px;background:linear-gradient(90deg,var(--accent1),var(--accent2));display:flex;align-items:center;justify-content:center;color:#000;font-size:22px}
-.minerTitle{font-weight:700;color:var(--neon);font-size:15px}
-.stateText{font-size:13px;color:var(--muted);margin-top:6px}
-
-/* Progress (with particle canvas overlay) */
-.progressWrap{margin-top:10px}
-.progressBar{
-  position:relative;
-  width:100%;height:14px;background:rgba(255,255,255,0.03);border-radius:999px;overflow:hidden;border:1px solid rgba(255,255,255,0.02)
-}
-.progressFill{
-  height:100%;width:0%;
-  background:linear-gradient(90deg,var(--accent1),var(--accent2));
-  transition:width 0.8s linear;
-  box-shadow:0 8px 24px rgba(0,215,255,0.08) inset;
-}
-.canvasParticles{
-  position:absolute;inset:0;pointer-events:none;
+.container {
+  padding: 20px;
+  padding-bottom: 120px; /* espacio extra para la barra inferior */
 }
 
-/* stat row */
-.statRow{display:flex;justify-content:space-between;align-items:center;margin-top:10px}
-.stat{font-size:13px;color:var(--muted)}
-
-/* actions */
-.actions{display:flex;gap:10px;margin-top:12px}
-.btn{flex:1;padding:10px;border-radius:10px;border:none;font-weight:800;cursor:pointer;transition:transform .15s,box-shadow .15s}
-.btn.primary{background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#000}
-.btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted)}
-.btn:active{transform:translateY(2px)}
-.btn[disabled]{opacity:0.6;cursor:not-allowed}
-
-/* footer note */
-.note{margin-top:12px;color:#ffd4d4;font-size:13px;border-radius:8px;padding:10px;background:rgba(255,100,120,0.02);border:1px solid rgba(255,100,120,0.03)}
-
-/* navbar bottom (transparent) */
-.navbar{
-  position:fixed;bottom:12px;left:50%;transform:translateX(-50%);
-  width:94%;max-width:980px;display:flex;justify-content:space-between;gap:6px;z-index:30;
+.card {
+  background: rgba(0, 15, 40, 0.7);
+  border-radius: 15px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
 }
-.navItem{
-  flex:1;text-align:center;color:var(--muted);font-size:12px;padding:8px;border-radius:999px;cursor:pointer;background:transparent;
-}
-.navItem.active,.navItem:hover{color:#000;background:linear-gradient(90deg,var(--neon),#06b6d4);font-weight:700;box-shadow:0 8px 26px rgba(0,215,255,0.10)}
 
-/* responsive */
-@media(max-width:420px){
-  .infoGrid{grid-template-columns:1fr}
+h2 {
+  color: #00ccff;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.balance {
+  font-size: 18px;
+  margin-top: 10px;
+  color: #00eaff;
+}
+
+.progress-container {
+  background: rgba(255,255,255,0.1);
+  border-radius: 10px;
+  height: 20px;
+  overflow: hidden;
+  margin-top: 15px;
+  position: relative;
+  box-shadow: 0 0 10px #00bfff inset;
+}
+
+.progress-bar {
+  background: linear-gradient(90deg, #00bfff, #00ffff);
+  height: 100%;
+  width: 0%;
+  transition: width 1s linear;
+  position: relative;
+  overflow: visible;
+}
+
+/* 🔹 Robot con rastro eléctrico */
+.robot {
+  position: absolute;
+  top: -28px;
+  left: 0;
+  width: 45px;
+  height: 45px;
+  background: url('https://cdn-icons-png.flaticon.com/512/4712/4712106.png') no-repeat center/contain;
+  animation: moveRobot 60s linear forwards;
+}
+
+.robot::after {
+  content: "";
+  position: absolute;
+  top: 15px;
+  left: -100px;
+  width: 100px;
+  height: 8px;
+  background: radial-gradient(circle, rgba(0,255,255,0.8) 0%, transparent 70%);
+  animation: energyTrail 0.3s infinite alternate;
+  filter: blur(3px);
+}
+
+@keyframes moveRobot {
+  from { left: 0%; filter: drop-shadow(0 0 8px #00ffff); }
+  to { left: 100%; filter: drop-shadow(0 0 25px #00bfff); }
+}
+
+@keyframes energyTrail {
+  from { opacity: 0.5; transform: scaleX(1); }
+  to { opacity: 1; transform: scaleX(1.3); }
+}
+
+button {
+  width: 48%;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(90deg, #007bff, #00eaff);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 15px #00eaff;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.navbar {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background: rgba(0, 15, 40, 0.95);
+  display: flex;
+  justify-content: space-around;
+  padding: 10px 0;
+  border-top: 1px solid #00bfff;
+  backdrop-filter: blur(6px);
+}
+
+.navItem {
+  text-align: center;
+  color: #ccc;
+  font-size: 12px;
+  transition: color 0.3s;
+}
+
+.navItem.active {
+  color: #00eaff;
+}
+
+.navItem div {
+  margin-top: 3px;
 }
 </style>
 </head>
 <body>
 
-<!-- back arrow -->
-<div class="top-left" title="Volver" onclick="goHome()">⬅</div>
+<div class="container">
+  <div class="card">
+    <h2>⚡ Minería USDT TRC20</h2>
+    <p>Obtén <strong>1.5%</strong> cada ciclo — Mínimo inversión: <strong>10 USDT</strong></p>
 
-<!-- top-right profile + history icon -->
-<div class="top-right">
-  <div style="cursor:pointer;font-size:20px;color:var(--muted)" title="Historial" onclick="openHistory()">📒</div>
-  <div class="profileM" title="Perfil">M</div>
-</div>
+    <div class="balance">Saldo de Recarga: <strong>10 USDT</strong></div>
+    <div class="balance">Saldo de Minería: <strong>0.15 USDT</strong></div>
 
-<div class="wrap">
-  <div class="card" role="main" aria-labelledby="title">
-    <div class="header">
-      <div>
-        <div class="title" id="title">⚡ Minería USDT TRC20</div>
-        <div class="subtitle">Gana <strong>1.5%</strong> cada ciclo — Mínimo inversión: <strong>10 USDT</strong></div>
+    <div class="card" style="margin-top:20px;">
+      <h3>Estado de Minería</h3>
+      <p><strong>Minando...</strong></p>
+      <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+        <div class="robot"></div>
       </div>
-      <!-- small ID block -->
-      <div style="text-align:right">
-        <div style="font-size:12px;color:var(--muted)">ID</div>
-        <div style="margin-top:6px;font-weight:800;color:var(--neon)" id="userId"></div>
+      <p>Tiempo restante: <span id="timer">00:01:00</span></p>
+      <p>Inversión: <strong>10 USDT</strong></p>
+      <div style="display:flex; justify-content:space-between;">
+        <button id="startBtn" onclick="iniciarMineria()">Iniciar Minería</button>
+        <button id="claimBtn" disabled>Reclamar</button>
       </div>
+      <p style="font-size:12px; opacity:0.8;">Si cierras o recargas, la minería continuará gracias al almacenamiento local.</p>
     </div>
 
-    <div class="infoGrid" aria-hidden="false">
-      <div class="info">
-        <div class="label">Saldo de Recarga</div>
-        <div class="value" id="recarga">0.00 USDT</div>
-      </div>
-      <div class="info">
-        <div class="label">Saldo de Minería</div>
-        <div class="value" id="mined">0.00 USDT</div>
-      </div>
-    </div>
-
-    <div class="minerBox" aria-live="polite">
-      <div class="minerHeader">
-        <div class="minerIcon">⚡</div>
-        <div>
-          <div class="minerTitle">Estado de Minería</div>
-          <div class="stateText" id="stateText">Inactiva</div>
-        </div>
-      </div>
-
-      <div class="progressWrap" aria-hidden="false">
-        <div class="progressBar" aria-label="Progreso de minería">
-          <div id="progressFill" class="progressFill"></div>
-          <!-- particle canvas -->
-          <canvas id="particles" class="canvasParticles"></canvas>
-        </div>
-        <div class="statRow">
-          <div class="stat">Tiempo restante: <strong id="timeLeft">—</strong></div>
-          <div class="stat">Inversión: <strong id="invested">—</strong></div>
-        </div>
-      </div>
-
-      <div class="actions">
-        <button id="startBtn" class="btn primary">Iniciar Minería</button>
-        <button id="claimBtn" class="btn ghost" disabled>Reclamar</button>
-      </div>
-
-      <div style="margin-top:8px;color:var(--muted);font-size:13px">Si cierras o recargas, la minería continúa gracias al almacenamiento local.</div>
-    </div>
-
-    <div class="note">⚠️ Revisa siempre la dirección de retiro antes de mover fondos. Si la dirección es incorrecta, tus activos no se podrán recuperar.</div>
+    <p style="color:#ffcc00; font-size:13px;">
+      ⚠️ Revisa siempre la dirección de retiro antes de mover fondos. Si la dirección es incorrecta, tus activos no se podrán recuperar.
+    </p>
   </div>
 </div>
 
-<!-- bottom navigation (transparent) -->
-<div class="navbar" role="navigation" aria-label="Navegación">
+<div class="navbar">
   <div class="navItem active" onclick="go('home.html')">🏠<div>Inicio</div></div>
   <div class="navItem" onclick="go('Retiros.html')">💰<div>Retiro</div></div>
   <div class="navItem" onclick="go('mineria.html')">⚡<div>Minería</div></div>
@@ -209,325 +183,40 @@ body{
   <div class="navItem" onclick="go('perfil.html')">👤<div>Perfil</div></div>
 </div>
 
-<!-- modal history -->
-<div id="modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);align-items:center;justify-content:center;z-index:2000">
-  <div style="background:var(--card);padding:16px;border-radius:12px;width:90%;max-width:420px;position:relative">
-    <div style="position:absolute;right:10px;top:8px;cursor:pointer;color:var(--neon)" onclick="closeHistory()">✖</div>
-    <h3 style="color:var(--neon);margin-bottom:8px">Historial de Minería</h3>
-    <div id="historyList" style="max-height:320px;overflow:auto;color:#cfeef6">
-      <div style="color:var(--muted)">No hay registros aún.</div>
-    </div>
-    <div style="display:flex;justify-content:center;margin-top:12px;gap:8px">
-      <button style="padding:8px 12px;border-radius:8px;border:none;background:var(--accent1);color:#000;font-weight:700" onclick="closeHistory()">Cerrar</button>
-    </div>
-  </div>
-</div>
-
 <script>
-/* ================= CONFIG (para probar: 1 minuto) =================
-   Cambia CYCLE_MS a 24*60*60*1000 para producción (24 horas).
-*/
-const REQUIRED_MIN = 10.00;
-const DAILY_RATE = 0.015; // 1.5%
-const CYCLE_MS = 60 * 1000; // <-- PRUEBA: 1 minuto. Cambiar a 24*60*60*1000 para 24h
+function go(url){window.location.href=url;}
 
-// LocalStorage keys
-const K_REC = 'nm_recarga';
-const K_MINED = 'nm_mined';
-const K_INV = 'nm_invested';
-const K_START = 'nm_mining_start';
-const K_END = 'nm_mining_end';
-const K_HISTORY = 'nm_mining_history';
-const K_USER = 'nm_user_id';
+let duracion = 60; // 1 minuto para pruebas
+let tiempoRestante = duracion;
+let minando = false;
+let progreso = 0;
 
-// DOM
-const recEl = document.getElementById('recarga');
-const minedEl = document.getElementById('mined');
-const stateText = document.getElementById('stateText');
-const progressFill = document.getElementById('progressFill');
-const timeLeftEl = document.getElementById('timeLeft');
-const investedEl = document.getElementById('invested');
-const startBtn = document.getElementById('startBtn');
-const claimBtn = document.getElementById('claimBtn');
-const userIdEl = document.getElementById('userId');
-const historyList = document.getElementById('historyList');
-const modal = document.getElementById('modal');
+function iniciarMineria() {
+  if (minando) return;
+  minando = true;
+  document.getElementById('startBtn').disabled = true;
+  const progressBar = document.getElementById('progressBar');
+  const timer = document.getElementById('timer');
+  const claimBtn = document.getElementById('claimBtn');
 
-// init balances if absent
-if(localStorage.getItem(K_REC) === null) localStorage.setItem(K_REC, Number(10.00).toFixed(8)); // test balance = 10
-if(localStorage.getItem(K_MINED) === null) localStorage.setItem(K_MINED, Number(0).toFixed(8));
-if(localStorage.getItem(K_INV) === null) localStorage.setItem(K_INV, Number(0).toFixed(8));
+  let intervalo = setInterval(() => {
+    tiempoRestante--;
+    progreso = ((duracion - tiempoRestante) / duracion) * 100;
+    progressBar.style.width = progreso + "%";
 
-// user id 3 letters + 1 digit (persistent)
-function genUserId(){
-  const L="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  return L.charAt(Math.floor(Math.random()*L.length)) +
-         L.charAt(Math.floor(Math.random()*L.length)) +
-         L.charAt(Math.floor(Math.random()*L.length)) +
-         String(Math.floor(Math.random()*10));
-}
-if(!localStorage.getItem(K_USER)) localStorage.setItem(K_USER, genUserId());
-userIdEl.textContent = localStorage.getItem(K_USER);
+    let min = Math.floor(tiempoRestante / 60);
+    let sec = tiempoRestante % 60;
+    timer.textContent = `00:${String(min).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
 
-// helper get/set numbers
-function getNum(k){ return parseFloat(localStorage.getItem(k) || '0'); }
-function setNum(k,v){ localStorage.setItem(k, Number(v).toFixed(8)); }
-
-// refresh UI
-function refreshUI(){
-  recEl.textContent = getNum(K_REC).toFixed(2) + ' USDT';
-  minedEl.textContent = getNum(K_MINED).toFixed(6) + ' USDT';
-  const invested = getNum(K_INV);
-  investedEl.textContent = invested > 0 ? invested.toFixed(6) + ' USDT' : '—';
-  const end = parseInt(localStorage.getItem(K_END) || '0',10);
-  if(end && Date.now() < end){
-    // mining active
-    stateText.textContent = 'Minando';
-    startBtn.disabled = true;
-    claimBtn.disabled = true;
-    updateProgress();
-  } else if(end && Date.now() >= end){
-    // finished -> enable claim
-    stateText.textContent = 'Ciclo completado';
-    startBtn.disabled = true;
-    claimBtn.disabled = false;
-    progressFill.style.width = '100%';
-    timeLeftEl.textContent = '00:00:00';
-  } else {
-    // inactive
-    stateText.textContent = 'Inactiva';
-    startBtn.disabled = false;
-    claimBtn.disabled = true;
-    progressFill.style.width = '0%';
-    timeLeftEl.textContent = '—';
-  }
-  renderHistoryPreview();
-}
-refreshUI();
-
-/* Progress & timer */
-let rafId = null;
-function updateProgress(){
-  const start = parseInt(localStorage.getItem(K_START)||'0',10);
-  const end = parseInt(localStorage.getItem(K_END)||'0',10);
-  if(!end || !start){ timeLeftEl.textContent='—'; progressFill.style.width='0%'; return; }
-  const now = Date.now();
-  const total = CYCLE_MS;
-  const remaining = Math.max(0, end - now);
-  const elapsed = Math.min(total, now - start);
-  const pct = Math.max(0, Math.min(100, (elapsed / total) * 100));
-  progressFill.style.width = pct + '%';
-  timeLeftEl.textContent = formatMs(remaining);
-  if(remaining <= 0){
-    // finished
-    cancelAnimationFrame(rafId);
-    startFireParticles(false); // end particle effect
-    refreshUI();
-    return;
-  }
-  rafId = requestAnimationFrame(updateProgress);
-}
-function formatMs(ms){
-  if(ms <= 0) return '00:00:00';
-  const s = Math.floor(ms/1000)%60;
-  const m = Math.floor(ms/60000)%60;
-  const h = Math.floor(ms/3600000);
-  return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-}
-
-/* Start mining */
-startBtn.addEventListener('click', ()=> {
-  const rec = getNum(K_REC);
-  if(rec < REQUIRED_MIN){
-    alert(`Saldo insuficiente. Necesitas al menos ${REQUIRED_MIN} USDT para iniciar minería.`);
-    return;
-  }
-  // lock full recarga as invested
-  setNum(K_INV, rec);
-  setNum(K_REC, 0.00);
-  const now = Date.now();
-  localStorage.setItem(K_START, String(now));
-  localStorage.setItem(K_END, String(now + CYCLE_MS));
-  // start particle visuals
-  startFireParticles(true);
-  refreshUI();
-  updateProgress();
-  alert('✅ Minería iniciada. Proceso activo.');
-});
-
-/* Claim: compute gain, add to mined, auto-restart cycle */
-claimBtn.addEventListener('click', ()=> {
-  const invested = getNum(K_INV);
-  if(invested <= 0){ alert('No hay inversión activa.'); return; }
-  // calculate gain
-  const gain = invested * DAILY_RATE;
-  const newMined = getNum(K_MINED) + gain;
-  setNum(K_MINED, newMined);
-  // create history entry
-  addHistoryEntry(invested, gain);
-  // restart cycle automatically (invested remains locked)
-  const now = Date.now();
-  localStorage.setItem(K_START, String(now));
-  localStorage.setItem(K_END, String(now + CYCLE_MS));
-  // visual
-  claimBtn.disabled = true;
-  startFireParticles(true);
-  refreshUI();
-  updateProgress();
-  alert(`✅ Ganancia de ${gain.toFixed(6)} USDT añadida a Saldo de Minería.`);
-});
-
-/* History handling */
-function addHistoryEntry(invested, gain){
-  const hist = JSON.parse(localStorage.getItem(K_HISTORY) || '[]');
-  hist.push({when:new Date().toLocaleString(), invested: Number(invested).toFixed(6), gain: Number(gain).toFixed(8)});
-  localStorage.setItem(K_HISTORY, JSON.stringify(hist));
-  renderHistoryPreview();
-}
-function renderHistoryPreview(){
-  const hist = JSON.parse(localStorage.getItem(K_HISTORY) || '[]');
-  const preview = hist.slice(-4).reverse();
-  const container = document.getElementById('historyList');
-  if(!container) return;
-  if(preview.length === 0){
-    container.innerHTML = '<div style="color:var(--muted)">No hay registros aún.</div>';
-  } else {
-    container.innerHTML = preview.map(h=>{
-      return `<div style="padding:8px;border-bottom:1px dashed rgba(255,255,255,0.03);">
-        <div style="font-weight:700;color:var(--neon)">${h.gain} USDT</div>
-        <div style="font-size:12px;color:var(--muted)">${h.when} · Invertido ${h.invested} USDT</div>
-      </div>`;
-    }).join('');
-  }
-}
-
-/* History modal toggles */
-function openHistory(){ modal.style.display='flex'; }
-function closeHistory(){ modal.style.display='none'; }
-
-/* Navigation helper */
-function go(url){ window.location.href = url; }
-function goHome(){ window.location.href = 'NeoMineX%20-%20Home.html'; }
-
-/* Particle system (canvas over progress bar) */
-const canvas = document.getElementById('particles');
-const ctx = canvas.getContext('2d');
-let particles = [];
-let particleRAF = null;
-let particleActive = false;
-
-function resizeCanvas(){
-  const rect = document.querySelector('.progressBar').getBoundingClientRect();
-  canvas.width = Math.max(200, rect.width);
-  canvas.height = rect.height;
-}
-window.addEventListener('resize', resizeCanvas);
-resizeCanvas();
-
-function spawnParticle(x, y, dir){
-  const p = {
-    x, y,
-    vx: (Math.random()*0.6 + 0.8) * dir,
-    vy: (Math.random()* -0.6) - 0.6,
-    life: Math.random()*600 + 600,
-    size: Math.random()*2 + 1,
-    alpha: 1,
-    hue: 190 + Math.random()*40
-  };
-  particles.push(p);
-}
-
-function updateParticles(dt){
-  for(let i = particles.length-1; i>=0; i--){
-    const p = particles[i];
-    p.life -= dt;
-    p.x += p.vx * dt * 0.02;
-    p.y += p.vy * dt * 0.02;
-    p.alpha = Math.max(0, p.life / 1200);
-    if(p.life <= 0) particles.splice(i,1);
-  }
-}
-
-function drawParticles(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  for(const p of particles){
-    ctx.beginPath();
-    const grad = ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.size*6);
-    grad.addColorStop(0, `rgba(0,215,255,${p.alpha})`);
-    grad.addColorStop(0.4, `rgba(0,150,200,${p.alpha*0.6})`);
-    grad.addColorStop(1, `rgba(0,80,120,0)`);
-    ctx.fillStyle = grad;
-    ctx.arc(p.x,p.y,p.size,0,Math.PI*2);
-    ctx.fill();
-  }
-}
-
-let lastParticleTime = performance.now();
-function particleLoop(now){
-  const dt = now - lastParticleTime;
-  lastParticleTime = now;
-  updateParticles(dt);
-  // spawn particles near the leading edge of progressFill
-  if(particleActive){
-    const fillRect = document.getElementById('progressFill').getBoundingClientRect();
-    const barRect = document.querySelector('.progressBar').getBoundingClientRect();
-    // convert to canvas coords
-    const xOffset = fillRect.width; // width as spawn x
-    const spawnX = Math.max(6, Math.min(canvas.width-6, (xOffset / barRect.width) * canvas.width));
-    // spawn a few
-    for(let i=0;i<2;i++){
-      spawnParticle(spawnX + (Math.random()*8-4), canvas.height - 6, Math.random()<0.5 ? -0.5 : 0.5);
+    if (tiempoRestante <= 0) {
+      clearInterval(intervalo);
+      timer.textContent = "00:00:00";
+      claimBtn.disabled = false;
+      minando = false;
     }
-  }
-  drawParticles();
-  particleRAF = requestAnimationFrame(particleLoop);
+  }, 1000);
 }
-function startFireParticles(active){
-  particleActive = !!active;
-  if(active && !particleRAF){
-    lastParticleTime = performance.now();
-    particleRAF = requestAnimationFrame(particleLoop);
-  }
-  if(!active && particleRAF){
-    // let existing particles fade
-    setTimeout(()=>{ cancelAnimationFrame(particleRAF); particleRAF = null; particles=[]; ctx.clearRect(0,0,canvas.width,canvas.height); }, 800);
-  }
-}
-
-/* Keep UI ticking */
-setInterval(()=> {
-  refreshUI();
-  // if mining active ensure particles running
-  const end = parseInt(localStorage.getItem(K_END)||'0',10);
-  if(end && Date.now() < end){
-    startFireParticles(true);
-  } else {
-    // stop particles if not mining
-    if(!claimBtn.disabled) startFireParticles(false);
-  }
-}, 1000);
-
-/* initial adjust & progress tick */
-resizeCanvas();
-updateProgress();
-
-/* expose helper to reset (for dev) */
-window.NeoMineX = {
-  resetAll: ()=> {
-    localStorage.setItem(K_REC, Number(10.00).toFixed(8));
-    localStorage.setItem(K_MINED, Number(0).toFixed(8));
-    localStorage.setItem(K_INV, Number(0).toFixed(8));
-    localStorage.removeItem(K_START);
-    localStorage.removeItem(K_END);
-    localStorage.removeItem(K_HISTORY);
-    refreshUI();
-    updateProgress();
-    alert('Reset aplicado: recarga=10, mined=0, invested=0');
-  },
-  setCycleMs: (ms) => {
-    console.warn('setCycleMs es solo para consola (no persistente). Edítalo en el archivo CYCLE_MS constante.');
-  }
-};
 </script>
+
 </body>
 </html>
