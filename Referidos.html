@@ -1,1 +1,214 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>NeoMineX — Referidos</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#020615;
+  --card:rgba(8,12,20,0.88);
+  --accent1:#06b6d4;
+  --accent2:#0ea5e9;
+  --neon:#00d7ff;
+  --muted:#94a8b6;
+  --glass:rgba(255,255,255,0.02);
+  --radius:12px;
+}
 
+body{
+  background: radial-gradient(600px 200px at 10% 10%, rgba(0,215,255,0.03), transparent 10%),
+              radial-gradient(500px 180px at 90% 90%, rgba(6,182,212,0.02), transparent 10%),
+              var(--bg);
+  color:#eaf8ff;
+  font-family:'Poppins',sans-serif;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  padding:20px;
+  display:flex;
+  justify-content:center;
+  min-height:100vh;
+  overflow-y:auto;
+  padding-bottom:140px;
+}
+
+.wrap{width:100%;max-width:520px;margin:20px auto}
+
+.card{
+  background:var(--card);
+  border-radius:14px;
+  padding:18px;
+  border:1px solid rgba(255,255,255,0.03);
+  box-shadow: 0 18px 50px rgba(2,6,23,0.6);
+  backdrop-filter:blur(6px);
+  position:relative;
+  margin-bottom:16px;
+}
+
+.header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.title{font-size:18px;color:var(--neon);font-weight:700;display:flex;gap:10px;align-items:center}
+.subtitle{font-size:12px;color:var(--muted)}
+
+.infoGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
+.info{
+  background:var(--glass);
+  padding:12px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,0.02);
+  text-align:center;
+}
+.info .label{font-size:12px;color:var(--muted);margin-bottom:8px}
+.info .value{font-size:16px;color:var(--neon);font-weight:800}
+
+/* REFERIDOS */
+.level{margin-bottom:12px}
+.level-title{font-weight:700;color:var(--neon);font-size:15px;margin-bottom:6px}
+.level-info{display:flex;justify-content:space-between;font-size:13px;color:#eaf8ff;margin-bottom:2px}
+.level-info span{color:var(--muted)}
+.copy-link{
+  margin-top:10px;
+  display:flex;
+  gap:8px;
+}
+.copy-link input{
+  flex:1;
+  padding:8px;
+  border-radius:10px;
+  border:none;
+  background:rgba(255,255,255,0.05);
+  color:#eaf8ff;
+  font-weight:700;
+}
+.copy-link button{
+  padding:8px 12px;
+  border:none;
+  border-radius:10px;
+  background:linear-gradient(90deg,var(--accent1),var(--accent2));
+  color:#000;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.footer-text{
+  margin-top:20px;
+  text-align:center;
+  font-size:12px;
+  color:var(--muted);
+}
+
+/* NAV BAR */
+.navbar{
+  position:fixed;
+  bottom:12px;
+  left:50%;
+  transform:translateX(-50%);
+  width:94%;
+  max-width:980px;
+  display:flex;
+  justify-content:space-between;
+  gap:6px;
+  z-index:100;
+}
+.navItem{
+  flex:1;
+  text-align:center;
+  color:#94a8b6;
+  font-size:12px;
+  padding:8px;
+  border-radius:999px;
+  cursor:pointer;
+  background:transparent;
+  transition:all .2s;
+}
+.navItem.active,
+.navItem:hover{
+  color:#000;
+  background:linear-gradient(90deg,#00d7ff,#06b6d4);
+  font-weight:700;
+  box-shadow:0 8px 26px rgba(0,215,255,0.10);
+  transform:translateY(-2px);
+}
+.navItem img, .navItem svg{
+  width:22px;
+  height:22px;
+  display:block;
+  margin:0 auto 2px;
+}
+.navItem div{font-size:10px;margin-top:2px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <div class="header">
+      <div class="title">Perfil - Usuario</div>
+    </div>
+    <div class="infoGrid">
+      <div class="info">
+        <div class="label">UID</div>
+        <div class="value" id="uid">AB12</div>
+      </div>
+      <div class="info">
+        <div class="label">Referidos</div>
+        <div class="value" id="totalRefs">0</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="level">
+      <div class="level-title">Lev 1 (5% ganancia)</div>
+      <div class="level-info"><span>Inversión:</span> $0.00</div>
+      <div class="level-info"><span>Referidos:</span> 0</div>
+    </div>
+    <div class="level">
+      <div class="level-title">Lev 2 (3% ganancia)</div>
+      <div class="level-info"><span>Inversión:</span> $0.00</div>
+      <div class="level-info"><span>Referidos:</span> 0</div>
+    </div>
+    <div class="level">
+      <div class="level-title">Lev 3 (2% ganancia)</div>
+      <div class="level-info"><span>Inversión:</span> $0.00</div>
+      <div class="level-info"><span>Referidos:</span> 0</div>
+    </div>
+
+    <div class="copy-link">
+      <input type="text" id="refLink" value="https://neomineX.com/?ref=AB12" readonly>
+      <button onclick="copyLink()">Copiar</button>
+    </div>
+  </div>
+
+  <div class="footer-text">
+    Aprende cómo funcionan los referidos y sus ganancias. Invita amigos y gana hasta 5% en Lev 1, 3% en Lev 2 y 2% en Lev 3.
+  </div>
+</div>
+
+<div class="navbar">
+  <div class="navItem active" onclick="go('Home.html')">🏠<div>Inicio</div></div>
+  <div class="navItem" onclick="go('Retiros.html')">💰<div>Retiro</div></div>
+  <div class="navItem" onclick="go('Mineria.html')">⚡<div>Minería</div></div>
+  <div class="navItem" onclick="go('Referidos.html')">👤👤<div>Referido</div></div>
+  <div class="navItem" onclick="go('Perfil.html')">👤<div>Perfil</div></div>
+</div>
+
+<script>
+function go(page){
+  window.location.href = page;
+}
+
+function copyLink(){
+  const copyText = document.getElementById("refLink");
+  copyText.select();
+  copyText.setSelectionRange(0, 99999);
+  navigator.clipboard.writeText(copyText.value);
+  alert("Enlace copiado: " + copyText.value);
+}
+
+// Simulación de sumar referido al usar el link
+// Aquí deberías enlazar a tu backend real
+let totalRefs = 0;
+document.getElementById('totalRefs').innerText = totalRefs;
+</script>
+</body>
+</html>
