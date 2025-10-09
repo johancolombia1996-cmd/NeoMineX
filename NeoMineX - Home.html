@@ -84,7 +84,12 @@ h3{color:var(--accent1);margin-bottom:10px;}
 .note{color:var(--muted);font-size:13px;margin-top:6px;}
 
 /* ===== Bots ===== */
-.botGrid{margin-top:10px;display:flex;flex-direction:column;gap:5px;}
+.botGrid{
+  margin-top:10px;
+  display:grid;
+  grid-template-columns:1fr 1fr; /* 2 columnas x 2 filas automáticamente */
+  gap:10px;
+}
 .botCard{
   background:linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.015));
   border:1px solid rgba(255,255,255,0.04);
@@ -126,10 +131,32 @@ h3{color:var(--accent1);margin-bottom:10px;}
   box-shadow:0 8px 25px rgba(14,165,233,0.25);
 }
 
-/* ===== Retiros ===== */
-.withdrawBox{height:240px;overflow:hidden;margin-top:6px;}
-.withdrawItem{opacity:0;transform:translateY(20px);transition:all .6s ease;font-size:14px;color:var(--muted);margin:6px 0;padding:8px 10px;background:rgba(255,255,255,0.02);border-radius:10px;border:1px solid rgba(255,255,255,0.03);}
-.withdrawItem.show{opacity:1;transform:translateY(0);}
+/* ===== Retiros en vivo horizontales tipo ticker ===== */
+.withdrawBox{
+  display:flex;
+  flex-direction:row;
+  gap:10px;
+  overflow-x:auto;
+  padding:8px;
+  scrollbar-width:none;
+}
+.withdrawBox::-webkit-scrollbar{display:none;}
+.withdrawItem{
+  flex:0 0 auto;
+  opacity:0;
+  transform:translateY(10px);
+  transition:all .6s ease;
+  font-size:14px;
+  color:var(--muted);
+  padding:8px 10px;
+  background:rgba(255,255,255,0.02);
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,0.03);
+}
+.withdrawItem.show{
+  opacity:1;
+  transform:translateY(0);
+}
 .withdrawItem span{color:var(--neon);font-weight:700;}
 
 /* =========================
@@ -181,7 +208,7 @@ h3{color:var(--accent1);margin-bottom:10px;}
 .navItem div{
   font-size:10px;
   margin-top:2px;
-  }
+}
 </style>
 </head>
 
@@ -209,6 +236,7 @@ h3{color:var(--accent1);margin-bottom:10px;}
 <!-- Contenido principal -->
 <div class="container">
   <div class="panel">
+    <!-- MINERÍA AUTOMÁTICA -->
     <div class="card">
       <h3>Minería Automática NeoMineX</h3>
       <p class="note">Energía y rendimiento optimizado por IA. Estado: <strong style="color:var(--neon)">Activa</strong></p>
@@ -248,6 +276,7 @@ h3{color:var(--accent1);margin-bottom:10px;}
       </div>
     </div>
 
+    <!-- RETIROS EN VIVO HORIZONTALES -->
     <div class="card">
       <h3>Retiros en Vivo</h3>
       <div class="withdrawBox" id="withdrawFeed"></div>
@@ -266,24 +295,38 @@ h3{color:var(--accent1);margin-bottom:10px;}
 
 <script>
 function go(url){window.location.href=url;}
+
+// Carrusel
 const imgs=document.querySelectorAll('#carousel img');
 let current=0;
-setInterval(()=>{imgs[current].classList.remove('active');current=(current+1)%imgs.length;imgs[current].classList.add('active');},5000);
+setInterval(()=>{
+  imgs[current].classList.remove('active');
+  current=(current+1)%imgs.length;
+  imgs[current].classList.add('active');
+},5000);
 
+// Retiros en vivo
 const feed=document.getElementById('withdrawFeed');
-function randomAddr(){const c='ABCDEFGHJKLMNPQRSTUVWXYZ123456789';let s='T';for(let i=0;i<10;i++)s+=c[Math.floor(Math.random()*c.length)];return s;}
+function randomAddr(){
+  const c='ABCDEFGHJKLMNPQRSTUVWXYZ123456789';
+  let s='T';
+  for(let i=0;i<10;i++) s+=c[Math.floor(Math.random()*c.length)];
+  return s;
+}
 function addWithdraw(){
   const addr=randomAddr();
   const amt=(Math.random()*80+1).toFixed(2);
   const div=document.createElement('div');
   div.className='withdrawItem';
   div.innerHTML=`💸 Retiro desde <span>${addr}</span> por <span>${amt} USDT</span> completado ✔️`;
-  feed.prepend(div);
+  feed.appendChild(div);
   setTimeout(()=>div.classList.add('show'),100);
-  if(feed.children.length>8)feed.removeChild(feed.lastChild);
+  // Mantener solo últimos 20 items
+  if(feed.children.length>20) feed.removeChild(feed.firstChild);
 }
 setInterval(addWithdraw,3500);
 addWithdraw();
 </script>
+
 </body>
-  </html>
+</html>
