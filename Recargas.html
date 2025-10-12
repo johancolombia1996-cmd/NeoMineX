@@ -54,6 +54,7 @@ body{
   width:90%;max-width:420px;
   box-shadow:0 0 40px rgba(14,165,233,0.1);
   backdrop-filter:blur(8px);
+  margin-bottom:20px;
 }
 h2{
   color:var(--accent1);
@@ -62,10 +63,10 @@ h2{
   text-shadow:0 0 12px rgba(14,165,233,0.3);
 }
 .usdt-logo{
-  width:120px;           /* tamaño grande */
-  height:120px;          /* altura igual al ancho */
-  border-radius:50%;     /* redonda */
-  object-fit:cover;      /* ajusta la imagen dentro del círculo */
+  width:120px;
+  height:120px;
+  border-radius:50%;
+  object-fit:cover;
   margin-bottom:20px;
   filter:drop-shadow(0 0 20px var(--neon));
   animation:float 4s ease-in-out infinite;
@@ -112,22 +113,34 @@ h2{
 
 <div class="back-arrow" onclick="goBack()">⬅</div>
 
+<!-- TARJETA TRC20 -->
 <div class="card">
   <h2>Recarga USDT TRC20</h2>
   <img class="usdt-logo" src="https://github.com/user-attachments/assets/8869208f-3c0d-46ec-b4e2-669e67d1982e" alt="USDT Logo">
-  <div class="usdt-box" id="address">TJ6QaxbDeK2sHbeTLWjKFdqiG4eiCaivNu</div>
-  <button class="copy-btn" onclick="copyAddress()">Copiar Dirección</button>
-  <div class="note">⚠️ Las recargas menores a <strong>10 USDT</strong> no serán acreditadas. en total son 12 usdt dependiendo la comision de su billetera o exchange, deben llegar 10 USDT</div>
+  <div class="usdt-box" id="address-trc">TJ6QaxbDeK2sHbeTLWjKFdqiG4eiCaivNu</div>
+  <button class="copy-btn" onclick="copyAddress('trc')">Copiar Dirección</button>
+  <div class="note">⚠️ Las recargas menores a <strong>10 USDT</strong> no serán acreditadas. En total deben llegar 10 USDT.</div>
+</div>
+
+<!-- TARJETA BEP20 -->
+<div class="card">
+  <h2>Dirección USDT BEP20</h2>
+  <img class="usdt-logo" src="https://github.com/user-attachments/assets/8869208f-3c0d-46ec-b4e2-669e67d1982e" alt="USDT Logo">
+  <div class="usdt-box" id="address-bep">0xe42280f3b6c84dca4ae37b35ef1206dfe2cd3dcf</div>
+  <button class="copy-btn" onclick="copyAddress('bep')">Copiar Dirección</button>
+  <div class="note">💡 Asegúrate de usar la red <strong>BEP20 (Binance Smart Chain)</strong> antes de enviar.</div>
 </div>
 
 <script>
 function goBack(){
   window.location.href = "https://johancolombia1996-cmd.github.io/NeoMineX/NeoMineX%20-%20Home.html";
 }
-function copyAddress(){
-  const addr=document.getElementById("address").innerText;
+function copyAddress(type){
+  const addr = document.getElementById(`address-${type}`).innerText;
   navigator.clipboard.writeText(addr);
-  const btn=document.querySelector(".copy-btn");
+  const btns = document.querySelectorAll(".copy-btn");
+  btns.forEach(btn=>btn.innerText="Copiar Dirección");
+  const btn = event.target;
   btn.innerText="✅ Copiado";
   setTimeout(()=>btn.innerText="Copiar Dirección",2000);
 }
