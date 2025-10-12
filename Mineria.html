@@ -242,11 +242,7 @@ body{
 
 <script>
 window.addEventListener('load',()=>{
-  setTimeout(()=>{
-    document.getElementById('loader').style.opacity='0';
-    document.getElementById('loader').style.transition='1s';
-    setTimeout(()=>{document.getElementById('loader').remove();},1000);
-  },2000);
+  setTimeout(()=>{document.getElementById('loader').style.opacity='0';document.getElementById('loader').style.transition='1s';setTimeout(()=>{document.getElementById('loader').remove();},1000);},2000);
 });
 
 // Variables
@@ -267,8 +263,6 @@ const recargaElem = document.getElementById('recarga');
 const retiroBtn = document.getElementById('retiroBtn');
 const saldoRetiroElem = document.getElementById('saldoRetiro');
 const modal = document.getElementById('modalRetiro');
-const historyBtn = document.getElementById('historyBtn');
-const historyContainer = document.getElementById('withdrawHistory');
 
 // Actualizar visual
 saldoElem.textContent = saldoMineria.toFixed(2)+" USDT";
@@ -282,27 +276,6 @@ function openModal(){
 function closeModal(){modal.style.display='none';}
 retiroBtn.addEventListener('click',openModal);
 
-// Historial
-let retiroHistory = JSON.parse(localStorage.getItem('retiroHistory')) || [];
-
-function actualizarHistorial(){
-  historyContainer.innerHTML='';
-  if(retiroHistory.length===0){
-    const noHist = document.createElement('div');
-    noHist.className='noWithdrawals';
-    noHist.textContent='No hay retiros';
-    historyContainer.appendChild(noHist);
-    return;
-  }
-  retiroHistory.forEach(r=>{
-    const div = document.createElement('div');
-    div.className='withdrawItem';
-    div.innerHTML=`<span>${r.fecha}</span><span>${r.hora}</span><span>${r.cantidad.toFixed(2)} USDT</span>`;
-    historyContainer.appendChild(div);
-  });
-}
-
-// Procesar retiro
 function procesarRetiro(){
   const direccion = document.getElementById('direccionRetiro').value;
   const cantidad = parseFloat(document.getElementById('cantidadRetiro').value);
@@ -313,22 +286,11 @@ function procesarRetiro(){
   saldoMineria -= cantidad;
   saldoElem.textContent = saldoMineria.toFixed(2)+" USDT";
   localStorage.setItem('saldoMineria',saldoMineria);
-
-  // Guardar historial
-  const fecha = new Date();
-  retiroHistory.push({
-    fecha: fecha.toLocaleDateString(),
-    hora: fecha.toLocaleTimeString(),
-    cantidad: cantidad
-  });
-  localStorage.setItem('retiroHistory', JSON.stringify(retiroHistory));
-  actualizarHistorial();
-
   alert(`✅ Retiro de ${cantidad.toFixed(2)} USDT procesado a ${direccion}`);
   closeModal();
 }
 
-// Iniciar minería
+// Iniciar minería con validación
 startBtn.addEventListener('click',()=>{
   if(saldoRecarga < 10){
     alert("Para minar debes tener al menos 10 USDT. Por favor recarga tu balance.");
@@ -338,7 +300,7 @@ startBtn.addEventListener('click',()=>{
   stateText.textContent='Minería Activa';
   robot.classList.add('pulsing');
   let segundosRestantes = tiempoMineria;
-  const inversion = 10;
+  const inversion = 10; // Tomamos 10 USDT como inversión mínima
   document.getElementById('invested').textContent = inversion+' USDT';
   intervaloMineria = setInterval(()=>{
     segundosRestantes--;
@@ -359,7 +321,7 @@ startBtn.addEventListener('click',()=>{
 
 // Reclamar ganancia
 claimBtn.addEventListener('click',()=>{
-  const inversion=10;
+  const inversion=10; // Coincide con la inversión mínima
   const ganancia = inversion*0.05;
   saldoMineria += ganancia;
   saldoElem.textContent = saldoMineria.toFixed(2)+" USDT";
@@ -368,13 +330,12 @@ claimBtn.addEventListener('click',()=>{
   progressFill.style.width='100%';
   robot.classList.remove('pulsing');
   localStorage.setItem('saldoMineria',saldoMineria);
-  actualizarHistorial();
 });
 
 // Funciones de navegación
 function go(url){window.location.href=url;}
 function goHome(){window.location.href='NeoMineX - Home.html';}
-function openHistory(){actualizarHistorial();}
+function openHistory(){alert("📒 Historial de retiro vacio.");}
 </script>
 </body>
 </html>
