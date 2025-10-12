@@ -11,12 +11,12 @@
 <style>
 :root{
   --bg:#030617;
-  --card:rgba(8,14,23,0.78);
+  --card:rgba(8,14,23,0.85);
   --accent1:#06b6d4;
   --accent2:#0ea5e9;
   --muted:rgba(230,247,251,0.72);
   --neon:#0ef;
-  --radius:14px;
+  --radius:16px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{
@@ -24,11 +24,12 @@ body{
   background:var(--bg);
   color:#e6f7fb;
   overflow-x:hidden;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  height:100vh;
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
+  padding-top:80px;
+  min-height:100vh;
 }
 
-/* Flecha animada */
+/* Flecha superior */
 .back-arrow{
   position:fixed;
   top:20px;left:20px;
@@ -36,55 +37,67 @@ body{
   color:var(--neon);
   cursor:pointer;
   animation:pulse 2s infinite;
-  transition:transform .3s ease;
+  transition:transform .3s ease, color .3s ease;
+  background:rgba(0,0,0,0.3);
+  padding:10px;
+  border-radius:50%;
+  box-shadow:0 0 15px rgba(14,165,233,0.3);
 }
-.back-arrow:hover{transform:translateX(-5px) scale(1.1);}
+.back-arrow:hover{
+  transform:translateX(-5px) scale(1.1);
+  color:#fff;
+}
 @keyframes pulse{
   0%,100%{text-shadow:0 0 8px var(--accent2);}
   50%{text-shadow:0 0 20px var(--neon);}
 }
 
-/* Tarjeta */
+/* Tarjetas */
 .card{
   background:var(--card);
-  border:1px solid rgba(255,255,255,0.05);
   border-radius:var(--radius);
-  padding:30px 22px;
+  padding:30px 25px;
   text-align:center;
   width:90%;max-width:420px;
-  box-shadow:0 0 40px rgba(14,165,233,0.1);
-  backdrop-filter:blur(8px);
-  margin-bottom:20px;
+  box-shadow:0 10px 40px rgba(14,165,233,0.2);
+  backdrop-filter:blur(10px);
+  margin-bottom:25px;
+  transition:transform .3s ease, box-shadow .3s ease;
+}
+.card:hover{
+  transform:translateY(-5px);
+  box-shadow:0 15px 50px rgba(14,165,233,0.3);
 }
 h2{
   color:var(--accent1);
-  font-size:22px;
-  margin-bottom:14px;
+  font-size:24px;
+  margin-bottom:18px;
   text-shadow:0 0 12px rgba(14,165,233,0.3);
 }
 .usdt-logo{
-  width:120px;
-  height:120px;
+  width:100px;
+  height:100px;
   border-radius:50%;
   object-fit:cover;
-  margin-bottom:20px;
+  margin-bottom:18px;
   filter:drop-shadow(0 0 20px var(--neon));
   animation:float 4s ease-in-out infinite;
 }
 @keyframes float{
   0%,100%{transform:translateY(0);}
-  50%{transform:translateY(-8px);}
+  50%{transform:translateY(-10px);}
 }
 .usdt-box{
-  background:rgba(255,255,255,0.03);
-  border:1px solid rgba(255,255,255,0.05);
-  padding:10px;
-  border-radius:10px;
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.08);
+  padding:12px;
+  border-radius:12px;
   color:var(--neon);
   font-weight:600;
-  font-size:14px;
+  font-size:15px;
   word-break:break-all;
-  margin-bottom:12px;
+  margin-bottom:15px;
+  transition:background .3s ease;
 }
 .copy-btn{
   background:linear-gradient(90deg,var(--accent1),var(--accent2));
@@ -92,13 +105,14 @@ h2{
   border-radius:999px;
   color:#000;
   font-weight:700;
-  padding:10px 20px;
+  padding:12px 25px;
   cursor:pointer;
+  font-size:15px;
   transition:transform .25s ease, box-shadow .25s ease;
 }
 .copy-btn:hover{
   transform:translateY(-3px);
-  box-shadow:0 0 20px rgba(14,165,233,0.3);
+  box-shadow:0 0 25px rgba(14,165,233,0.4);
 }
 .note{
   color:var(--muted);
@@ -119,7 +133,7 @@ h2{
   <img class="usdt-logo" src="https://github.com/user-attachments/assets/8869208f-3c0d-46ec-b4e2-669e67d1982e" alt="USDT Logo">
   <div class="usdt-box" id="address-trc">TJ6QaxbDeK2sHbeTLWjKFdqiG4eiCaivNu</div>
   <button class="copy-btn" onclick="copyAddress('trc')">Copiar Dirección</button>
-  <div class="note">⚠️ Las recargas menores a <strong>10 USDT</strong> no serán acreditadas. En total deben llegar 10 USDT.</div>
+  <div class="note">⚠️ Las recargas menores a <strong>10 USDT</strong> no serán acreditadas.</div>
 </div>
 
 <!-- TARJETA BEP20 -->
@@ -128,13 +142,14 @@ h2{
   <img class="usdt-logo" src="https://github.com/user-attachments/assets/8869208f-3c0d-46ec-b4e2-669e67d1982e" alt="USDT Logo">
   <div class="usdt-box" id="address-bep">0xe42280f3b6c84dca4ae37b35ef1206dfe2cd3dcf</div>
   <button class="copy-btn" onclick="copyAddress('bep')">Copiar Dirección</button>
-  <div class="note">💡 Asegúrate de usar la red <strong>BEP20 (Binance Smart Chain)</strong> antes de enviar.</div>
+  <div class="note">💡 Asegúrate de usar la red <strong>BEP20 (Binance Smart Chain)</strong>.</div>
 </div>
 
 <script>
 function goBack(){
-  window.location.href = "https://johancolombia1996-cmd.github.io/NeoMineX/NeoMineX%20-%20Home.html";
+  window.location.href = "NeoMineX - Home.html";
 }
+
 function copyAddress(type){
   const addr = document.getElementById(`address-${type}`).innerText;
   navigator.clipboard.writeText(addr);
