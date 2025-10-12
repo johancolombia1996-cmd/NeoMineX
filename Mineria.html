@@ -34,24 +34,14 @@ body{
   padding-bottom:140px;
 }
 #loader{
-  position:fixed; inset:0; background:radial-gradient(circle at center,#010a14,#000);
-  display:flex; align-items:center; justify-content:center; flex-direction:column;
-  z-index:3000; color:var(--neon); font-weight:700; font-size:18px; letter-spacing:1px;
-  text-shadow:0 0 10px var(--neon),0 0 20px var(--accent2);
-  animation:glowText 2s infinite alternate;
+  position:fixed;inset:0;background:radial-gradient(circle at center,#010a14,#000);
+  display:flex;align-items:center;justify-content:center;flex-direction:column;z-index:3000;
+  color:var(--neon);font-weight:700;font-size:18px;letter-spacing:1px;
+  text-shadow:0 0 10px var(--neon),0 0 20px var(--accent2);animation:glowText 2s infinite alternate;
 }
-@keyframes glowText{
-  from{text-shadow:0 0 10px var(--neon),0 0 20px var(--accent2);}
-  to{text-shadow:0 0 20px var(--accent2),0 0 40px var(--neon);}
-}
-.loader-ring{
-  width:80px;height:80px;border-radius:50%;
-  border:3px solid rgba(0,215,255,0.2);
-  border-top:3px solid var(--neon);
-  animation:spin 1.2s linear infinite;
-  margin-bottom:16px;
-}
-@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+@keyframes glowText{from{text-shadow:0 0 10px var(--neon),0 0 20px var(--accent2);}to{text-shadow:0 0 20px var(--accent2),0 0 40px var(--neon);}}
+.loader-ring{width:80px;height:80px;border-radius:50%;border:3px solid rgba(0,215,255,0.2);border-top:3px solid var(--neon);animation:spin 1.2s linear infinite;margin-bottom:16px;}
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg);}}
 .wrap{width:100%;max-width:520px;margin:20px auto}
 .card{background:var(--card);border-radius:14px;padding:18px;border:1px solid rgba(255,255,255,0.03);box-shadow:0 18px 50px rgba(2,6,23,0.6);backdrop-filter:blur(6px);position:relative;overflow:visible;animation:fadeInUp .36s ease both}
 @keyframes fadeInUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
@@ -63,7 +53,7 @@ body{
 .infoGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
 .info{background:var(--glass);padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.02);text-align:center;}
 .info .label{font-size:12px;color:var(--muted);margin-bottom:8px}
-.info .value{font-size:16px;color:var(--neon);font-weight:800;cursor:pointer}
+.info .value{font-size:16px;color:var(--neon);font-weight:800}
 .minerBox{margin-top:14px;padding:14px;border-radius:12px;background:linear-gradient(90deg,rgba(6,182,212,0.02),rgba(14,165,233,0.02));border:1px solid rgba(255,255,255,0.03);position:relative;overflow:visible}
 .minerHeader{display:flex;align-items:center;gap:12px;margin-bottom:12px}
 .minerIcon{width:54px;height:54px;border-radius:12px;background:linear-gradient(90deg,var(--accent1),var(--accent2));display:flex;align-items:center;justify-content:center;color:#000;font-size:22px}
@@ -91,212 +81,65 @@ body{
 .navItem{flex:1;text-align:center;color:#94a8b6;font-size:12px;padding:8px;border-radius:999px;cursor:pointer;background:transparent;transition:all .2s;}
 .navItem.active,.navItem:hover{color:#000;background:linear-gradient(90deg,#00d7ff,#06b6d4);font-weight:700;box-shadow:0 8px 26px rgba(0,215,255,0.10);transform:translateY(-2px);}
 
-/* Modal retiro */
-#modalRetiro{
-  position:fixed;inset:0;background:rgba(0,0,0,0.7);display:none;justify-content:center;align-items:center;z-index:5000;
+/* Modal Historial */
+#modalHistorial{
+  position:fixed;top:0;left:0;width:100%;height:100%;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);z-index:1000;
 }
-#modalContent{
-  background:var(--card);padding:20px;border-radius:12px;max-width:400px;width:90%;text-align:center;position:relative;
+#modalContentHistorial{
+  background:var(--card);border-radius:14px;padding:20px;position:relative;width:90%;max-width:400px;box-shadow:0 12px 40px rgba(0,215,255,0.2);animation:fadeInUp .3s ease forwards;
 }
-#modalContent input{
-  width:100%;padding:10px;margin:8px 0;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#eaf8ff
+#modalCloseHistorial{position:absolute;top:12px;right:16px;cursor:pointer;color:var(--neon);font-weight:700;font-size:18px;}
+#historialList{margin-top:16px;max-height:200px;overflow-y:auto;}
+#modalContentHistorial button{
+  width:100%;margin-top:16px;padding:10px;border-radius:10px;border:none;background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#000;font-weight:800;cursor:pointer;
 }
-#modalContent button{padding:10px 16px;margin-top:10px;border-radius:10px;border:none;background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#000;font-weight:800;cursor:pointer}
-#modalClose{position:absolute;top:10px;right:12px;cursor:pointer;color:var(--neon);font-weight:700;font-size:18px;}
-</style>
-</head>
-<body>
+/* Modal Retiro */
+const modalRetiro = document.getElementById('modalRetiro');
+const modalHistorial = document.getElementById('modalHistorial');
 
-<!-- Pantalla de carga -->
-<div id="loader">
-  <div class="loader-ring"></div>
-  ⚡ Cargando NeoMineX… Por favor espera.
-</div>
+function closeRetiro(){ modalRetiro.style.display='none'; }
+function closeHistorial(){ modalHistorial.style.display='none'; }
+function openHistorial(){ modalHistorial.style.display='flex'; }
 
-<div class="top-left" title="Volver" onclick="goHome()">⬅</div>
-<div class="top-right">
-  <div style="cursor:pointer;font-size:20px;color:var(--muted)" title="Historial de Retiros" onclick="openHistory()">📒</div>
-  <div class="profileM" title="Perfil">M</div>
-</div>
-
-<div class="wrap">
-  <div class="card">
-    <div class="motivational">💎 Neomax: Minerando el futuro, construyendo oportunidades.</div>
-    <div class="header">
-      <div>
-        <div class="title">⚡ Minería USDT TRC20</div>
-        <div class="subtitle">Gana <strong>5%</strong> por cada minado</div>
-      </div>
-      <div style="text-align:right">
-        <div style="font-size:12px;color:var(--muted)">ID</div>
-        <div style="margin-top:6px;font-weight:800;color:var(--neon)" id="userId">AB12</div>
-      </div>
-    </div>
-    <div class="infoGrid">
-      <div class="info">
-        <div class="label">Saldo de Recarga</div>
-        <div class="value" id="recarga">0.00 USDT</div>
-      </div>
-      <div class="info">
-        <div class="label">Saldo de Minería</div>
-        <div class="value" id="mined">0.00 USDT</div>
-        <button id="retiroBtn" class="btn primary" style="margin-top:8px">Retirar</button>
-      </div>
-    </div>
-
-    <div class="minerBox">
-      <div class="minerHeader">
-        <div class="minerIcon">⚡</div>
-        <div>
-          <div class="minerTitle">Estado de Minería</div>
-          <div class="stateText" id="stateText">Inactiva</div>
-        </div>
-      </div>
-      <div class="progressWrap">
-        <div class="progressBar" id="progressBar">
-          <div id="progressFill" class="progressFill"></div>
-          <canvas id="particles" class="canvasParticles"></canvas>
-          <div class="robotWrap" id="robotWrap">
-            <div class="robot" id="robotElem">
-              <div class="antenna"></div>
-              <div class="visor"></div>
-            </div>
-          </div>
-        </div>
-        <div class="statRow">
-          <div class="stat">Tiempo restante: <strong id="timeLeft">—</strong></div>
-          <div class="stat">Inversión: <strong id="invested">—</strong></div>
-        </div>
-      </div>
-      <div class="actions">
-        <button id="startBtn" class="btn primary">Iniciar Minería</button>
-        <button id="claimBtn" class="btn ghost" disabled>Reclamar</button>
-      </div>
-      <div style="margin-top:8px;color:var(--muted);font-size:13px">
-        Si cierras o recargas, la minería continúa gracias al almacenamiento local.
-      </div>
-    </div>
-
-    <div class="note" id="noteText"></div>
-  </div>
-</div>
-
-<!-- Modal retiro -->
-<div id="modalRetiro">
-  <div id="modalContent">
-    <div id="modalClose" onclick="closeModal()">×</div>
-    <h3>Retiro de Minería</h3>
-    <p>Saldo disponible: <strong id="saldoRetiro">0.00 USDT</strong></p>
-    <input type="text" id="direccionRetiro" placeholder="Dirección de retiro">
-    <input type="number" id="cantidadRetiro" placeholder="Cantidad a retirar">
-    <button onclick="procesarRetiro()">Aceptar</button>
-  </div>
-</div>
-
-<div class="navbar">
-  <div class="navItem active" onclick="go('NeoMineX - Home.html')">🏠<div>Inicio</div></div>
-  <div class="navItem" onclick="go('Recargas.html')">💳<div>Recarga</div></div>
-  <div class="navItem" onclick="go('Mineria.html')">⚡<div>Minería</div></div>
-  <div class="navItem" onclick="go('Referidos.html')">👤👤<div>Referido</div></div>
-  <div class="navItem" onclick="go('Perfil.html')">👤<div>Perfil</div></div>
-</div>
-
-<script>
-window.addEventListener('load',()=>{
-  setTimeout(()=>{document.getElementById('loader').style.opacity='0';document.getElementById('loader').style.transition='1s';setTimeout(()=>{document.getElementById('loader').remove();},1000);},2000);
-});
-
-// Variables
-let saldoMineria = parseFloat(localStorage.getItem('saldoMineria')) || 0.00;
-let saldoRecarga = parseFloat(localStorage.getItem('saldoRecarga')) || 0.00;
-let tiempoMineria = 86400; // 24h
-let intervaloMineria = null;
-
-// Elementos
-const startBtn = document.getElementById('startBtn');
-const claimBtn = document.getElementById('claimBtn');
-const stateText = document.getElementById('stateText');
-const progressFill = document.getElementById('progressFill');
-const timeLeftElem = document.getElementById('timeLeft');
-const robot = document.getElementById('robotElem');
-const saldoElem = document.getElementById('mined');
-const recargaElem = document.getElementById('recarga');
-const retiroBtn = document.getElementById('retiroBtn');
-const saldoRetiroElem = document.getElementById('saldoRetiro');
-const modal = document.getElementById('modalRetiro');
-
-// Actualizar visual
-saldoElem.textContent = saldoMineria.toFixed(2)+" USDT";
-recargaElem.textContent = saldoRecarga.toFixed(2)+" USDT";
-
-// Modal funciones
-function openModal(){
-  saldoRetiroElem.textContent = saldoMineria.toFixed(2)+" USDT";
-  modal.style.display='flex';
-}
-function closeModal(){modal.style.display='none';}
-retiroBtn.addEventListener('click',openModal);
-
+// Procesar retiro
 function procesarRetiro(){
-  const direccion = document.getElementById('direccionRetiro').value;
+  const direccion = document.getElementById('direccionRetiro').value.trim();
   const cantidad = parseFloat(document.getElementById('cantidadRetiro').value);
-  if(!direccion || isNaN(cantidad) || cantidad<=0 || cantidad>saldoMineria){
-    alert("Por favor ingresa una dirección válida y una cantidad dentro de tu saldo.");
+  
+  if(!direccion || isNaN(cantidad) || cantidad<=0){
+    alert("⚠ Por favor completa todos los campos correctamente.");
     return;
   }
+  if(cantidad > saldoMineria){
+    alert("⚠ No tienes suficiente saldo para retirar esa cantidad.");
+    return;
+  }
+  
   saldoMineria -= cantidad;
-  saldoElem.textContent = saldoMineria.toFixed(2)+" USDT";
-  localStorage.setItem('saldoMineria',saldoMineria);
-  alert(`✅ Retiro de ${cantidad.toFixed(2)} USDT procesado a ${direccion}`);
-  closeModal();
+  document.getElementById('mined').textContent = saldoMineria.toFixed(2)+" USDT";
+  localStorage.setItem('saldoMineria', saldoMineria);
+  
+  // Añadir al historial
+  const historialList = document.getElementById('historialList');
+  const item = document.createElement('div');
+  item.style.padding='8px'; item.style.marginBottom='6px';
+  item.style.borderBottom='1px solid rgba(255,255,255,0.05)';
+  item.innerHTML=`<strong>${cantidad.toFixed(2)} USDT</strong> → ${direccion}`;
+  historialList.appendChild(item);
+  
+  closeRetiro();
+  alert("✅ Retiro solicitado correctamente.");
 }
 
-// Iniciar minería con validación
-startBtn.addEventListener('click',()=>{
-  if(saldoRecarga < 10){
-    alert("Para minar debes tener al menos 10 USDT. Por favor recarga tu balance.");
-    return;
-  }
-  if(intervaloMineria) return;
-  stateText.textContent='Minería Activa';
-  robot.classList.add('pulsing');
-  let segundosRestantes = tiempoMineria;
-  const inversion = 10; // Tomamos 10 USDT como inversión mínima
-  document.getElementById('invested').textContent = inversion+' USDT';
-  intervaloMineria = setInterval(()=>{
-    segundosRestantes--;
-    const hrs=Math.floor(segundosRestantes/3600);
-    const min=Math.floor((segundosRestantes%3600)/60);
-    const seg=segundosRestantes%60;
-    timeLeftElem.textContent=`${hrs}h ${min}m ${seg}s`;
-    progressFill.style.width=`${((tiempoMineria-segundosRestantes)/tiempoMineria)*100}%`;
-    if(segundosRestantes<=0){
-      clearInterval(intervaloMineria);
-      intervaloMineria=null;
-      stateText.textContent='Minería Completa';
-      claimBtn.disabled=false;
-      robot.classList.remove('pulsing');
-    }
-  },1000);
-});
-
-// Reclamar ganancia
-claimBtn.addEventListener('click',()=>{
-  const inversion=10; // Coincide con la inversión mínima
-  const ganancia = inversion*0.05;
-  saldoMineria += ganancia;
-  saldoElem.textContent = saldoMineria.toFixed(2)+" USDT";
-  claimBtn.disabled=true;
-  stateText.textContent='Ganancia reclamada ✅';
-  progressFill.style.width='100%';
-  robot.classList.remove('pulsing');
-  localStorage.setItem('saldoMineria',saldoMineria);
+// Cierre al click fuera del contenido
+window.addEventListener('click',(e)=>{
+  if(e.target===modalRetiro) closeRetiro();
+  if(e.target===modalHistorial) closeHistorial();
 });
 
 // Funciones de navegación
 function go(url){window.location.href=url;}
 function goHome(){window.location.href='NeoMineX - Home.html';}
-function openHistory(){alert("📒 Historial de retiros próximamente disponible.");}
 </script>
 </body>
 </html>
