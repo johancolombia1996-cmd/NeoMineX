@@ -253,7 +253,7 @@ window.addEventListener('load', () => {
 
   // Mostrar saldo inicial en 0
   saldoMineria = 0;
-  saldoRecarga = 10;
+  saldoRecarga = 0;
   saldoElem.textContent = saldoMineria.toFixed(2) + " USDT";
   recargaElem.textContent = saldoRecarga.toFixed(2) + " USDT";
 
@@ -263,8 +263,8 @@ window.addEventListener('load', () => {
 });
 
 // Variables
-let saldoMineria = 10;
-let saldoRecarga = 10;
+let saldoMineria = 0;
+let saldoRecarga = 0;
 let tiempoMineria = 86400; // 24h
 let intervaloMineria = null;
 
