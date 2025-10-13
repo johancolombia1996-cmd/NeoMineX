@@ -253,8 +253,8 @@ window.addEventListener('load', () => {
   }, 2000);
 
   // Inicializamos recarga mínima
-  if (saldoRecarga < 10) {
-    saldoRecarga = 10;
+  if (saldoRecarga < 0) {
+    saldoRecarga = 0;
     localStorage.setItem('saldoRecarga', saldoRecarga);
   }
 
