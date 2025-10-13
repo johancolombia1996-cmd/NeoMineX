@@ -311,7 +311,7 @@ function procesarRetiro() {
 
 // Función central de minería
 function iniciarMineria(segundos = tiempoMineria) {
-  const inversion = 10; // inversión fija
+  const inversion = 0; // inversión fija
   if (saldoRecarga < inversion) {
     alert(`Para minar debes tener al menos ${inversion} USDT. Por favor recarga tu balance.`);
     return;
