@@ -239,7 +239,6 @@ body{
   <div class="navItem" onclick="go('Referidos.html')">👤👤<div>Referido</div></div>
   <div class="navItem" onclick="go('Perfil.html')">👤<div>Perfil</div></div>
 </div>
-
 <script>
 window.addEventListener('load', () => {
   setTimeout(() => {
@@ -256,11 +255,16 @@ window.addEventListener('load', () => {
   saldoElem.textContent = saldoMineria.toFixed(2) + " USDT";
   recargaElem.textContent = saldoRecarga.toFixed(2) + " USDT";
 
-  const tiempoGuardado = localStorage.getItem('mineriaTiempoRestante');
+  // Restaurar progreso si había minería activa
   const enMineria = localStorage.getItem('mineriaActiva') === 'true';
-  if (enMineria && tiempoGuardado) {
-    const segundosRestantes = parseInt(tiempoGuardado);
-    iniciarMineria(segundosRestantes);
+  const finGuardado = localStorage.getItem('mineriaFin');
+  if (enMineria && finGuardado) {
+    const tiempoRestante = Math.max(0, Math.floor((finGuardado - Date.now()) / 1000));
+    if (tiempoRestante > 0) {
+      iniciarMineria(tiempoRestante);
+    } else {
+      finalizarMineria();
+    }
   } else {
     timeLeftElem.textContent = "0h 0m 0s";
     progressFill.style.width = "0%";
@@ -270,7 +274,7 @@ window.addEventListener('load', () => {
 // Variables
 let saldoMineria = 0;
 let saldoRecarga = 10;
-let tiempoMineria = 86400; // 24h
+const tiempoMineria = 86400; // 24 horas
 let intervaloMineria = null;
 
 // Elementos
@@ -286,7 +290,7 @@ const retiroBtn = document.getElementById('retiroBtn');
 const saldoRetiroElem = document.getElementById('saldoRetiro');
 const modal = document.getElementById('modalRetiro');
 
-// Modal funciones
+// Modal retiro
 function openModal() {
   saldoRetiroElem.textContent = saldoMineria.toFixed(2) + " USDT";
   modal.style.display = 'flex';
@@ -304,47 +308,51 @@ function procesarRetiro() {
   saldoMineria -= cantidad;
   saldoElem.textContent = saldoMineria.toFixed(2) + " USDT";
   localStorage.setItem('saldoMineria', saldoMineria);
+  alert(`✅ Retiro de ${cantidad} USDT procesado con éxito.`);
+  closeModal();
 }
 
-// Función central de minería
+// Iniciar minería
 function iniciarMineria(segundos = tiempoMineria) {
   const inversion = 10;
   if (saldoRecarga < inversion) {
-    alert(`Para minar debes tener al menos ${inversion} USDT. Por favor recarga tu balance.`);
+    alert(`Para minar debes tener al menos ${inversion} USDT.`);
     return;
   }
   if (intervaloMineria) return;
 
+  const fin = Date.now() + segundos * 1000;
+  localStorage.setItem('mineriaActiva', 'true');
+  localStorage.setItem('mineriaFin', fin);
+
   stateText.textContent = 'Minería Activa';
   robot.classList.add('pulsing');
   document.getElementById('invested').textContent = inversion + ' USDT';
-  localStorage.setItem('mineriaActiva', 'true');
+  claimBtn.disabled = true;
 
-  let segundosRestantes = segundos;
-  const inicio = Date.now();
+  actualizarTiempo();
+  intervaloMineria = setInterval(actualizarTiempo, 1000);
 
-  intervaloMineria = setInterval(() => {
-    segundosRestantes--;
-    if (segundosRestantes < 0) segundosRestantes = 0;
-
-    const hrs = Math.floor(segundosRestantes / 3600);
-    const min = Math.floor((segundosRestantes % 3600) / 60);
-    const seg = segundosRestantes % 60;
+  function actualizarTiempo() {
+    const restante = Math.max(0, Math.floor((fin - Date.now()) / 1000));
+    const hrs = Math.floor(restante / 3600);
+    const min = Math.floor((restante % 3600) / 60);
+    const seg = restante % 60;
     timeLeftElem.textContent = `${hrs}h ${min}m ${seg}s`;
-    progressFill.style.width = `${((tiempoMineria - segundosRestantes) / tiempoMineria) * 100}%`;
+    progressFill.style.width = `${((tiempoMineria - restante) / tiempoMineria) * 100}%`;
+    if (restante <= 0) finalizarMineria();
+  }
+}
 
-    localStorage.setItem('mineriaTiempoRestante', segundosRestantes);
-
-    if (segundosRestantes <= 0) {
-      clearInterval(intervaloMineria);
-      intervaloMineria = null;
-      stateText.textContent = 'Minería Completa';
-      claimBtn.disabled = false;
-      robot.classList.remove('pulsing');
-      localStorage.setItem('mineriaActiva', 'false');
-      localStorage.removeItem('mineriaTiempoRestante');
-    }
-  }, 1000);
+// Finaliza minería
+function finalizarMineria() {
+  clearInterval(intervaloMineria);
+  intervaloMineria = null;
+  stateText.textContent = 'Minería Completa';
+  robot.classList.remove('pulsing');
+  claimBtn.disabled = false;
+  localStorage.setItem('mineriaActiva', 'false');
+  localStorage.removeItem('mineriaFin');
 }
 
 // Botones
@@ -353,6 +361,45 @@ startBtn.addEventListener('click', () => {
 });
 
 claimBtn.addEventListener('click', () => {
+  mostrarCargaYSumar();
+});
+
+// Función ventana emergente con barra de carga
+function mostrarCargaYSumar() {
+  // Crear overlay
+  const overlay = document.createElement('div');
+  overlay.style.position = 'fixed';
+  overlay.style.inset = '0';
+  overlay.style.background = 'rgba(0,0,0,0.8)';
+  overlay.style.display = 'flex';
+  overlay.style.flexDirection = 'column';
+  overlay.style.justifyContent = 'center';
+  overlay.style.alignItems = 'center';
+  overlay.style.zIndex = '6000';
+  overlay.innerHTML = `
+    <div style="background:var(--card);padding:20px;border-radius:12px;text-align:center;width:80%;max-width:320px;">
+      <h3 style="color:var(--neon);margin-bottom:10px;">Reclamando ganancias...</h3>
+      <div style="width:100%;height:14px;background:rgba(255,255,255,0.1);border-radius:10px;overflow:hidden;">
+        <div id="bar" style="width:0%;height:100%;background:linear-gradient(90deg,var(--accent1),var(--accent2));transition:width 0.2s;"></div>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+
+  let progreso = 0;
+  const bar = overlay.querySelector('#bar');
+  const intervalo = setInterval(() => {
+    progreso += 20;
+    bar.style.width = `${progreso}%`;
+    if (progreso >= 100) {
+      clearInterval(intervalo);
+      document.body.removeChild(overlay);
+      reclamarGanancia();
+    }
+  }, 1000);
+}
+
+// Reclamar ganancia
+function reclamarGanancia() {
   const inversion = 10;
   const ganancia = inversion * 0.05;
   saldoMineria += ganancia;
@@ -362,11 +409,12 @@ claimBtn.addEventListener('click', () => {
   stateText.textContent = 'Ganancia reclamada ✅';
   progressFill.style.width = '100%';
   robot.classList.remove('pulsing');
-});
+}
 
-// Funciones de navegación
+// Navegación
 function go(url) { window.location.href = url; }
 function goHome() { window.location.href = 'NeoMineX - Home.html'; }
 function openHistory() { alert("📒 Historial de retiro vacío."); }
-</script></body>
+                                </script>
+</body>
 </html>
