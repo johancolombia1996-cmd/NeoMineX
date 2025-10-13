@@ -251,22 +251,20 @@ window.addEventListener('load', () => {
     }
   }, 2000);
 
-  // Mostrar saldo inicial
+  // Mostrar saldo inicial en 0
+  saldoMineria = 0;
+  saldoRecarga = 0;
   saldoElem.textContent = saldoMineria.toFixed(2) + " USDT";
   recargaElem.textContent = saldoRecarga.toFixed(2) + " USDT";
 
-  // Si ya estaba minando, restaurar temporizador
-  if (localStorage.getItem('minando') === 'true') {
-    iniciarMineria(parseInt(localStorage.getItem('segundosRestantes')));
-  } else {
-    timeLeftElem.textContent = "0h 0m 0s";
-    progressFill.style.width = "0%";
-  }
+  // Temporizador en cero
+  timeLeftElem.textContent = "0h 0m 0s";
+  progressFill.style.width = "0%";
 });
 
 // Variables
-let saldoMineria = parseFloat(localStorage.getItem('saldoMineria')) || 0.00;
-let saldoRecarga = parseFloat(localStorage.getItem('saldoRecarga')) || 0.00;
+let saldoMineria = 0;
+let saldoRecarga = 0;
 let tiempoMineria = 86400; // 24h
 let intervaloMineria = null;
 
@@ -300,27 +298,21 @@ function procesarRetiro() {
   }
   saldoMineria -= cantidad;
   saldoElem.textContent = saldoMineria.toFixed(2) + " USDT";
-  localStorage.setItem('saldoMineria', saldoMineria);
-  alert(`✅ Retiro de ${cantidad.toFixed(2)} USDT procesado a ${direccion}`);
-  closeModal();
 }
 
 // Función central de minería
 function iniciarMineria(segundos = tiempoMineria) {
-  const inversion = 0; // Inversión mínima para minar
+  const inversion = 10; // inversión mínima
   if (saldoRecarga < inversion) {
     alert(`Para minar debes tener al menos ${inversion} USDT. Por favor recarga tu balance.`);
     return;
   }
-  if (intervaloMineria) return; // ya está minando
+  if (intervaloMineria) return;
 
   stateText.textContent = 'Minería Activa';
   robot.classList.add('pulsing');
-  localStorage.setItem('minando', 'true');
 
   let segundosRestantes = segundos;
-  localStorage.setItem('segundosRestantes', segundosRestantes);
-
   document.getElementById('invested').textContent = inversion + ' USDT';
 
   intervaloMineria = setInterval(() => {
@@ -333,15 +325,12 @@ function iniciarMineria(segundos = tiempoMineria) {
     timeLeftElem.textContent = `${hrs}h ${min}m ${seg}s`;
     progressFill.style.width = `${((tiempoMineria - segundosRestantes) / tiempoMineria) * 100}%`;
 
-    localStorage.setItem('segundosRestantes', segundosRestantes);
-
     if (segundosRestantes <= 0) {
       clearInterval(intervaloMineria);
       intervaloMineria = null;
       stateText.textContent = 'Minería Completa';
       claimBtn.disabled = false;
       robot.classList.remove('pulsing');
-      localStorage.setItem('minando', 'false');
     }
   }, 1000);
 }
@@ -350,7 +339,7 @@ function iniciarMineria(segundos = tiempoMineria) {
 startBtn.addEventListener('click', () => iniciarMineria());
 
 claimBtn.addEventListener('click', () => {
-  const inversion = 0;
+  const inversion = 10;
   const ganancia = inversion * 0.05;
   saldoMineria += ganancia;
   saldoElem.textContent = saldoMineria.toFixed(2) + " USDT";
@@ -358,15 +347,11 @@ claimBtn.addEventListener('click', () => {
   stateText.textContent = 'Ganancia reclamada ✅';
   progressFill.style.width = '100%';
   robot.classList.remove('pulsing');
-  localStorage.setItem('saldoMineria', saldoMineria);
-  localStorage.setItem('segundosRestantes', tiempoMineria);
-  localStorage.setItem('minando', 'false');
 });
 
 // Funciones de navegación
 function go(url) { window.location.href = url; }
 function goHome() { window.location.href = 'NeoMineX - Home.html'; }
-function openHistory() { alert("📒 Historial de retiro vacio."); }
-</script>
-</body>
+function openHistory() { alert("📒 Historial de retiro vacío."); }
+</script></body>
 </html>
