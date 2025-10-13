@@ -240,7 +240,6 @@ body{
   <div class="navItem" onclick="go('Perfil.html')">👤<div>Perfil</div></div>
 </div>
 
-
 <script>
 window.addEventListener('load', () => {
   setTimeout(() => {
@@ -252,15 +251,16 @@ window.addEventListener('load', () => {
     }
   }, 2000);
 
-  // Inicializamos recarga mínima
-  if (saldoRecarga < 0) {
-    saldoRecarga = 0;
-    localStorage.setItem('saldoRecarga', saldoRecarga);
-  }
+  // Mostrar saldo inicial
+  saldoElem.textContent = saldoMineria.toFixed(2) + " USDT";
+  recargaElem.textContent = saldoRecarga.toFixed(2) + " USDT";
 
-  // Restaurar minería si estaba activa
+  // Si ya estaba minando, restaurar temporizador
   if (localStorage.getItem('minando') === 'true') {
     iniciarMineria(parseInt(localStorage.getItem('segundosRestantes')));
+  } else {
+    timeLeftElem.textContent = "0h 0m 0s";
+    progressFill.style.width = "0%";
   }
 });
 
@@ -282,10 +282,6 @@ const recargaElem = document.getElementById('recarga');
 const retiroBtn = document.getElementById('retiroBtn');
 const saldoRetiroElem = document.getElementById('saldoRetiro');
 const modal = document.getElementById('modalRetiro');
-
-// Actualizar visual
-saldoElem.textContent = saldoMineria.toFixed(2) + " USDT";
-recargaElem.textContent = saldoRecarga.toFixed(2) + " USDT";
 
 // Modal funciones
 function openModal() {
@@ -311,7 +307,7 @@ function procesarRetiro() {
 
 // Función central de minería
 function iniciarMineria(segundos = tiempoMineria) {
-  const inversion = 0; // inversión fija
+  const inversion = 10; // Inversión mínima para minar
   if (saldoRecarga < inversion) {
     alert(`Para minar debes tener al menos ${inversion} USDT. Por favor recarga tu balance.`);
     return;
@@ -321,6 +317,7 @@ function iniciarMineria(segundos = tiempoMineria) {
   stateText.textContent = 'Minería Activa';
   robot.classList.add('pulsing');
   localStorage.setItem('minando', 'true');
+
   let segundosRestantes = segundos;
   localStorage.setItem('segundosRestantes', segundosRestantes);
 
@@ -370,6 +367,6 @@ claimBtn.addEventListener('click', () => {
 function go(url) { window.location.href = url; }
 function goHome() { window.location.href = 'NeoMineX - Home.html'; }
 function openHistory() { alert("📒 Historial de retiro vacio."); }
-    </script>
+</script>
 </body>
 </html>
