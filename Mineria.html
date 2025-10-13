@@ -239,6 +239,7 @@ body{
   <div class="navItem" onclick="go('Referidos.html')">👤👤<div>Referido</div></div>
   <div class="navItem" onclick="go('Perfil.html')">👤<div>Perfil</div></div>
 </div>
+
 <script>
 window.addEventListener('load', () => {
   setTimeout(() => {
@@ -255,7 +256,6 @@ window.addEventListener('load', () => {
   saldoElem.textContent = saldoMineria.toFixed(2) + " USDT";
   recargaElem.textContent = saldoRecarga.toFixed(2) + " USDT";
 
-  // Restaurar progreso si había minería activa
   const enMineria = localStorage.getItem('mineriaActiva') === 'true';
   const finGuardado = localStorage.getItem('mineriaFin');
   if (enMineria && finGuardado) {
@@ -274,7 +274,7 @@ window.addEventListener('load', () => {
 // Variables
 let saldoMineria = 0;
 let saldoRecarga = 10;
-const tiempoMineria = 86400; // 12 horas
+const tiempoMineria = 43200; // ⏱️ 12 horas
 let intervaloMineria = null;
 
 // Elementos
@@ -344,7 +344,7 @@ function iniciarMineria(segundos = tiempoMineria) {
   }
 }
 
-// Finaliza minería
+// Finalizar minería
 function finalizarMineria() {
   clearInterval(intervaloMineria);
   intervaloMineria = null;
@@ -355,18 +355,13 @@ function finalizarMineria() {
   localStorage.removeItem('mineriaFin');
 }
 
-// Botones
-startBtn.addEventListener('click', () => {
-  iniciarMineria();
-});
-
+// Reclamación
 claimBtn.addEventListener('click', () => {
   mostrarCargaYSumar();
 });
 
-// Función ventana emergente con barra de carga
+// Efecto carga 5 segundos
 function mostrarCargaYSumar() {
-  // Crear overlay
   const overlay = document.createElement('div');
   overlay.style.position = 'fixed';
   overlay.style.inset = '0';
@@ -398,7 +393,7 @@ function mostrarCargaYSumar() {
   }, 1000);
 }
 
-// Reclamar ganancia
+// Añade ganancia después de 5s
 function reclamarGanancia() {
   const inversion = 10;
   const ganancia = inversion * 0.05;
@@ -415,6 +410,7 @@ function reclamarGanancia() {
 function go(url) { window.location.href = url; }
 function goHome() { window.location.href = 'NeoMineX - Home.html'; }
 function openHistory() { alert("📒 Historial de retiro vacío."); }
-                                </script>
+</script>
+
 </body>
 </html>
