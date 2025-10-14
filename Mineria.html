@@ -239,8 +239,8 @@ body{
   <div class="navItem" onclick="go('Referidos.html')">👤👤<div>Referido</div></div>
   <div class="navItem" onclick="go('Perfil.html')">👤<div>Perfil</div></div>
 </div>
-<script>
-  // -------------------- Inicialización --------------------
+    <script>
+// -------------------- INICIALIZACIÓN --------------------
 window.addEventListener('load', () => {
   setTimeout(() => {
     const loader = document.getElementById('loader');
@@ -259,18 +259,16 @@ window.addEventListener('load', () => {
   saldoRecarga = parseFloat(localStorage.getItem('saldoRecarga'));
   actualizarSaldos();
 
-  // Temporizador inicia en cero
   timeLeftElem.textContent = "0h 0m 0s";
   progressFill.style.width = "0%";
 
-  // Revisar si hay minería activa previamente
   const enMineria = localStorage.getItem('mineriaActiva') === 'true';
   const finGuardado = parseInt(localStorage.getItem('mineriaFin'), 10);
 
   if (enMineria && finGuardado) {
     const tiempoRestante = Math.max(0, Math.floor((finGuardado - Date.now()) / 1000));
     if (tiempoRestante > 0) {
-      iniciarMineria(tiempoRestante, false); // continuar con tiempo restante
+      iniciarMineria(tiempoRestante, false);
     } else {
       finalizarMineria();
     }
@@ -278,19 +276,18 @@ window.addEventListener('load', () => {
     verificarSaldoParaInicio();
   }
 
-  // Comprobar cada segundo si el saldo permite iniciar minería
   setInterval(verificarSaldoParaInicio, 1000);
 });
 
-// -------------------- Variables --------------------
+// -------------------- VARIABLES --------------------
 let saldoMineria = 0;
 let saldoRecarga = 0;
 const tiempoMineria = 43200; // 12 horas
-const inversion = 10; // inversión por defecto
-const retiroMinimo = 5; // retiro mínimo en USDT
+const inversion = 10;
+const retiroMinimo = 5;
 let intervaloMineria = null;
 
-// -------------------- Elementos --------------------
+// -------------------- ELEMENTOS --------------------
 const startBtn = document.getElementById('startBtn');
 const claimBtn = document.getElementById('claimBtn');
 const stateText = document.getElementById('stateText');
@@ -303,15 +300,12 @@ const retiroBtn = document.getElementById('retiroBtn');
 const saldoRetiroElem = document.getElementById('saldoRetiro');
 const modal = document.getElementById('modalRetiro');
 
-// -------------------- Funciones --------------------
-
-// Actualiza los saldos y habilita/deshabilita el botón de inicio
+// -------------------- FUNCIONES --------------------
 function actualizarSaldos() {
   saldoElem.textContent = saldoMineria.toFixed(2) + " USDT";
   recargaElem.textContent = saldoRecarga.toFixed(2) + " USDT";
 }
 
-// Verifica si hay saldo suficiente para habilitar el inicio
 function verificarSaldoParaInicio() {
   if (saldoRecarga >= inversion) {
     startBtn.disabled = false;
@@ -322,20 +316,18 @@ function verificarSaldoParaInicio() {
   }
 }
 
-// Modificar saldo manualmente
 function setSaldoMineria(valor) {
   saldoMineria = parseFloat(valor) || 0;
   localStorage.setItem('saldoMineria', saldoMineria);
   actualizarSaldos();
 }
-
 function setSaldoRecarga(valor) {
   saldoRecarga = parseFloat(valor) || 0;
   localStorage.setItem('saldoRecarga', saldoRecarga);
   actualizarSaldos();
 }
 
-// -------------------- Botón iniciar minería --------------------
+// -------------------- BOTÓN INICIAR --------------------
 startBtn.addEventListener('click', () => {
   if (saldoRecarga >= inversion) {
     iniciarMineria(tiempoMineria, true);
@@ -344,7 +336,7 @@ startBtn.addEventListener('click', () => {
   }
 });
 
-// -------------------- Modal de retiro --------------------
+// -------------------- RETIRO --------------------
 function openModal() {
   saldoRetiroElem.textContent = saldoMineria.toFixed(2) + " USDT";
   modal.style.display = 'flex';
@@ -355,17 +347,14 @@ retiroBtn.addEventListener('click', openModal);
 function procesarRetiro() {
   const direccion = document.getElementById('direccionRetiro').value;
   const cantidad = parseFloat(document.getElementById('cantidadRetiro').value);
-
   if (!direccion || isNaN(cantidad) || cantidad <= 0 || cantidad > saldoMineria) {
     alert("Por favor ingresa una dirección válida y una cantidad dentro de tu saldo.");
     return;
   }
-
   if (cantidad < retiroMinimo) {
     alert(`El retiro mínimo es de ${retiroMinimo} USDT.`);
     return;
   }
-
   saldoMineria -= cantidad;
   localStorage.setItem('saldoMineria', saldoMineria);
   actualizarSaldos();
@@ -373,24 +362,20 @@ function procesarRetiro() {
   closeModal();
 }
 
-// -------------------- Minería --------------------
+// -------------------- MINERÍA --------------------
 function iniciarMineria(segundos = tiempoMineria, restablecer = true) {
   if (saldoRecarga < inversion) return;
   if (intervaloMineria) return;
-
   const fin = restablecer ? Date.now() + tiempoMineria * 1000 : Date.now() + segundos * 1000;
   localStorage.setItem('mineriaActiva', 'true');
   localStorage.setItem('mineriaFin', fin);
-
   stateText.textContent = 'Minería Activa';
   robot.classList.add('pulsing');
   document.getElementById('invested').textContent = inversion + ' USDT';
   claimBtn.disabled = true;
   startBtn.disabled = true;
-
   actualizarTiempo();
   intervaloMineria = setInterval(actualizarTiempo, 1000);
-
   function actualizarTiempo() {
     const restante = Math.max(0, Math.floor((fin - Date.now()) / 1000));
     const hrs = Math.floor(restante / 3600);
@@ -401,7 +386,6 @@ function iniciarMineria(segundos = tiempoMineria, restablecer = true) {
     if (restante <= 0) finalizarMineria();
   }
 }
-
 function finalizarMineria() {
   clearInterval(intervaloMineria);
   intervaloMineria = null;
@@ -413,9 +397,8 @@ function finalizarMineria() {
   localStorage.removeItem('mineriaFin');
 }
 
-// -------------------- Reclamación --------------------
+// -------------------- RECLAMACIÓN --------------------
 claimBtn.addEventListener('click', mostrarCargaYSumar);
-
 function mostrarCargaYSumar() {
   const overlay = document.createElement('div');
   overlay.style.position = 'fixed';
@@ -434,7 +417,6 @@ function mostrarCargaYSumar() {
       </div>
     </div>`;
   document.body.appendChild(overlay);
-
   let progreso = 0;
   const bar = overlay.querySelector('#bar');
   const intervalo = setInterval(() => {
@@ -447,7 +429,6 @@ function mostrarCargaYSumar() {
     }
   }, 1000);
 }
-
 function reclamarGanancia() {
   const ganancia = inversion * 0.05;
   saldoMineria += ganancia;
@@ -459,12 +440,103 @@ function reclamarGanancia() {
   robot.classList.remove('pulsing');
 }
 
-// -------------------- Navegación --------------------
-function go(url) { window.location.href = url; }
-function goHome() { window.location.href = 'NeoMineX - Home.html'; }
-function openHistory() { alert("📒 Historial de retiro vacío."); }
+// -------------------- NAVEGACIÓN --------------------
+function go(url){window.location.href=url;}
 
-</script>
+// -------------------- TELEGRAM FLOAT --------------------
+const telegram = document.getElementById('telegramFloat');
+if(telegram){
+  let direction = 1;
+  setInterval(()=> {
+    let bottom = parseInt(window.getComputedStyle(telegram).bottom);
+    if(bottom >= window.innerHeight-70) direction=-1;
+    if(bottom <= 70) direction=1;
+    telegram.style.bottom = (bottom + direction*2) + 'px';
+  },30);
+}
 
+// -------------------- ENCUESTA Y MODAL --------------------
+const optionYes = document.getElementById('optionYes');
+const optionNo = document.getElementById('optionNo');
+const modal2 = document.getElementById('modal');
+const modalTitle = document.getElementById('modalTitle');
+const modalMessage = document.getElementById('modalMessage');
+const modalClose = document.getElementById('modalClose');
+const recargaBalance = document.getElementById('recargaBalance');
+const surveyKey = 'NeoMineXSurvey';
+const now = Date.now();
+if(localStorage.getItem(surveyKey)){
+  const data = JSON.parse(localStorage.getItem(surveyKey));
+  if(data.answer === 'yes'){
+    recargaBalance.innerText = (parseFloat(recargaBalance.innerText)+1).toFixed(2)+' $';
+  }
+  document.querySelector('.survey').style.display='none';
+}
+function showModal(title,message,showFireworks){
+  modal2.style.display='flex';
+  modalTitle.innerText = title;
+  modalMessage.innerText = message;
+  if(showFireworks){
+    startFireworks();
+    setTimeout(stopFireworks,4000);
+  }
+}
+modalClose.onclick = () => { modal2.style.display='none'; stopFireworks(); }
+optionYes.onclick = () => {
+  if(localStorage.getItem(surveyKey)) return;
+  showModal('¡Gracias por elegirnos!','NeoMineX te agradece, tienes 1 USDT de recompensa.',true);
+  let balance = parseFloat(recargaBalance.innerText);
+  balance += 1;
+  recargaBalance.innerText = balance.toFixed(2)+' $';
+  localStorage.setItem(surveyKey,JSON.stringify({answer:'yes',time:now}));
+  document.querySelector('.survey').style.display='none';
+}
+optionNo.onclick = () => {
+  if(localStorage.getItem(surveyKey)) return;
+  showModal('¡Me has roto el corazón!','No recibirás nada. Viva NeoMineX 💔',false);
+  localStorage.setItem(surveyKey,JSON.stringify({answer:'no',time:now}));
+  document.querySelector('.survey').style.display='none';
+}
+
+// -------------------- FUEGOS ARTIFICIALES --------------------
+let canvas, ctx, particles=[], fwInterval;
+function startFireworks(){
+  canvas = document.getElementById('fireworkCanvas');
+  canvas.width = canvas.offsetWidth;
+  canvas.height = canvas.offsetHeight;
+  ctx = canvas.getContext('2d');
+  for(let i=0;i<50;i++){
+    particles.push({
+      x: Math.random()*canvas.width,
+      y: canvas.height,
+      vx: (Math.random()-0.5)*6,
+      vy: Math.random()*-8-2,
+      alpha: 1,
+      color: `hsl(${Math.random()*360},100%,60%)`,
+      size: 2+Math.random()*3
+    });
+  }
+  fwInterval = setInterval(drawFireworks,30);
+}
+function stopFireworks(){
+  clearInterval(fwInterval);
+  particles = [];
+  if(ctx) ctx.clearRect(0,0,canvas.width,canvas.height);
+}
+function drawFireworks(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  particles.forEach((p,i)=>{
+    p.x += p.vx;
+    p.y += p.vy;
+    p.vy += 0.05;
+    p.alpha -= 0.02;
+    if(p.alpha<=0) particles.splice(i,1);
+    ctx.fillStyle = `hsla(${Math.random()*360},100%,60%,${p.alpha})`;
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.size,0,Math.PI*2);
+    ctx.fill();
+  });
+}
+    </script>
 </body>
 </html>
