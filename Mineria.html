@@ -240,7 +240,6 @@ body{
   <div class="navItem" onclick="go('Perfil.html')">👤<div>Perfil</div></div>
 </div>
 <script>
-
   // -------------------- Inicialización --------------------
 window.addEventListener('load', () => {
   setTimeout(() => {
@@ -288,6 +287,7 @@ let saldoMineria = 0;
 let saldoRecarga = 0;
 const tiempoMineria = 43200; // 12 horas
 const inversion = 10; // inversión por defecto
+const retiroMinimo = 5; // retiro mínimo en USDT
 let intervaloMineria = null;
 
 // -------------------- Elementos --------------------
@@ -355,7 +355,6 @@ retiroBtn.addEventListener('click', openModal);
 function procesarRetiro() {
   const direccion = document.getElementById('direccionRetiro').value;
   const cantidad = parseFloat(document.getElementById('cantidadRetiro').value);
-  const retiroMinimo = 5; // ⚡ Retiro mínimo en USDT
 
   if (!direccion || isNaN(cantidad) || cantidad <= 0 || cantidad > saldoMineria) {
     alert("Por favor ingresa una dirección válida y una cantidad dentro de tu saldo.");
@@ -366,6 +365,14 @@ function procesarRetiro() {
     alert(`El retiro mínimo es de ${retiroMinimo} USDT.`);
     return;
   }
+
+  saldoMineria -= cantidad;
+  localStorage.setItem('saldoMineria', saldoMineria);
+  actualizarSaldos();
+  alert(`✅ Retiro de ${cantidad} USDT procesado con éxito.`);
+  closeModal();
+}
+
 // -------------------- Minería --------------------
 function iniciarMineria(segundos = tiempoMineria, restablecer = true) {
   if (saldoRecarga < inversion) return;
@@ -456,8 +463,6 @@ function reclamarGanancia() {
 function go(url) { window.location.href = url; }
 function goHome() { window.location.href = 'NeoMineX - Home.html'; }
 function openHistory() { alert("📒 Historial de retiro vacío."); }
-
-
 
 </script>
 
