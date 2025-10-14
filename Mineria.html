@@ -355,17 +355,17 @@ retiroBtn.addEventListener('click', openModal);
 function procesarRetiro() {
   const direccion = document.getElementById('direccionRetiro').value;
   const cantidad = parseFloat(document.getElementById('cantidadRetiro').value);
+  const retiroMinimo = 5; // ⚡ Retiro mínimo en USDT
+
   if (!direccion || isNaN(cantidad) || cantidad <= 0 || cantidad > saldoMineria) {
     alert("Por favor ingresa una dirección válida y una cantidad dentro de tu saldo.");
     return;
   }
-  saldoMineria -= cantidad;
-  localStorage.setItem('saldoMineria', saldoMineria);
-  actualizarSaldos();
-  alert(`✅ Retiro de ${cantidad} USDT procesado con éxito.`);
-  closeModal();
-}
 
+  if (cantidad < retiroMinimo) {
+    alert(`El retiro mínimo es de ${retiroMinimo} USDT.`);
+    return;
+  }
 // -------------------- Minería --------------------
 function iniciarMineria(segundos = tiempoMineria, restablecer = true) {
   if (saldoRecarga < inversion) return;
