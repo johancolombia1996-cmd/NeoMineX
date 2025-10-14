@@ -130,59 +130,113 @@ html,body{height:100%;background:var(--bg);color:#eaf8ff;font-family:'Poppins',s
 </div>
 
 <script>
-  // --- SISTEMA DE MINERÍA DE 12 HORAS ---
-const claimBtn = document.getElementById('claimBtn'); // tu botón Reclamar
-const balanceText = document.getElementById('recargaBalance'); // el texto del balance
+// NAVEGACIÓN
+function go(url){window.location.href=url;}
 
-const miningKey = 'NeoMineXMining';
-const miningTime = 12 * 60 * 60 * 1000; // 12 horas
-let miningData = JSON.parse(localStorage.getItem(miningKey)) || {
-  lastClaim: 0,
-  claimed: false
-};
+// TELEGRAM FLOAT MOVIMIENTO VERTICAL
+const telegram = document.getElementById('telegramFloat');
+let direction = 1;
+setInterval(()=> {
+  let bottom = parseInt(window.getComputedStyle(telegram).bottom);
+  if(bottom >= window.innerHeight-70) direction=-1;
+  if(bottom <= 70) direction=1;
+  telegram.style.bottom = (bottom + direction*2) + 'px';
+},30);
 
-function updateClaimButton() {
-  const now = Date.now();
-  const elapsed = now - miningData.lastClaim;
+// ENCUESTA Y MODAL
+const optionYes = document.getElementById('optionYes');
+const optionNo = document.getElementById('optionNo');
+const modal = document.getElementById('modal');
+const modalTitle = document.getElementById('modalTitle');
+const modalMessage = document.getElementById('modalMessage');
+const modalClose = document.getElementById('modalClose');
+const recargaBalance = document.getElementById('recargaBalance');
 
-  if (elapsed >= miningTime) {
-    claimBtn.disabled = false;
-    claimBtn.style.background = '#007bff'; // Azul activo
-    claimBtn.innerText = 'Reclamar recompensa';
-  } else {
-    claimBtn.disabled = true;
-    claimBtn.style.background = '#222'; // Negro minando
-    const remaining = Math.ceil((miningTime - elapsed) / 1000 / 60 / 60);
-    claimBtn.innerText = `Minando... ${remaining}h`;
+const surveyKey = 'NeoMineXSurvey';
+const now = Date.now();
+const fourDays = 4*24*60*60*1000;
+  // Verificar si ya respondió
+if(localStorage.getItem(surveyKey)){
+  const data = JSON.parse(localStorage.getItem(surveyKey));
+  // Mantener balance si respondió sí
+  if(data.answer === 'yes'){
+    recargaBalance.innerText = (parseFloat(recargaBalance.innerText)+1).toFixed(2)+' $';
+  }
+  document.querySelector('.survey').style.display='none';
+}
+
+function showModal(title,message,showFireworks){
+  modal.style.display='flex';
+  modalTitle.innerText = title;
+  modalMessage.innerText = message;
+  if(showFireworks){
+    startFireworks();
+    setTimeout(stopFireworks,4000); // Detener fuegos después de 4s
   }
 }
 
-claimBtn.addEventListener('click', () => {
-  const now = Date.now();
-  const elapsed = now - miningData.lastClaim;
+// CERRAR MODAL
+modalClose.onclick = () => { modal.style.display='none'; stopFireworks(); }
 
-  if (elapsed >= miningTime) {
-    // Dar recompensa
-    let balance = parseFloat(balanceText.innerText);
-    balance += 0.5; // ejemplo: recompensa de 0.5 USDT cada 12 h
-    balanceText.innerText = balance.toFixed(2) + ' $';
+// RESPONDER SÍ
+optionYes.onclick = () => {
+  if(localStorage.getItem(surveyKey)) return;
+  showModal('¡Gracias por elegirnos!','NeoMineX te agradece, tienes 1 USDT de recompensa.',true);
+  // Sumar 1 USDT
+  let balance = parseFloat(recargaBalance.innerText);
+  balance += 1;
+  recargaBalance.innerText = balance.toFixed(2)+' $';
+  localStorage.setItem(surveyKey,JSON.stringify({answer:'yes',time:now}));
+  document.querySelector('.survey').style.display='none';
+}
 
-    // Guardar nuevo ciclo
-    miningData.lastClaim = now;
-    miningData.claimed = true;
-    localStorage.setItem(miningKey, JSON.stringify(miningData));
+// RESPONDER NO
+optionNo.onclick = () => {
+  if(localStorage.getItem(surveyKey)) return;
+  showModal('¡Me has roto el corazón!','No recibirás nada. Viva NeoMineX 💔',false);
+  localStorage.setItem(surveyKey,JSON.stringify({answer:'no',time:now}));
+  document.querySelector('.survey').style.display='none';
+}
 
-    // Desactivar botón
-    claimBtn.disabled = true;
-    claimBtn.style.background = '#222';
-    claimBtn.innerText = 'Minando...';
-  } else {
-    alert('⛏️ Aún no han pasado las 12 horas de minería.');
+// FUEGOS ARTIFICIALES MEJORADOS
+let canvas, ctx, particles=[], fwInterval;
+function startFireworks(){
+  canvas = document.getElementById('fireworkCanvas');
+  canvas.width = canvas.offsetWidth;
+  canvas.height = canvas.offsetHeight;
+  ctx = canvas.getContext('2d');
+  for(let i=0;i<50;i++){
+    particles.push({
+      x: Math.random()*canvas.width,
+      y: canvas.height,
+      vx: (Math.random()-0.5)*6,
+      vy: Math.random()*-8-2,
+      alpha: 1,
+      color: `hsl(${Math.random()*360},100%,60%)`,
+      size: 2+Math.random()*3
+    });
   }
-});
-
-setInterval(updateClaimButton, 60000); // Actualiza cada minuto
-updateClaimButton();
+  fwInterval = setInterval(drawFireworks,30);
+}
+function stopFireworks(){
+  clearInterval(fwInterval);
+  particles = [];
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+}
+function drawFireworks(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  particles.forEach((p,i)=>{
+    p.x += p.vx;
+    p.y += p.vy;
+    p.vy += 0.05; // gravedad
+    p.alpha -= 0.02;
+    if(p.alpha<=0) particles.splice(i,1);
+    ctx.fillStyle = `hsla(${Math.random()*360},100%,60%,${p.alpha})`;
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.size,0,Math.PI*2);
+    ctx.fill();
+  });
+}
 </script>
 </body>
 </html>
