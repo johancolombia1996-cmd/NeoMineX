@@ -273,7 +273,7 @@ window.addEventListener('load', () => {
 
 // Variables
 let saldoMineria = 0;
-let saldoRecarga = 0;
+let saldoRecarga = 10;
 const tiempoMineria = 43200; // ⏱️ 12 horas
 let intervaloMineria = null;
 
@@ -314,7 +314,7 @@ function procesarRetiro() {
 
 // Iniciar minería
 function iniciarMineria(segundos = tiempoMineria) {
-  const inversion = 0;
+  const inversion = 10;
   if (saldoRecarga < inversion) {
     alert(`Para minar debes tener al menos ${inversion} USDT.`);
     return;
