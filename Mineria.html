@@ -241,7 +241,8 @@ body{
 </div>
 
 <script>
-window.addEventListener('load', () => {
+
+  window.addEventListener('load', () => {
   setTimeout(() => {
     const loader = document.getElementById('loader');
     if (loader) {
@@ -251,11 +252,16 @@ window.addEventListener('load', () => {
     }
   }, 2000);
 
-  saldoMineria = parseFloat(localStorage.getItem('saldoMineria')) || 0;
-  saldoRecarga = parseFloat(localStorage.getItem('saldoRecarga')) || 0;
-  saldoElem.textContent = saldoMineria.toFixed(2) + " USDT";
-  recargaElem.textContent = saldoRecarga.toFixed(2) + " USDT";
+  // Si no hay valor en localStorage, inicializa con valores por defecto
+  if (localStorage.getItem('saldoMineria') === null) localStorage.setItem('saldoMineria', 0);
+  if (localStorage.getItem('saldoRecarga') === null) localStorage.setItem('saldoRecarga', 10);
 
+  // Cargar saldos desde localStorage
+  saldoMineria = parseFloat(localStorage.getItem('saldoMineria'));
+  saldoRecarga = parseFloat(localStorage.getItem('saldoRecarga'));
+  actualizarSaldos();
+
+  // Minería activa
   const enMineria = localStorage.getItem('mineriaActiva') === 'true';
   const finGuardado = localStorage.getItem('mineriaFin');
   if (enMineria && finGuardado) {
@@ -275,6 +281,7 @@ window.addEventListener('load', () => {
 let saldoMineria = 0;
 let saldoRecarga = 0;
 const tiempoMineria = 43200; // ⏱️ 12 horas
+const inversion = 10; // inversión por defecto
 let intervaloMineria = null;
 
 // Elementos
@@ -289,6 +296,25 @@ const recargaElem = document.getElementById('recarga');
 const retiroBtn = document.getElementById('retiroBtn');
 const saldoRetiroElem = document.getElementById('saldoRetiro');
 const modal = document.getElementById('modalRetiro');
+
+// Función para actualizar la UI
+function actualizarSaldos() {
+  saldoElem.textContent = saldoMineria.toFixed(2) + " USDT";
+  recargaElem.textContent = saldoRecarga.toFixed(2) + " USDT";
+}
+
+// Funciones para modificar saldos manualmente
+function setSaldoMineria(valor) {
+  saldoMineria = parseFloat(valor) || 0;
+  localStorage.setItem('saldoMineria', saldoMineria);
+  actualizarSaldos();
+}
+
+function setSaldoRecarga(valor) {
+  saldoRecarga = parseFloat(valor) || 0;
+  localStorage.setItem('saldoRecarga', saldoRecarga);
+  actualizarSaldos();
+}
 
 // Modal retiro
 function openModal() {
@@ -306,15 +332,14 @@ function procesarRetiro() {
     return;
   }
   saldoMineria -= cantidad;
-  saldoElem.textContent = saldoMineria.toFixed(2) + " USDT";
   localStorage.setItem('saldoMineria', saldoMineria);
+  actualizarSaldos();
   alert(`✅ Retiro de ${cantidad} USDT procesado con éxito.`);
   closeModal();
 }
 
 // Iniciar minería
 function iniciarMineria(segundos = tiempoMineria) {
-  const inversion = 10;
   if (saldoRecarga < inversion) {
     alert(`Para minar debes tener al menos ${inversion} USDT.`);
     return;
@@ -356,9 +381,7 @@ function finalizarMineria() {
 }
 
 // Reclamación
-claimBtn.addEventListener('click', () => {
-  mostrarCargaYSumar();
-});
+claimBtn.addEventListener('click', () => { mostrarCargaYSumar(); });
 
 // Efecto carga 5 segundos
 function mostrarCargaYSumar() {
@@ -395,11 +418,10 @@ function mostrarCargaYSumar() {
 
 // Añade ganancia después de 5s
 function reclamarGanancia() {
-  const inversion = 10;
   const ganancia = inversion * 0.05;
   saldoMineria += ganancia;
-  saldoElem.textContent = saldoMineria.toFixed(2) + " USDT";
   localStorage.setItem('saldoMineria', saldoMineria);
+  actualizarSaldos();
   claimBtn.disabled = true;
   stateText.textContent = 'Ganancia reclamada ✅';
   progressFill.style.width = '100%';
