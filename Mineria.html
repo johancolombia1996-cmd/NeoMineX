@@ -243,13 +243,13 @@ body{
   <script>
 // -------------------- CONFIGURACIÓN --------------------
 const TIEMPO_MINERIA = 43200; // 12 horas
-const INVERSION = 10;
+const INVERSION = 15;
 const RETIRO_MINIMO = 5;
 const PORCENTAJE_GANANCIA = 0.05; // 🔹 5% de ganancia
 
 // -------------------- VARIABLES --------------------
 let saldoMineria = 0;
-let saldoRecarga = 0;
+let saldoRecarga = 15;
 let intervaloMineria = null;
 
 // -------------------- ELEMENTOS --------------------
@@ -279,7 +279,7 @@ window.addEventListener('load', () => {
 
   // Inicializar saldos
   saldoMineria = parseFloat(localStorage.getItem('saldoMineria')) || 1;
-  saldoRecarga = parseFloat(localStorage.getItem('saldoRecarga')) || 10;
+  saldoRecarga = parseFloat(localStorage.getItem('saldoRecarga')) || 15;
   actualizarSaldos();
 
   progressFill.style.width = "0%";
