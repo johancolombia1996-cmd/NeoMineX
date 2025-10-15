@@ -241,7 +241,7 @@ body{
 </div>
 
   <script>
-// -------------------- CONFIGURACIÓN --------------------
+    // -------------------- CONFIGURACIÓN --------------------
 const TIEMPO_MINERIA = 43200; // 12 horas
 const INVERSION = 15;
 const RETIRO_MINIMO = 5;
@@ -460,21 +460,30 @@ function procesarRetiro() {
   alert(`✅ Retiro de ${cantidad} USDT procesado con éxito.`);
   closeModal();
 }
-</script>
 
-<style>
-/* 🔸 Vibración del botón reclamar cuando se activa */
-.vibrar {
-  animation: vibrar 0.3s infinite;
+// -------------------- FLECHA Y BOTONES INFERIORES --------------------
+function go(url) {
+  window.location.href = url;
 }
-@keyframes vibrar {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-3px); }
-  50% { transform: translateX(3px); }
-  75% { transform: translateX(-2px); }
-}
-</style>
 
-  
+function goHome() {
+  // Vuelve a la página anterior (puedes cambiarlo por una URL fija)
+  history.back();
+}
+
+const backArrow = document.getElementById('backArrow');
+if (backArrow) {
+  backArrow.addEventListener('click', goHome);
+}
+
+const navBtns = document.querySelectorAll('.nav-btn');
+navBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const destino = btn.getAttribute('data-url');
+    if (destino) go(destino);
+  });
+});
+
+  </script>
 </body>
 </html>
