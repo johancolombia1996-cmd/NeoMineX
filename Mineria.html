@@ -241,250 +241,281 @@ body{
   <div class="navItem" onclick="go('Perfil.html')">👤<div>Perfil</div></div>
 </div>
 
-  <script>
-    // -------------------- CONFIGURACIÓN --------------------
-const TIEMPO_MINERIA = 43200; // 12 horas
-const INVERSION = 15;
-const RETIRO_MINIMO = 5;
-const PORCENTAJE_GANANCIA = 0.05; // 🔹 5% de ganancia
+      <script>
+  // -------------------- CONFIGURACIÓN --------------------
+  const TIEMPO_MINERIA = 300; // 🔹 5 minutos (300 segundos)
+  const INVERSION = 15;
+  const RETIRO_MINIMO = 5;
+  const GANANCIA_POR_CICLO = 0.03; // 🔹 Gana 0.03 USDT cada 5 min
 
-// -------------------- VARIABLES --------------------
-let saldoMineria = 0;
-let saldoRecarga = 15;
-let intervaloMineria = null;
+  // -------------------- VARIABLES --------------------
+  let saldoMineria = 0;
+  let saldoRecarga = 15;
+  let intervaloMineria = null;
 
-// -------------------- ELEMENTOS --------------------
-const startBtn = document.getElementById('startBtn');
-const claimBtn = document.getElementById('claimBtn');
-const stateText = document.getElementById('stateText');
-const progressFill = document.getElementById('progressFill');
-const timeLeftElem = document.getElementById('timeLeft');
-const robot = document.getElementById('robotElem');
-const saldoElem = document.getElementById('mined');
-const recargaElem = document.getElementById('recarga');
-const retiroBtn = document.getElementById('retiroBtn');
-const saldoRetiroElem = document.getElementById('saldoRetiro');
-const modal = document.getElementById('modalRetiro');
+  // -------------------- ELEMENTOS --------------------
+  const startBtn = document.getElementById('startBtn');
+  const claimBtn = document.getElementById('claimBtn');
+  const stateText = document.getElementById('stateText');
+  const progressFill = document.getElementById('progressFill');
+  const timeLeftElem = document.getElementById('timeLeft');
+  const robot = document.getElementById('robotElem');
+  const saldoElem = document.getElementById('mined');
+  const recargaElem = document.getElementById('recarga');
+  const retiroBtn = document.getElementById('retiroBtn');
+  const saldoRetiroElem = document.getElementById('saldoRetiro');
+  const modal = document.getElementById('modalRetiro');
 
-// -------------------- INICIALIZACIÓN --------------------
-window.addEventListener('load', () => {
-  // Ocultar loader
-  const loader = document.getElementById('loader');
-  if (loader) {
-    setTimeout(() => {
-      loader.style.opacity = '0';
-      loader.style.transition = '1s';
-      setTimeout(() => loader.remove(), 1000);
-    }, 2000);
-  }
+  // -------------------- INICIALIZACIÓN --------------------
+  window.addEventListener('load', () => {
+    const loader = document.getElementById('loader');
+    if (loader) {
+      setTimeout(() => {
+        loader.style.opacity = '0';
+        loader.style.transition = '1s';
+        setTimeout(() => loader.remove(), 1000);
+      }, 2000);
+    }
 
-  // Inicializar saldos
-  saldoMineria = parseFloat(localStorage.getItem('saldoMineria')) || 1;
-  saldoRecarga = parseFloat(localStorage.getItem('saldoRecarga')) || 15;
-  actualizarSaldos();
+    saldoMineria = parseFloat(localStorage.getItem('saldoMineria')) || 1;
+    saldoRecarga = parseFloat(localStorage.getItem('saldoRecarga')) || 15;
+    actualizarSaldos();
 
-  progressFill.style.width = "0%";
-  timeLeftElem.textContent = "0h 0m 0s";
+    progressFill.style.width = "0%";
+    timeLeftElem.textContent = "0h 0m 0s";
 
-  const activa = localStorage.getItem('mineriaActiva') === 'true';
-  const finGuardado = parseInt(localStorage.getItem('mineriaFin'), 10);
+    const activa = localStorage.getItem('mineriaActiva') === 'true';
+    const finGuardado = parseInt(localStorage.getItem('mineriaFin'), 10);
 
-  if (activa && finGuardado) {
-    const restante = Math.max(0, Math.floor((finGuardado - Date.now()) / 1000));
-    if (restante > 0) {
-      iniciarMineria(restante, false);
+    if (activa && finGuardado) {
+      const restante = Math.max(0, Math.floor((finGuardado - Date.now()) / 1000));
+      if (restante > 0) {
+        iniciarMineria(restante, false);
+      } else {
+        finalizarMineria();
+      }
     } else {
-      finalizarMineria();
+      verificarSaldo();
     }
-  } else {
-    verificarSaldo();
-  }
 
-  setInterval(verificarEstado, 1000);
-});
-
-// -------------------- FUNCIONES PRINCIPALES --------------------
-function actualizarSaldos() {
-  saldoElem.textContent = saldoMineria.toFixed(2) + " USDT";
-  recargaElem.textContent = saldoRecarga.toFixed(2) + " USDT";
-}
-
-function verificarSaldo() {
-  if (saldoRecarga >= INVERSION) {
-    startBtn.disabled = false;
-    stateText.textContent = "Listo para iniciar minería";
-  } else {
-    startBtn.disabled = true;
-    stateText.textContent = "Saldo insuficiente para minar";
-  }
-}
-
-function verificarEstado() {
-  const activa = localStorage.getItem('mineriaActiva') === 'true';
-  const fin = parseInt(localStorage.getItem('mineriaFin'), 10);
-  if (activa && fin && Date.now() >= fin) {
-    finalizarMineria();
-  }
-}
-
-// -------------------- INICIAR MINERÍA --------------------
-startBtn.addEventListener('click', () => {
-  if (saldoRecarga < INVERSION) return alert("No tienes saldo suficiente");
-  iniciarMineria(TIEMPO_MINERIA, true);
-});
-
-function iniciarMineria(segundos = TIEMPO_MINERIA, reiniciar = true) {
-  if (intervaloMineria) clearInterval(intervaloMineria);
-
-  const fin = Date.now() + segundos * 1000;
-  localStorage.setItem('mineriaActiva', 'true');
-  localStorage.setItem('mineriaFin', fin);
-
-  stateText.textContent = "Minería activa ⛏️";
-  robot.classList.add('pulsing');
-  claimBtn.disabled = true;
-  startBtn.disabled = true;
-  document.getElementById('invested').textContent = INVERSION + ' USDT';
-
-  intervaloMineria = setInterval(() => {
-    const restante = Math.max(0, Math.floor((fin - Date.now()) / 1000));
-    const h = Math.floor(restante / 3600);
-    const m = Math.floor((restante % 3600) / 60);
-    const s = restante % 60;
-    timeLeftElem.textContent = `${h}h ${m}m ${s}s`;
-    progressFill.style.width = `${((TIEMPO_MINERIA - restante) / TIEMPO_MINERIA) * 100}%`;
-
-    if (restante <= 0) {
-      clearInterval(intervaloMineria);
-      finalizarMineria();
+    if (localStorage.getItem('mineriaActiva') === 'false' && !localStorage.getItem('mineriaFin')) {
+      claimBtn.disabled = false;
+      stateText.textContent = "Minería completa ✅";
     }
-  }, 1000);
-}
 
-// -------------------- FINALIZAR Y RECLAMAR --------------------
-function finalizarMineria() {
-  clearInterval(intervaloMineria);
-  intervaloMineria = null;
-  localStorage.setItem('mineriaActiva', 'false');
-  localStorage.removeItem('mineriaFin');
-
-  robot.classList.remove('pulsing');
-  progressFill.style.width = '100%';
-  timeLeftElem.textContent = "0h 0m 0s";
-  stateText.textContent = "Minería completa ✅";
-
-  claimBtn.disabled = false;
-  startBtn.disabled = saldoRecarga < INVERSION;
-
-  reproducirSonido();
-  animarBotonClaim();
-}
-
-function animarBotonClaim() {
-  claimBtn.classList.add('vibrar');
-  setTimeout(() => claimBtn.classList.remove('vibrar'), 4000);
-}
-
-function reproducirSonido() {
-  const audio = new Audio('https://cdn.pixabay.com/download/audio/2022/03/15/audio_d2a2b0d4ef.mp3');
-  audio.play();
-}
-
-// -------------------- RECLAMACIÓN --------------------
-claimBtn.addEventListener('click', () => {
-  claimBtn.disabled = true;
-  mostrarCargaYSumar();
-});
-
-function mostrarCargaYSumar() {
-  const overlay = document.createElement('div');
-  overlay.style = `
-    position:fixed;inset:0;background:rgba(0,0,0,0.85);
-    display:flex;flex-direction:column;justify-content:center;align-items:center;
-    z-index:9999;
-  `;
-  overlay.innerHTML = `
-    <div style="background:#111;padding:20px;border-radius:14px;width:85%;max-width:340px;text-align:center;">
-      <h3 style="color:var(--neon);margin-bottom:12px;">Reclamando ganancias...</h3>
-      <div style="width:100%;height:14px;background:#333;border-radius:10px;overflow:hidden;">
-        <div id="bar" style="width:0%;height:100%;background:linear-gradient(90deg,#14f7c4,#00b3ff);transition:width 0.2s;"></div>
-      </div>
-    </div>`;
-  document.body.appendChild(overlay);
-
-  let progreso = 0;
-  const bar = overlay.querySelector('#bar');
-  const intervalo = setInterval(() => {
-    progreso += 25;
-    bar.style.width = `${progreso}%`;
-    if (progreso >= 100) {
-      clearInterval(intervalo);
-      document.body.removeChild(overlay);
-      reclamarGanancia();
-    }
-  }, 600);
-}
-
-function reclamarGanancia() {
-  const ganancia = INVERSION * PORCENTAJE_GANANCIA; // 🔹 5% fijo
-  saldoMineria += ganancia;
-  localStorage.setItem('saldoMineria', saldoMineria);
-  actualizarSaldos();
-  stateText.textContent = `Ganancia reclamada ✅ +${ganancia.toFixed(2)} USDT`;
-  claimBtn.disabled = true;
-  robot.classList.remove('pulsing');
-  reproducirSonido();
-}
-
-// -------------------- RETIROS --------------------
-retiroBtn.addEventListener('click', () => {
-  saldoRetiroElem.textContent = saldoMineria.toFixed(2) + " USDT";
-  modal.style.display = 'flex';
-});
-
-function closeModal() { modal.style.display = 'none'; }
-
-function procesarRetiro() {
-  const direccion = document.getElementById('direccionRetiro').value;
-  const cantidad = parseFloat(document.getElementById('cantidadRetiro').value);
-  if (!direccion || isNaN(cantidad) || cantidad <= 0 || cantidad > saldoMineria) {
-    alert("Por favor ingresa una dirección válida y una cantidad dentro de tu saldo.");
-    return;
-  }
-  if (cantidad < RETIRO_MINIMO) {
-    alert(`El retiro mínimo es de ${RETIRO_MINIMO} USDT.`);
-    return;
-  }
-  saldoMineria -= cantidad;
-  localStorage.setItem('saldoMineria', saldoMineria);
-  actualizarSaldos();
-  alert(`✅ Retiro de ${cantidad} USDT procesado con éxito.`);
-  closeModal();
-}
-
-// -------------------- FLECHA Y BOTONES INFERIORES --------------------
-function go(url) {
-  window.location.href = url;
-}
-
-function goHome() {
-  // Vuelve a la página anterior (puedes cambiarlo por una URL fija)
-  history.back();
-}
-
-const backArrow = document.getElementById('backArrow');
-if (backArrow) {
-  backArrow.addEventListener('click', goHome);
-}
-
-const navBtns = document.querySelectorAll('.nav-btn');
-navBtns.forEach(btn => {
-  btn.addEventListener('click', () => {
-    const destino = btn.getAttribute('data-url');
-    if (destino) go(destino);
+    setInterval(verificarEstado, 1000);
   });
-});
 
-  </script>
+  // -------------------- FUNCIONES PRINCIPALES --------------------
+  function actualizarSaldos() {
+    saldoElem.textContent = saldoMineria.toFixed(2) + " USDT";
+    recargaElem.textContent = saldoRecarga.toFixed(2) + " USDT";
+  }
+
+  function verificarSaldo() {
+    if (saldoRecarga >= INVERSION) {
+      startBtn.disabled = false;
+      stateText.textContent = "Listo para iniciar minería";
+    } else {
+      startBtn.disabled = true;
+      stateText.textContent = "Saldo insuficiente para minar";
+    }
+  }
+
+  function verificarEstado() {
+    const activa = localStorage.getItem('mineriaActiva') === 'true';
+    const fin = parseInt(localStorage.getItem('mineriaFin'), 10);
+
+    if (!activa && !fin) {
+      claimBtn.disabled = false;
+      startBtn.disabled = saldoRecarga < INVERSION;
+      return;
+    }
+
+    if (activa && fin && Date.now() >= fin) {
+      finalizarMineria();
+    }
+  }
+
+  // -------------------- INICIAR MINERÍA --------------------
+  startBtn.addEventListener('click', () => {
+    if (saldoRecarga < INVERSION) return alert("No tienes saldo suficiente");
+    iniciarMineria(TIEMPO_MINERIA, true);
+  });
+
+  function iniciarMineria(segundos = TIEMPO_MINERIA, reiniciar = true) {
+    if (intervaloMineria) clearInterval(intervaloMineria);
+
+    const fin = Date.now() + segundos * 1000;
+    localStorage.setItem('mineriaActiva', 'true');
+    localStorage.setItem('mineriaFin', fin);
+
+    stateText.textContent = "Minería activa ⛏️";
+    robot.classList.add('pulsing');
+    claimBtn.disabled = true;
+    startBtn.disabled = true;
+    document.getElementById('invested').textContent = INVERSION + ' USDT';
+
+    intervaloMineria = setInterval(() => {
+      const restante = Math.max(0, Math.floor((fin - Date.now()) / 1000));
+      const h = Math.floor(restante / 3600);
+      const m = Math.floor((restante % 3600) / 60);
+      const s = restante % 60;
+      timeLeftElem.textContent = `${h}h ${m}m ${s}s`;
+      progressFill.style.width = `${((TIEMPO_MINERIA - restante) / TIEMPO_MINERIA) * 100}%`;
+
+      if (restante <= 0) {
+        clearInterval(intervaloMineria);
+        finalizarMineria();
+      }
+    }, 1000);
+  }
+
+  // -------------------- FINALIZAR Y AVISO --------------------
+  function finalizarMineria() {
+    clearInterval(intervaloMineria);
+    intervaloMineria = null;
+    localStorage.setItem('mineriaActiva', 'false');
+    localStorage.removeItem('mineriaFin');
+
+    robot.classList.remove('pulsing');
+    progressFill.style.width = '100%';
+    timeLeftElem.textContent = "0h 0m 0s";
+    stateText.textContent = "Minería completa ✅";
+
+    claimBtn.disabled = false;
+    startBtn.disabled = saldoRecarga < INVERSION ? true : false;
+
+    reproducirSonido();
+    animarBotonClaim();
+    mostrarModalCompletado();
+
+    setTimeout(() => {
+      verificarSaldo();
+    }, 1500);
+  }
+
+  function mostrarModalCompletado() {
+    const overlay = document.createElement('div');
+    overlay.style = `
+      position:fixed;inset:0;background:rgba(0,0,0,0.8);
+      display:flex;flex-direction:column;justify-content:center;align-items:center;
+      z-index:9999;
+      animation: fadeIn 0.5s ease;
+    `;
+    overlay.innerHTML = `
+      <div style="background:#111;border:2px solid #00ffcc;border-radius:18px;
+      padding:25px;width:85%;max-width:350px;text-align:center;color:#fff;
+      box-shadow:0 0 20px #00ffcc;">
+        <h2 style="color:#00ffcc;">⛏️ Minería completada</h2>
+        <p style="margin-top:10px;font-size:15px;">Reclama tus ganancias ahora</p>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+
+    setTimeout(() => {
+      overlay.style.opacity = '0';
+      overlay.style.transition = '0.5s';
+      setTimeout(() => overlay.remove(), 500);
+    }, 5000);
+  }
+
+  function animarBotonClaim() {
+    claimBtn.classList.add('vibrar');
+    setTimeout(() => claimBtn.classList.remove('vibrar'), 4000);
+  }
+
+  function reproducirSonido() {
+    const audio = new Audio('https://cdn.pixabay.com/download/audio/2022/03/15/audio_d2a2b0d4ef.mp3');
+    audio.play();
+  }
+
+  // -------------------- RECLAMAR --------------------
+  claimBtn.addEventListener('click', () => {
+    if (claimBtn.disabled) return;
+    claimBtn.disabled = true;
+    mostrarCargaYSumar();
+  });
+
+  function mostrarCargaYSumar() {
+    const overlay = document.createElement('div');
+    overlay.style = `
+      position:fixed;inset:0;background:rgba(0,0,0,0.85);
+      display:flex;flex-direction:column;justify-content:center;align-items:center;
+      z-index:9999;
+    `;
+    overlay.innerHTML = `
+      <div style="background:#111;padding:20px;border-radius:14px;width:85%;max-width:340px;text-align:center;">
+        <h3 style="color:#00ffcc;margin-bottom:12px;">Reclamando ganancias...</h3>
+        <div style="width:100%;height:14px;background:#333;border-radius:10px;overflow:hidden;">
+          <div id="bar" style="width:0%;height:100%;background:linear-gradient(90deg,#00ffcc,#00b3ff);transition:width 0.2s;"></div>
+        </div>
+      </div>`;
+    document.body.appendChild(overlay);
+
+    let progreso = 0;
+    const bar = overlay.querySelector('#bar');
+    const intervalo = setInterval(() => {
+      progreso += 25;
+      bar.style.width = `${progreso}%`;
+      if (progreso >= 100) {
+        clearInterval(intervalo);
+        document.body.removeChild(overlay);
+        reclamarGanancia();
+      }
+    }, 600);
+  }
+
+  function reclamarGanancia() {
+    saldoMineria += GANANCIA_POR_CICLO;
+    localStorage.setItem('saldoMineria', saldoMineria);
+    actualizarSaldos();
+    stateText.textContent = `Ganancia reclamada ✅ +${GANANCIA_POR_CICLO.toFixed(2)} USDT`;
+    claimBtn.disabled = true;
+    robot.classList.remove('pulsing');
+    reproducirSonido();
+  }
+
+  // -------------------- RETIRO --------------------
+  retiroBtn.addEventListener('click', () => {
+    saldoRetiroElem.textContent = saldoMineria.toFixed(2) + " USDT";
+    modal.style.display = 'flex';
+  });
+
+  function closeModal() { modal.style.display = 'none'; }
+
+  function procesarRetiro() {
+    const direccion = document.getElementById('direccionRetiro').value;
+    const cantidad = parseFloat(document.getElementById('cantidadRetiro').value);
+    if (!direccion || isNaN(cantidad) || cantidad <= 0 || cantidad > saldoMineria) {
+      alert("Por favor ingresa una dirección válida y una cantidad dentro de tu saldo.");
+      return;
+    }
+    if (cantidad < RETIRO_MINIMO) {
+      alert(`El retiro mínimo es de ${RETIRO_MINIMO} USDT.`);
+      return;
+    }
+    saldoMineria -= cantidad;
+    localStorage.setItem('saldoMineria', saldoMineria);
+    actualizarSaldos();
+    alert(`✅ Retiro de ${cantidad} USDT procesado con éxito.`);
+    closeModal();
+  }
+
+  // -------------------- FLECHA Y BOTONES --------------------
+  function go(url) { window.location.href = url; }
+  function goHome() { history.back(); }
+
+  const backArrow = document.getElementById('backArrow');
+  if (backArrow) backArrow.addEventListener('click', goHome);
+
+  const navBtns = document.querySelectorAll('.nav-btn');
+  navBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const destino = btn.getAttribute('data-url');
+      if (destino) go(destino);
+    });
+  });
+      </script>
 </body>
 </html>
