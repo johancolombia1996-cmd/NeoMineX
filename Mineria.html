@@ -241,12 +241,25 @@ body{
   <div class="navItem" onclick="go('Perfil.html')">👤<div>Perfil</div></div>
 </div>
 
-      <script>
+  overlay = document.createElement('div');
+    overlay.style = `
+      position:fixed;inset:0;background:rgba(0,0,0,0.85);
+      display:flex;flex-direction:column;justify-content:center;align-items:center;
+      z-index:9999;
+    `;
+    overlay.innerHTML = `
+      <div style="background:#111;padding:20px;border-radius:14px;width:85%;max-width:340px;text-align:center;">
+        <h3 style="color:#00ffcc;margin-bottom:12px;">Reclamando ganancias...</h3>
+        <div style="width:100%;height:14px;background:#333;border-radius:10px;overflow:hidden;">
+          <div id="bar" style="width:0%;height:100%;background:linear-gradient(90deg,#00ffcc,#00b3ff);transition:width 0.2s;"></div>
+        </div>
+      </div>`;
+    <script>
   // -------------------- CONFIGURACIÓN --------------------
-  const TIEMPO_MINERIA = 300; // 🔹 5 minutos (300 segundos)
-  const INVERSION = 45;
-  const RETIRO_MINIMO = 5;
-  const GANANCIA_POR_CICLO = 0.03; // 🔹 Gana 0.03 USDT cada 5 min
+  const TIEMPO_MINERIA = 3600; // ⏱️ 1 hora (3600 segundos)
+  const INVERSION = 45;        // 💰 inversión requerida
+  const RETIRO_MINIMO = 5;     // 🔻 retiro mínimo
+  const GANANCIA_POR_CICLO = 0.05; // 💵 ganancia cada hora
 
   // -------------------- VARIABLES --------------------
   let saldoMineria = 0;
@@ -268,17 +281,8 @@ body{
 
   // -------------------- INICIALIZACIÓN --------------------
   window.addEventListener('load', () => {
-    const loader = document.getElementById('loader');
-    if (loader) {
-      setTimeout(() => {
-        loader.style.opacity = '0';
-        loader.style.transition = '1s';
-        setTimeout(() => loader.remove(), 1000);
-      }, 2000);
-    }
-
-    saldoMineria = parseFloat(localStorage.getItem('saldoMineria')) || 1;
-    saldoRecarga = parseFloat(localStorage.getItem('saldoRecarga')) || 15;
+    saldoMineria = parseFloat(localStorage.getItem('saldoMineria')) || 0;
+    saldoRecarga = parseFloat(localStorage.getItem('saldoRecarga')) || 45;
     actualizarSaldos();
 
     progressFill.style.width = "0%";
@@ -339,7 +343,7 @@ body{
 
   // -------------------- INICIAR MINERÍA --------------------
   startBtn.addEventListener('click', () => {
-    if (saldoRecarga < INVERSION) return alert("No tienes saldo suficiente");
+    if (saldoRecarga < INVERSION) return alert("No tienes saldo suficiente para iniciar la minería.");
     iniciarMineria(TIEMPO_MINERIA, true);
   });
 
@@ -371,7 +375,7 @@ body{
     }, 1000);
   }
 
-  // -------------------- FINALIZAR Y AVISO --------------------
+  // -------------------- FINALIZAR --------------------
   function finalizarMineria() {
     clearInterval(intervaloMineria);
     intervaloMineria = null;
@@ -389,19 +393,15 @@ body{
     reproducirSonido();
     animarBotonClaim();
     mostrarModalCompletado();
-
-    setTimeout(() => {
-      verificarSaldo();
-    }, 1500);
   }
 
+  // -------------------- MODALES Y ANIMACIONES --------------------
   function mostrarModalCompletado() {
     const overlay = document.createElement('div');
     overlay.style = `
       position:fixed;inset:0;background:rgba(0,0,0,0.8);
-      display:flex;flex-direction:column;justify-content:center;align-items:center;
-      z-index:9999;
-      animation: fadeIn 0.5s ease;
+      display:flex;justify-content:center;align-items:center;z-index:9999;
+      animation:fadeIn 0.5s ease;
     `;
     overlay.innerHTML = `
       <div style="background:#111;border:2px solid #00ffcc;border-radius:18px;
@@ -409,10 +409,8 @@ body{
       box-shadow:0 0 20px #00ffcc;">
         <h2 style="color:#00ffcc;">⛏️ Minería completada</h2>
         <p style="margin-top:10px;font-size:15px;">Reclama tus ganancias ahora</p>
-      </div>
-    `;
+      </div>`;
     document.body.appendChild(overlay);
-
     setTimeout(() => {
       overlay.style.opacity = '0';
       overlay.style.transition = '0.5s';
@@ -441,8 +439,7 @@ body{
     const overlay = document.createElement('div');
     overlay.style = `
       position:fixed;inset:0;background:rgba(0,0,0,0.85);
-      display:flex;flex-direction:column;justify-content:center;align-items:center;
-      z-index:9999;
+      display:flex;justify-content:center;align-items:center;z-index:9999;
     `;
     overlay.innerHTML = `
       <div style="background:#111;padding:20px;border-radius:14px;width:85%;max-width:340px;text-align:center;">
@@ -502,7 +499,7 @@ body{
     closeModal();
   }
 
-  // -------------------- FLECHA Y BOTONES --------------------
+  // -------------------- NAVEGACIÓN --------------------
   function go(url) { window.location.href = url; }
   function goHome() { history.back(); }
 
