@@ -130,7 +130,7 @@ html,body{height:100%;background:var(--bg);color:#eaf8ff;font-family:'Poppins',s
 </div>
 
 <script>
-// NAVEGACIÓN
+    // NAVEGACIÓN
 function go(url){window.location.href=url;}
 
 // TELEGRAM FLOAT MOVIMIENTO VERTICAL
@@ -152,15 +152,25 @@ const modalMessage = document.getElementById('modalMessage');
 const modalClose = document.getElementById('modalClose');
 const recargaBalance = document.getElementById('recargaBalance');
 
+// BALANCE INICIAL
+if(!localStorage.getItem('NeoMineXBalance')){
+  localStorage.setItem('NeoMineXBalance', 45); // 45 USDT inicial
+}
+recargaBalance.innerText = parseFloat(localStorage.getItem('NeoMineXBalance')).toFixed(2) + ' $';
+
+// ENCUESTA
 const surveyKey = 'NeoMineXSurvey';
 const now = Date.now();
-const fourDays = 4*24*60*60*1000;
-  // Verificar si ya respondió
+
+// Verificar si ya respondió
 if(localStorage.getItem(surveyKey)){
   const data = JSON.parse(localStorage.getItem(surveyKey));
   // Mantener balance si respondió sí
   if(data.answer === 'yes'){
-    recargaBalance.innerText = (parseFloat(recargaBalance.innerText)+1).toFixed(2)+' $';
+    let balance = parseFloat(localStorage.getItem('NeoMineXBalance'));
+    balance += 1;
+    localStorage.setItem('NeoMineXBalance', balance);
+    recargaBalance.innerText = balance.toFixed(2)+' $';
   }
   document.querySelector('.survey').style.display='none';
 }
@@ -176,15 +186,18 @@ function showModal(title,message,showFireworks){
 }
 
 // CERRAR MODAL
-modalClose.onclick = () => { modal.style.display='none'; stopFireworks(); }
+modalClose.onclick = () => { 
+  modal.style.display='none'; 
+  stopFireworks(); 
+}
 
 // RESPONDER SÍ
 optionYes.onclick = () => {
   if(localStorage.getItem(surveyKey)) return;
   showModal('¡Gracias por elegirnos!','NeoMineX te agradece, tienes 1 USDT de recompensa.',true);
-  // Sumar 1 USDT
-  let balance = parseFloat(recargaBalance.innerText);
+  let balance = parseFloat(localStorage.getItem('NeoMineXBalance'));
   balance += 1;
+  localStorage.setItem('NeoMineXBalance', balance);
   recargaBalance.innerText = balance.toFixed(2)+' $';
   localStorage.setItem(surveyKey,JSON.stringify({answer:'yes',time:now}));
   document.querySelector('.survey').style.display='none';
@@ -198,7 +211,7 @@ optionNo.onclick = () => {
   document.querySelector('.survey').style.display='none';
 }
 
-// FUEGOS ARTIFICIALES MEJORADOS
+// FUEGOS ARTIFICIALES
 let canvas, ctx, particles=[], fwInterval;
 function startFireworks(){
   canvas = document.getElementById('fireworkCanvas');
@@ -221,7 +234,7 @@ function startFireworks(){
 function stopFireworks(){
   clearInterval(fwInterval);
   particles = [];
-  ctx.clearRect(0,0,canvas.width,canvas.height);
+  if(ctx) ctx.clearRect(0,0,canvas.width,canvas.height);
 }
 function drawFireworks(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
@@ -237,6 +250,55 @@ function drawFireworks(){
     ctx.fill();
   });
 }
+
+// SISTEMA DE MINERÍA — 1 HORA = 0.05 USDT
+const miningTime = 3600; // segundos (1 hora)
+const miningGain = 0.05; // ganancia por hora
+const miningKey = 'NeoMineXMining';
+const displayTimer = document.getElementById('timer');
+
+let miningData = JSON.parse(localStorage.getItem(miningKey)) || { start: null };
+
+function startMining(){
+  if(!miningData.start){
+    miningData.start = Date.now();
+    localStorage.setItem(miningKey, JSON.stringify(miningData));
+  }
+  updateTimer();
+}
+
+function updateTimer(){
+  const interval = setInterval(()=>{
+    if(!miningData.start) return clearInterval(interval);
+    let elapsed = Math.floor((Date.now() - miningData.start)/1000);
+    let remaining = miningTime - elapsed;
+
+    if(remaining <= 0){
+      // Dar recompensa
+      let balance = parseFloat(localStorage.getItem('NeoMineXBalance'));
+      balance += miningGain;
+      localStorage.setItem('NeoMineXBalance', balance);
+      recargaBalance.innerText = balance.toFixed(2)+' $';
+
+      // Reiniciar minería
+      miningData.start = Date.now();
+      localStorage.setItem(miningKey, JSON.stringify(miningData));
+      remaining = miningTime;
+      showModal('¡Minería completada!','Has ganado +0.05 USDT ⛏️',true);
+    }
+
+    // Mostrar contador (hh:mm:ss)
+    const h = Math.floor(remaining / 3600);
+    const m = Math.floor((remaining % 3600) / 60);
+    const s = remaining % 60;
+    if(displayTimer){
+      displayTimer.textContent = `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+    }
+  },1000);
+}
+
+// Iniciar minería automáticamente al cargar
+window.addEventListener('load', startMining);
 </script>
 </body>
 </html>
